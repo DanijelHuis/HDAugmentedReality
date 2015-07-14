@@ -33,7 +33,7 @@ Xcode 6.3 is needed for Swift 1.2.
 - Add this two lines to your podfile: 
 ```bash
 use_frameworks!
-pod 'HDAugmentedReality', :git => ' https://github.com/DanijelHuis/HDAugmentedReality.git'
+pod 'HDAugmentedReality', :git => 'https://github.com/DanijelHuis/HDAugmentedReality.git'
 ```
 ## How to use
 
