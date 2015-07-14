@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DebugMapViewController" customModule="HDAugmentedRealityDemo" customModuleProvider="target">
+            <connections>
+                <outlet property="mapView" destination="MI0-Cq-Uzz" id="G3A-Z2-ZPX"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MI0-Cq-Uzz">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <gestureRecognizers/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="AkI-42-7Rz"/>
+                        <outletCollection property="gestureRecognizers" destination="y9S-5A-asO" appends="YES" id="i28-Ed-efJ"/>
+                    </connections>
+                </mapView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="320" translatesAutoresizingMaskIntoConstraints="NO" id="dgZ-bF-KBg">
+                    <rect key="frame" x="0.0" y="16" width="320" height="36"/>
+                    <color key="backgroundColor" red="0.43137254899999999" green="0.72156862749999995" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <string key="text">DEBUG: LONG PRESS TO FAKE USER LOCATION. NOTE THAT UPDATING  USER LOCATION WILL NOT WORK AFTER THIS, UNLESS ARViewController IS RESTARTED.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b3m-Ne-a3Q">
+                    <rect key="frame" x="8" y="59" width="40" height="40"/>
+                    <color key="backgroundColor" red="1" green="0.0" blue="0.011788656139999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="cH2-Fg-IRx"/>
+                        <constraint firstAttribute="width" constant="40" id="hEd-CK-um6"/>
+                    </constraints>
+                    <state key="normal" title="X">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="closeButtonTap:" destination="-1" eventType="touchUpInside" id="FdK-yr-0kG"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="b3m-Ne-a3Q" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="9Ib-Hm-QMU"/>
+                <constraint firstItem="MI0-Cq-Uzz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="CfP-ZX-6xm"/>
+                <constraint firstItem="b3m-Ne-a3Q" firstAttribute="top" secondItem="dgZ-bF-KBg" secondAttribute="bottom" constant="7.5" id="EjJ-W8-siU"/>
+                <constraint firstAttribute="trailing" secondItem="MI0-Cq-Uzz" secondAttribute="trailing" id="Fgt-aZ-oob"/>
+                <constraint firstAttribute="trailing" secondItem="dgZ-bF-KBg" secondAttribute="trailing" id="RHg-UL-ZdU"/>
+                <constraint firstItem="dgZ-bF-KBg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="16" id="ZUU-lf-JFS"/>
+                <constraint firstAttribute="bottom" secondItem="MI0-Cq-Uzz" secondAttribute="bottom" id="cgo-Mb-Sr4"/>
+                <constraint firstItem="MI0-Cq-Uzz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="dgh-76-Ium"/>
+                <constraint firstItem="dgZ-bF-KBg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="vTM-ba-cXX"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <point key="canvasLocation" x="194" y="267"/>
+        </view>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="y9S-5A-asO">
+            <connections>
+                <action selector="longTap:" destination="-1" id="usm-YO-UPg"/>
+                <outlet property="delegate" destination="-1" id="quL-lA-t7p"/>
+            </connections>
+        </pongPressGestureRecognizer>
+    </objects>
+</document>
