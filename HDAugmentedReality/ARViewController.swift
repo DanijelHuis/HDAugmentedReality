@@ -72,7 +72,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// Class for managing geographical calculations. Use it to set properties like reloadDistanceFilter, userDistanceFilter and altitudeSensitive
     private(set) public var trackingManager: ARTrackingManager = ARTrackingManager()
     /// Image for close button. If not set, default one is used.
-    public var closeButtonImage = UIImage(named: "Resources.bundle/hdar_close")
+    public var closeButtonImage = UIImage(named: "hdar_close", inBundle: NSBundle(forClass: ARViewController.self), compatibleWithTraitCollection: nil)
     {
         didSet
         {
