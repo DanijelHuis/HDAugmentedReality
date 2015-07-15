@@ -24,6 +24,7 @@
 		0CB2C2471AF18C620006E949 /* TestAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB2C2461AF18C620006E949 /* TestAnnotationView.swift */; };
 		0CB56FB21B35E5DF000EDEBB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CB56FB11B35E5DF000EDEBB /* MapKit.framework */; };
 		0CF4A67E1B56F25F00695793 /* DebugMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0CF4A67D1B56F25F00695793 /* DebugMapViewController.xib */; };
+		0CF4A6801B56F98000695793 /* hdar_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CF4A67F1B56F98000695793 /* hdar_close.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		0CB2C2461AF18C620006E949 /* TestAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestAnnotationView.swift; sourceTree = "<group>"; };
 		0CB56FB11B35E5DF000EDEBB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0CF4A67D1B56F25F00695793 /* DebugMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DebugMapViewController.xib; sourceTree = "<group>"; };
+		0CF4A67F1B56F98000695793 /* hdar_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hdar_close.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				0CF4A67D1B56F25F00695793 /* DebugMapViewController.xib */,
+				0CF4A67F1B56F98000695793 /* hdar_close.png */,
 				0C3660661B5469C300D63DF1 /* hdar_close@2x.png */,
 				0C3660671B5469C300D63DF1 /* hdar_close@3x.png */,
 			);
@@ -201,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CAD4EB81AE6FC14000F2A2A /* Main.storyboard in Resources */,
+				0CF4A6801B56F98000695793 /* hdar_close.png in Resources */,
 				0CAD4EBA1AE6FC14000F2A2A /* Images.xcassets in Resources */,
 				0C36606F1B5469C300D63DF1 /* hdar_close@2x.png in Resources */,
 				0C3660701B5469C300D63DF1 /* hdar_close@3x.png in Resources */,
