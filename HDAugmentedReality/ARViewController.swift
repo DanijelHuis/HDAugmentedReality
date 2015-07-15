@@ -72,7 +72,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// Class for managing geographical calculations. Use it to set properties like reloadDistanceFilter, userDistanceFilter and altitudeSensitive
     private(set) public var trackingManager: ARTrackingManager = ARTrackingManager()
     /// Image for close button. If not set, default one is used.
-    public var closeButtonImage = UIImage(named: "hdar_close")
+    public var closeButtonImage = UIImage(named: "Resources.bundle/hdar_close")
     {
         didSet
         {
@@ -1011,7 +1011,8 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// Opening DebugMapViewController
     internal func debugButtonTap()
     {
-        var mapViewController = DebugMapViewController(nibName: "DebugMapViewController", bundle: nil)
+        var bundle = NSBundle(forClass: DebugMapViewController.self)
+        var mapViewController = DebugMapViewController(nibName: "DebugMapViewController", bundle: bundle)
         self.presentViewController(mapViewController, animated: true, completion: nil)
         mapViewController.addAnnotations(self.annotations)
     }
