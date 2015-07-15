@@ -14,4 +14,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'HDAugmentedReality/**/*'
+  s.resource_bundles = {'Resources' => ['HDAugmentedReality/Resources/**/*.{xib,png}']}
 end
