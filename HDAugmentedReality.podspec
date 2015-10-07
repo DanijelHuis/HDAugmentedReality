@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
-  s.source_files = 'HDAugmentedReality/**/*'
+  s.source_files = 'HDAugmentedReality/Classes/**/*'
   #s.resource_bundles = {'Resources' => ['HDAugmentedReality/Resources/**/*.{xib,png}']}
   s.resources = 'HDAugmentedReality/Resources/**/*.{xib,png}'
 end
