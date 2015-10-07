@@ -1,6 +1,7 @@
 # HDAugmentedReality
 
-Augmented Reality component for iOS, written in Swift 1.2.
+Augmented Reality component for iOS, written in Swift 2.0.
+Note: Version 0.1.0 was written in Swift 1.2 so use that for older Xcodes.
 
 ## Features
 
