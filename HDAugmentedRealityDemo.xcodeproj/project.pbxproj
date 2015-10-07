@@ -172,7 +172,9 @@
 		0CAD4EA51AE6FC14000F2A2A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Danijel Huis";
 				TargetAttributes = {
 					0CAD4EAC1AE6FC14000F2A2A = {
@@ -265,6 +267,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -333,8 +336,9 @@
 				INFOPLIST_FILE = HDAugmentedRealityDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Huis.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6ad478d5-2018-440e-a836-0ec2ba1314d4";
+				PROVISIONING_PROFILE = "d32efe34-a8d0-4617-a061-a8df60fb464c";
 			};
 			name = Debug;
 		};
@@ -347,8 +351,9 @@
 				INFOPLIST_FILE = HDAugmentedRealityDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Huis.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6ad478d5-2018-440e-a836-0ec2ba1314d4";
+				PROVISIONING_PROFILE = "d32efe34-a8d0-4617-a061-a8df60fb464c";
 			};
 			name = Release;
 		};

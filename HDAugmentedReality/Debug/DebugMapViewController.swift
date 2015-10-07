@@ -23,7 +23,7 @@ public class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLoca
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    required public init(coder aDecoder: NSCoder)
+    required public init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
     }
@@ -70,9 +70,9 @@ public class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLoca
         {
             if let coordinate = annotation.location?.coordinate
             {
-                var mapAnnotation = MKPointAnnotation()
+                let mapAnnotation = MKPointAnnotation()
                 mapAnnotation.coordinate = coordinate
-                var text = String(format: "%@, AZ: %.0f, VL: %i, %.0fm", annotation.title != nil ? annotation.title! : "", annotation.azimuth, annotation.verticalLevel, annotation.distanceFromUser)
+                let text = String(format: "%@, AZ: %.0f, VL: %i, %.0fm", annotation.title != nil ? annotation.title! : "", annotation.azimuth, annotation.verticalLevel, annotation.distanceFromUser)
                 mapAnnotation.title = text
                 mapAnnotations.append(mapAnnotation)
             }
@@ -86,10 +86,10 @@ public class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLoca
     {
         if sender.state == UIGestureRecognizerState.Began
         {
-            var point = sender.locationInView(self.mapView)
-            var coordinate = self.mapView.convertPoint(point, toCoordinateFromView: self.mapView)
-            var location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            var userInfo: [NSObject : AnyObject] = ["location" : location]
+            let point = sender.locationInView(self.mapView)
+            let coordinate = self.mapView.convertPoint(point, toCoordinateFromView: self.mapView)
+            let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            let userInfo: [NSObject : AnyObject] = ["location" : location]
             NSNotificationCenter.defaultCenter().postNotificationName("kNotificationLocationSet", object: nil, userInfo: userInfo)
         }
     }
@@ -100,25 +100,25 @@ public class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLoca
     }
     
     
-    public func locationManager(manager: CLLocationManager!, didUpdateHeading newHeading: CLHeading!)
+    public func locationManager(manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
     {
         heading = newHeading.trueHeading
         
         // Rotate map
         if(!self.interactionInProgress && CLLocationCoordinate2DIsValid(mapView.centerCoordinate))
         {
-            var camera = mapView.camera.copy() as! MKMapCamera
+            let camera = mapView.camera.copy() as! MKMapCamera
             camera.heading = CLLocationDirection(heading);
             self.mapView.setCamera(camera, animated: false)
         }
     }
     
-    public func mapView(mapView: MKMapView!, regionWillChangeAnimated animated: Bool)
+    public func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool)
     {
         self.interactionInProgress = true
     }
     
-    public func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool)
+    public func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
     {
         self.interactionInProgress = false
     }

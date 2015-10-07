@@ -22,7 +22,7 @@ public class ARAnnotationView: UIView
         self.initializeInternal()
     }
 
-    public required init(coder aDecoder: NSCoder)
+    public required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
         self.initializeInternal()

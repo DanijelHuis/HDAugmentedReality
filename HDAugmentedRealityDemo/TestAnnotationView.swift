@@ -26,7 +26,7 @@ public class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
     {
         // Title label
         self.titleLabel?.removeFromSuperview()
-        var label = UILabel()
+        let label = UILabel()
         label.font = UIFont.systemFontOfSize(10)
         label.numberOfLines = 0
         label.backgroundColor = UIColor.clearColor()
@@ -36,13 +36,13 @@ public class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
         
         // Info button
         self.infoButton?.removeFromSuperview()
-        var button = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
+        let button = UIButton(type: UIButtonType.DetailDisclosure)
         button.userInteractionEnabled = false   // Whole view will be tappable, using it for appearance
         self.addSubview(button)
         self.infoButton = button
         
         // Gesture
-        var tapGesture = UITapGestureRecognizer(target: self, action: Selector("tapGesture"))
+        let tapGesture = UITapGestureRecognizer(target: self, action: Selector("tapGesture"))
         self.addGestureRecognizer(tapGesture)
         
         // Other
@@ -57,8 +57,8 @@ public class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
     
     func layoutUi()
     {
-        var buttonWidth: CGFloat = 40
-        var buttonHeight: CGFloat = 40
+        let buttonWidth: CGFloat = 40
+        let buttonHeight: CGFloat = 40
         
         self.titleLabel?.frame = CGRectMake(10, 0, self.frame.size.width - buttonWidth - 5, self.frame.size.height);
         self.infoButton?.frame = CGRectMake(self.frame.size.width - buttonWidth, self.frame.size.height/2 - buttonHeight/2, buttonWidth, buttonHeight);
@@ -69,9 +69,9 @@ public class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
     {
         if let annotation = self.annotation, let title = annotation.title
         {
-            var distance = annotation.distanceFromUser > 1000 ? String(format: "%.1fkm", annotation.distanceFromUser / 1000) : String(format:"%.0fm", annotation.distanceFromUser)
+            let distance = annotation.distanceFromUser > 1000 ? String(format: "%.1fkm", annotation.distanceFromUser / 1000) : String(format:"%.0fm", annotation.distanceFromUser)
             
-            var text = String(format: "%@\nAZ: %.0f°\nDST: %@", title, annotation.azimuth, distance)
+            let text = String(format: "%@\nAZ: %.0f°\nDST: %@", title, annotation.azimuth, distance)
             self.titleLabel?.text = text
         }
     }
@@ -86,7 +86,7 @@ public class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
     {
         if let annotation = self.annotation
         {
-            var alertView = UIAlertView(title: annotation.title, message: "Tapped", delegate: nil, cancelButtonTitle: "OK")
+            let alertView = UIAlertView(title: annotation.title, message: "Tapped", delegate: nil, cancelButtonTitle: "OK")
             alertView.show()
         }
     }

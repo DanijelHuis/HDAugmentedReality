@@ -114,10 +114,15 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         {
             if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.NotDetermined
             {
-                if self.locationManager.respondsToSelector(Selector("requestWhenInUseAuthorization"))
+                if #available(iOS 8.0, *)
                 {
                     self.locationManager.requestWhenInUseAuthorization()
                 }
+                else
+                {
+                    // Fallback on earlier versions
+                }
+                
             }
         }
         
@@ -148,27 +153,23 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     // MARK:                                                        CLLocationManagerDelegate
     //==========================================================================================================================================================
 
-    public func locationManager(manager: CLLocationManager!, didUpdateHeading newHeading: CLHeading!)
+    public func locationManager(manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
     {
         self.heading = fmod(newHeading.trueHeading, 360.0)
         self.delegate?.logText?("Heading: \(self.heading)")
     }
     
-    public func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!)
+    public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         if locations.count > 0
         {
-            var location = locations[0] as? CLLocation
-            if location == nil || location?.timestamp == nil
-            {
-                return
-            }
-            
+            let location = locations[0]
+
             // Disregarding old and low quality location detections
-            var age = location!.timestamp.timeIntervalSinceNow;
-            if age < -30 || location!.horizontalAccuracy > 500 || location!.horizontalAccuracy < 0
+            let age = location.timestamp.timeIntervalSinceNow;
+            if age < -30 || location.horizontalAccuracy > 500 || location.horizontalAccuracy < 0
             {
-                println("Disregarding location: age: \(age), ha: \(location!.horizontalAccuracy)")
+                print("Disregarding location: age: \(age), ha: \(location.horizontalAccuracy)")
                 return
             }
             
@@ -178,7 +179,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
             // Setting altitude to 0 if altitudeSensitive == false
             if self.userLocation != nil && !self.altitudeSensitive
             {
-                var location = self.userLocation!
+                let location = self.userLocation!
                 self.userLocation = CLLocation(coordinate: location.coordinate, altitude: 0, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, timestamp: location.timestamp)
             }
             
@@ -190,7 +191,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
             }
             
             //===== Reporting location 5s after we get location, this will filter multiple locations calls and make only one delegate call
-            var reportIsScheduled = self.reportLocationTimer != nil
+            let reportIsScheduled = self.reportLocationTimer != nil
             
             // First time, reporting immediately
             if self.reportLocationDate == nil
@@ -237,15 +238,15 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
             return 0
         }
         
-        var acceleration: CMAcceleration = self.motionManager.accelerometerData.acceleration
+        let acceleration: CMAcceleration = self.motionManager.accelerometerData!.acceleration
         
         // Filtering data so its not jumping around
-        var filterFactor: Double = 0.05
+        let filterFactor: Double = 0.05
         self.lastAcceleration.x = (acceleration.x * filterFactor) + (self.lastAcceleration.x  * (1.0 - filterFactor));
         self.lastAcceleration.y = (acceleration.y * filterFactor) + (self.lastAcceleration.y  * (1.0 - filterFactor));
         self.lastAcceleration.z = (acceleration.z * filterFactor) + (self.lastAcceleration.z  * (1.0 - filterFactor));
         
-        var deviceOrientation = self.orientation
+        let deviceOrientation = self.orientation
         var angle: Double = 0
         
         if deviceOrientation == CLDeviceOrientation.Portrait
@@ -279,12 +280,12 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
             return 0
         }
                 
-        var coordinate: CLLocationCoordinate2D = location.coordinate
-        var userCoordinate: CLLocationCoordinate2D = self.userLocation!.coordinate
+        let coordinate: CLLocationCoordinate2D = location.coordinate
+        let userCoordinate: CLLocationCoordinate2D = self.userLocation!.coordinate
         
         // Calculating azimuth
-        var latitudeDistance: Double = userCoordinate.latitude - coordinate.latitude;
-        var longitudeDistance: Double = userCoordinate.longitude - coordinate.longitude;
+        let latitudeDistance: Double = userCoordinate.latitude - coordinate.latitude;
+        let longitudeDistance: Double = userCoordinate.longitude - coordinate.longitude;
        
         // Simplified azimuth calculation
         azimuth = radiansToDegrees(atan2(longitudeDistance, (latitudeDistance * Double(LAT_LON_FACTOR))))

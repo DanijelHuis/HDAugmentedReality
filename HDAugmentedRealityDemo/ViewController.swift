@@ -20,25 +20,25 @@ class ViewController: UIViewController, ARDataSource
     func showARViewController()
     {
         // Check if device has hardware needed for augmented reality
-        var result = ARViewController.createCaptureSession()
+        let result = ARViewController.createCaptureSession()
         if result.error != nil
         {
-            var message = result.error?.userInfo?["description"] as? String
-            var alertView = UIAlertView(title: "Error", message: message, delegate: nil, cancelButtonTitle: "Close")
+            let message = result.error?.userInfo["description"] as? String
+            let alertView = UIAlertView(title: "Error", message: message, delegate: nil, cancelButtonTitle: "Close")
             alertView.show()
             return
         }
        
         // Create random annotations around center point    //@TODO
         //FIXME: set your initial position here, this is used to generate random POIs
-        var lat = 45.558054
-        var lon = 18.682622
-        var delta = 0.05
-        var count = 50
-        var dummyAnnotations = self.getDummyAnnotations(centerLatitude: lat, centerLongitude: lon, delta: delta, count: count)
+        let lat = 45.558054
+        let lon = 18.682622
+        let delta = 0.05
+        let count = 50
+        let dummyAnnotations = self.getDummyAnnotations(centerLatitude: lat, centerLongitude: lon, delta: delta, count: count)
         
         // Present ARViewController
-        var arViewController = ARViewController()
+        let arViewController = ARViewController()
         arViewController.debugEnabled = true
         arViewController.dataSource = self
         arViewController.maxDistance = 0
@@ -54,7 +54,7 @@ class ViewController: UIViewController, ARDataSource
     func ar(arViewController: ARViewController, viewForAnnotation: ARAnnotation) -> ARAnnotationView
     {
         // Annotation views should be lightweight views, try to avoid xibs and autolayout all together.
-        var annotationView = TestAnnotationView()
+        let annotationView = TestAnnotationView()
         annotationView.frame = CGRect(x: 0,y: 0,width: 150,height: 50)
         return annotationView;
     }
@@ -64,14 +64,14 @@ class ViewController: UIViewController, ARDataSource
     
     
     
-    private func getDummyAnnotations(#centerLatitude: Double, centerLongitude: Double, delta: Double, count: Int) -> Array<ARAnnotation>
+    private func getDummyAnnotations(centerLatitude centerLatitude: Double, centerLongitude: Double, delta: Double, count: Int) -> Array<ARAnnotation>
     {
         var annotations: [ARAnnotation] = []
         
         srand48(3)
         for var i = 0; i < count; i++
         {
-            var annotation = ARAnnotation()
+            let annotation = ARAnnotation()
             annotation.location = self.getRandomLocation(centerLatitude: centerLatitude, centerLongitude: centerLongitude, delta: delta)
             annotation.title = "POI \(i)"
             annotations.append(annotation)
@@ -79,13 +79,13 @@ class ViewController: UIViewController, ARDataSource
         return annotations
     }
     
-    private func getRandomLocation(#centerLatitude: Double, centerLongitude: Double, delta: Double) -> CLLocation
+    private func getRandomLocation(centerLatitude centerLatitude: Double, centerLongitude: Double, delta: Double) -> CLLocation
     {
         var lat = centerLatitude
         var lon = centerLongitude
         
-        var latDelta = -(delta / 2) + drand48() * delta
-        var lonDelta = -(delta / 2) + drand48() * delta
+        let latDelta = -(delta / 2) + drand48() * delta
+        let lonDelta = -(delta / 2) + drand48() * delta
         lat = lat + latDelta
         lon = lon + lonDelta
         return CLLocation(latitude: lat, longitude: lon)

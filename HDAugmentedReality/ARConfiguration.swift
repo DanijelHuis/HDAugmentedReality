@@ -60,9 +60,9 @@ internal func deltaAngle(angle1: Double, angle2: Double) -> Double
     *
     *       Use ARViewController.trackingManager.reloadDistanceFilter to change how often this is called.
     *
-    *       :param: arViewController        ARViewController instance
-    *       :param: location                Current location of the user
-    *       :returns:                       Annotations to load, previous annotations are removed
+    *       - parameter arViewController:        ARViewController instance
+    *       - parameter location:                Current location of the user
+    *       - returns:                       Annotations to load, previous annotations are removed
     */
     optional func ar(arViewController: ARViewController, shouldReloadWithLocation location: CLLocation) -> [ARAnnotation]
 
