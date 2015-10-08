@@ -225,7 +225,15 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
         
         
-        
+        if closeButtonImage == nil
+        {
+            let bundle = NSBundle(forClass: ARViewController.self)
+            let path = bundle.pathForResource("hdar_close", ofType: "png")
+            if let path = path
+            {
+                closeButtonImage = UIImage(contentsOfFile: path)
+            }
+        }
         
         // Close button - make it customizable
         let closeButton: UIButton = UIButton(type: UIButtonType.Custom)

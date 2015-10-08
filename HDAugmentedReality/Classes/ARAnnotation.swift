@@ -20,9 +20,9 @@ public class ARAnnotation: NSObject
     internal(set) public var annotationView: ARAnnotationView?
     
     // Internal use only, do not set this properties
-    internal var distanceFromUser: Double = 0
-    internal var azimuth: Double = 0
-    internal var verticalLevel: Int = 0
-    internal var active: Bool = false
+    internal(set) public var distanceFromUser: Double = 0
+    internal(set) public var azimuth: Double = 0
+    internal(set) public var verticalLevel: Int = 0
+    internal(set) public var active: Bool = false
 
 }
