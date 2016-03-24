@@ -198,7 +198,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
             self.loadOverlay()
         }
         
-        self.setOrientation(self.interfaceOrientation)
+        self.setOrientation(UIApplication.sharedApplication().statusBarOrientation)
         self.layoutUi()
         self.startCamera()
         
