@@ -139,8 +139,8 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.maxVisibleAnnotations = 100
         self.maxDistance = 0
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("locationNotification:"), name: "kNotificationLocationSet", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("appWillEnterForeground:"), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ARViewController.locationNotification(_:)), name: "kNotificationLocationSet", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ARViewController.appWillEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
 
         self.initialize()
     }
@@ -217,7 +217,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
             
             let debugMapButton: UIButton = UIButton(type: UIButtonType.Custom)
             debugMapButton.frame = CGRect(x: 5,y: 5,width: 40,height: 40);
-            debugMapButton.addTarget(self, action: Selector("debugButtonTap"), forControlEvents: UIControlEvents.TouchUpInside)
+            debugMapButton.addTarget(self, action: #selector(ARViewController.debugButtonTap), forControlEvents: UIControlEvents.TouchUpInside)
             debugMapButton.setTitle("map", forState: UIControlState.Normal)
             debugMapButton.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
             debugMapButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
@@ -239,7 +239,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         let closeButton: UIButton = UIButton(type: UIButtonType.Custom)
         closeButton.setImage(closeButtonImage, forState: UIControlState.Normal);
         closeButton.frame = CGRect(x: self.view.bounds.size.width - 45, y: 5,width: 40,height: 40)
-        closeButton.addTarget(self, action: Selector("closeButtonTap"), forControlEvents: UIControlEvents.TouchUpInside)
+        closeButton.addTarget(self, action: #selector(ARViewController.closeButtonTap), forControlEvents: UIControlEvents.TouchUpInside)
         closeButton.autoresizingMask = [UIViewAutoresizing.FlexibleLeftMargin, UIViewAutoresizing.FlexibleBottomMargin]
         self.view.addSubview(closeButton)
         self.closeButton = closeButton
@@ -317,6 +317,11 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
         self.annotations = validAnnotations
         self.reloadAnnotations()
+    }
+    
+    public func getAnnotations() -> [ARAnnotation]
+    {
+        return self.annotations
     }
     
     /// Creates annotations views and recalculates all variables(distances, azimuths, vertical levels) if user location is available, else it will reload when it gets user location.
@@ -539,16 +544,16 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         // Lot faster with NS stuff than swift collection classes
         let dictionary: NSMutableDictionary = NSMutableDictionary()
-        
+
         // Creating dictionary for each vertical level
-        for var level = 0; level <= self.maxVerticalLevel; level++
+        for level in 0.stride(to: self.maxVerticalLevel + 1, by: 1)
         {
             let array = NSMutableArray()
             dictionary[Int(level)] = array
         }
         
         // Putting each annotation in its dictionary(each level has its own dictionary)
-        for var i = 0; i < self.activeAnnotations.count; i++
+        for i in 0.stride(to: self.activeAnnotations.count, by: 1)
         {
             let annotation = self.activeAnnotations[i] as ARAnnotation
             if annotation.verticalLevel <= self.maxVerticalLevel
@@ -568,17 +573,17 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         
         // Doing the shit
         var minVerticalLevel: Int = Int.max
-        for var level = 0; level <= self.maxVerticalLevel; level++
+        for level in 0.stride(to: self.maxVerticalLevel + 1, by: 1)
         {
             let annotationsForCurrentLevel = dictionary[(level as Int)] as! NSMutableArray
             let annotationsForNextLevel = dictionary[((level + 1) as Int)] as? NSMutableArray
 
-            for var i = 0; i < annotationsForCurrentLevel.count; i++
+            for i in 0.stride(to: annotationsForCurrentLevel.count, by: 1)
             {
- let                annotation1 = annotationsForCurrentLevel[i] as! ARAnnotation
+                let annotation1 = annotationsForCurrentLevel[i] as! ARAnnotation
                 if annotation1.verticalLevel != level { continue }  // Can happen if it was moved to next level by previous annotation, it will be handled in next loop
                 
-                for var j = i + 1; j < annotationsForCurrentLevel.count; j++
+                for j in (i+1).stride(to: annotationsForCurrentLevel.count, by: 1)
                 {
                     let annotation2 = annotationsForCurrentLevel[j] as! ARAnnotation
                     if annotation1 == annotation2 || annotation2.verticalLevel != level
@@ -599,7 +604,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
                     // Current annotation is farther away from user than comparing annotation, current will be pushed to the next level
                     if annotation1.distanceFromUser > annotation2.distanceFromUser
                     {
-                        annotation1.verticalLevel++
+                        annotation1.verticalLevel += 1
                         if annotationsForNextLevel != nil
                         {
                             annotationsForNextLevel?.addObject(annotation1)
@@ -610,7 +615,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
                     // Compared annotation will be pushed to next level because it is furher away
                     else
                     {
-                        annotation2.verticalLevel++
+                        annotation2.verticalLevel += 1
                         if annotationsForNextLevel != nil
                         {
                             annotationsForNextLevel?.addObject(annotation2)
@@ -763,7 +768,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
             {
                 filteredAnnotations.append(annotation)
                 annotation.active = true
-                count++;
+                count += 1;
             }
             else
             {
@@ -813,7 +818,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     internal func arTrackingManager(trackingManager: ARTrackingManager, didUpdateReloadLocation: CLLocation?)
     {
         // Manual reload?
-        if didUpdateReloadLocation != nil && self.dataSource != nil && self.dataSource!.respondsToSelector(Selector("ar:shouldReloadWithLocation:"))
+        if didUpdateReloadLocation != nil && self.dataSource != nil && self.dataSource!.respondsToSelector(#selector(ARDataSource.ar(_:shouldReloadWithLocation:)))
         {
             let annotations = self.dataSource?.ar?(self, shouldReloadWithLocation: didUpdateReloadLocation!)
             if let annotations = annotations
@@ -863,7 +868,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
             //===== View preview layer
             let cameraLayer = AVCaptureVideoPreviewLayer(session: self.cameraSession)
             cameraLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-            self.view.layer.addSublayer(cameraLayer)
+            self.view.layer.insertSublayer(cameraLayer, atIndex: 0)
             self.cameraLayer = cameraLayer
         }
         else
@@ -929,7 +934,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         self.cameraSession.startRunning()
         self.trackingManager.startTracking()
-        self.displayTimer = CADisplayLink(target: self, selector: Selector("displayTimerTick"))
+        self.displayTimer = CADisplayLink(target: self, selector: #selector(ARViewController.displayTimerTick))
         self.displayTimer?.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
     }
     

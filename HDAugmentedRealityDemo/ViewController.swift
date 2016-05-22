@@ -59,17 +59,12 @@ class ViewController: UIViewController, ARDataSource
         return annotationView;
     }
     
-    
-    
-    
-    
-    
     private func getDummyAnnotations(centerLatitude centerLatitude: Double, centerLongitude: Double, delta: Double, count: Int) -> Array<ARAnnotation>
     {
         var annotations: [ARAnnotation] = []
         
         srand48(3)
-        for var i = 0; i < count; i++
+        for i in 0.stride(to: count, by: 1)
         {
             let annotation = ARAnnotation()
             annotation.location = self.getRandomLocation(centerLatitude: centerLatitude, centerLongitude: centerLongitude, delta: delta)

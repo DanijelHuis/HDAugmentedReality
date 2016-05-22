@@ -206,7 +206,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
             // Scheduling report in 5s
             else
             {
-                self.reportLocationTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: Selector("reportLocationToDelegate"), userInfo: nil, repeats: false)
+                self.reportLocationTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(ARTrackingManager.reportLocationToDelegate), userInfo: nil, repeats: false)
             }
         }
     }
