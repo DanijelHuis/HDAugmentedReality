@@ -98,7 +98,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         // Setup location manager
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.distanceFilter = CLLocationDistance(self.userDistanceFilter)
-        self.locationManager.headingFilter = 1.0
+        self.locationManager.headingFilter = 1
         self.locationManager.delegate = self
     }
     
@@ -156,7 +156,6 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     public func locationManager(manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
     {
         self.heading = fmod(newHeading.trueHeading, 360.0)
-        self.delegate?.logText?("Heading: \(self.heading)")
     }
     
     public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])

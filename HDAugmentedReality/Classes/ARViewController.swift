@@ -82,7 +82,12 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     }
     /// Enables map debugging and some other debugging features, set before controller is shown
     public var debugEnabled = false;
-
+    /**
+     Smoothing factor for heading in range 0-1. It affects horizontal movement of annotaion views. The lower the value the bigger the smoothing.
+     Value of 1 means no smoothing, should be greater than 0.
+     */
+    public var headingSmoothingFactor: Double = 1
+    
     //===== Private
     private var initialized: Bool = false
     private var cameraSession: AVCaptureSession = AVCaptureSession()
@@ -100,7 +105,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     private var annotations: [ARAnnotation] = []
     private var activeAnnotations: [ARAnnotation] = []
     private var closeButton: UIButton?
-    
+    private var currentHeading: Double = 0
     //==========================================================================================================================================================
     // MARK:                                                        Init
     //==========================================================================================================================================================
@@ -432,7 +437,6 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         //===== Removing views not in viewport, adding those that are. Also removing annotations view vertical level > maxVerticalLevel
         let degreesDelta = Double(degreesPerScreen)
-        let  currentHeading = self.trackingManager.heading
         
         for annotationView in self.annotationViews
         {
@@ -461,11 +465,11 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         let threshold: Double = 40
         var currentRegion: Int = 0
         
-        if self.trackingManager.heading < threshold // 0-40
+        if currentHeading < threshold // 0-40
         {
             currentRegion = 1
         }
-        else if self.trackingManager.heading > (360 - threshold)    // 320-360
+        else if currentHeading > (360 - threshold)    // 320-360
         {
             currentRegion = -1
         }
@@ -783,8 +787,14 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     //==========================================================================================================================================================
     internal func displayTimerTick()
     {
+        let filterFactor: Double = headingSmoothingFactor
+        let newHeading = self.trackingManager.heading
+        currentHeading = (newHeading * filterFactor) + (currentHeading  * (1.0 - filterFactor));
+        
         self.overlayView.frame = self.overlayFrame()
         self.updateAnnotationsForCurrentHeading()
+        
+        logText("Heading: \(self.trackingManager.heading)")
     }
     
     internal func arTrackingManager(trackingManager: ARTrackingManager, didUpdateUserLocation: CLLocation?)
@@ -960,7 +970,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     private func overlayFrame() -> CGRect
     {
-        let x: CGFloat = self.view.bounds.size.width / 2 - (CGFloat(self.trackingManager.heading) * H_PIXELS_PER_DEGREE)
+        let x: CGFloat = self.view.bounds.size.width / 2 - (CGFloat(currentHeading) * H_PIXELS_PER_DEGREE)
         let y: CGFloat = (CGFloat(self.trackingManager.pitch) * VERTICAL_SENS) + 60.0
         let newFrame = CGRect(x: x, y: y, width: OVERLAY_VIEW_WIDTH, height: self.view.bounds.size.height)
         return newFrame
