@@ -700,7 +700,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     private func reload(calculateDistanceAndAzimuth calculateDistanceAndAzimuth: Bool, calculateVerticalLevels: Bool, createAnnotationViews: Bool)
     {
-        NSLog("==========")
+        //NSLog("==========")
         if calculateDistanceAndAzimuth
         {
             
@@ -789,7 +789,18 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         let filterFactor: Double = headingSmoothingFactor
         let newHeading = self.trackingManager.heading
-        currentHeading = (newHeading * filterFactor) + (currentHeading  * (1.0 - filterFactor));
+        
+        // Picking up the pace if device is being rotated fast or heading of device is at the border(North). It is needed
+        // to do this on North border because overlayView changes its position and we don't want it to animate full circle.
+        if(self.headingSmoothingFactor == 1 || fabs(currentHeading - self.trackingManager.heading) > 50)
+        {
+            currentHeading = self.trackingManager.heading
+        }
+        else
+        {
+            // Smoothing out heading
+            currentHeading = (newHeading * filterFactor) + (currentHeading  * (1.0 - filterFactor))
+        }
         
         self.overlayView.frame = self.overlayFrame()
         self.updateAnnotationsForCurrentHeading()
@@ -965,13 +976,22 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.overlayView.removeFromSuperview()
         self.overlayView = UIView()
         self.view.addSubview(self.overlayView)
-        //self.overlayView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
+        /*self.overlayView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
+        
+        for i in 0...36
+        {
+            let view = UIView()
+            view.frame = CGRectMake( CGFloat(i * 10) * H_PIXELS_PER_DEGREE , 50, 10, 10)
+            view.backgroundColor = UIColor.redColor()
+            self.overlayView.addSubview(view)
+        }*/
     }
     
     private func overlayFrame() -> CGRect
     {
         let x: CGFloat = self.view.bounds.size.width / 2 - (CGFloat(currentHeading) * H_PIXELS_PER_DEGREE)
         let y: CGFloat = (CGFloat(self.trackingManager.pitch) * VERTICAL_SENS) + 60.0
+        
         let newFrame = CGRect(x: x, y: y, width: OVERLAY_VIEW_WIDTH, height: self.view.bounds.size.height)
         return newFrame
     }
