@@ -1,7 +1,7 @@
 # HDAugmentedReality
 
-Augmented Reality component for iOS, written in Swift 2.0.
-Note: Version 0.1.0 was written in Swift 1.2 so use that for older Xcodes.
+Augmented Reality component for iOS, written in Swift 3.0.
+Note: Version 1.0.1 on branch master was written in Swift 2. Version 0.1.0 was written in Swift 1.2 so use that for older Xcodes.
 
 ## Features
 
@@ -20,7 +20,7 @@ Note: Version 0.1.0 was written in Swift 1.2 so use that for older Xcodes.
 - CoreMotion.Framework
 - MapKit.Framework (For debugging only, can be set ‘Optional’)
 
-Xcode 6.3 is needed for Swift 1.2.
+Xcode 8 is needed for Swift 3.
 
 ## Manual installation (iOS7+)
 
