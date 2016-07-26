@@ -25,6 +25,7 @@
 		0CF0F8EA1BC5E70C00C7646E /* ARTrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF0F8E31BC5E70C00C7646E /* ARTrackingManager.swift */; };
 		0CF0F8EB1BC5E70C00C7646E /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF0F8E41BC5E70C00C7646E /* ARViewController.swift */; };
 		0CF0F8EC1BC5E70C00C7646E /* DebugMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF0F8E61BC5E70C00C7646E /* DebugMapViewController.swift */; };
+		0E7A8E161D475BCB00B70162 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E7A8E151D475BCB00B70162 /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		0CF0F8E31BC5E70C00C7646E /* ARTrackingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARTrackingManager.swift; sourceTree = "<group>"; };
 		0CF0F8E41BC5E70C00C7646E /* ARViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		0CF0F8E61BC5E70C00C7646E /* DebugMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugMapViewController.swift; sourceTree = "<group>"; };
+		0E7A8E151D475BCB00B70162 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				0CAD4EB61AE6FC14000F2A2A /* Main.storyboard */,
 				0CAD4EB91AE6FC14000F2A2A /* Images.xcassets */,
 				0CAD4EB01AE6FC14000F2A2A /* Supporting Files */,
+				0E7A8E151D475BCB00B70162 /* Launch Screen.storyboard */,
 			);
 			path = HDAugmentedRealityDemo;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 				0CAD4EBA1AE6FC14000F2A2A /* Images.xcassets in Resources */,
 				0C10A15B1BC67B5C009EDF6A /* DebugMapViewController.xib in Resources */,
 				0C10A15D1BC67B5C009EDF6A /* hdar_close@2x.png in Resources */,
+				0E7A8E161D475BCB00B70162 /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
