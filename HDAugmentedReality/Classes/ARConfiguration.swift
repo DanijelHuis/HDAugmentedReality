@@ -9,18 +9,18 @@ let OVERLAY_VIEW_WIDTH: CGFloat = 360 * H_PIXELS_PER_DEGREE      // 360 degrees 
 let MAX_VISIBLE_ANNOTATIONS: Int = 500                           // Do not change, can affect performance
 let MAX_VERTICAL_LEVELS: Int = 10                                // Do not change, can affect performance
 
-internal func radiansToDegrees(radians: Double) -> Double
+internal func radiansToDegrees(_ radians: Double) -> Double
 {
     return (radians) * (180.0 / M_PI)
 }
 
-internal func degreesToRadians(degrees: Double) -> Double
+internal func degreesToRadians(_ degrees: Double) -> Double
 {
     return (degrees) * (M_PI / 180.0)
 }
 
 /// Normalizes degree to 360
-internal func normalizeDegree(degree: Double) -> Double
+internal func normalizeDegree(_ degree: Double) -> Double
 {
     var degreeNormalized = fmod(degree, 360)
     if degreeNormalized < 0
@@ -31,7 +31,7 @@ internal func normalizeDegree(degree: Double) -> Double
 }
 
 /// Finds shortes angle distance between two angles. Angles must be normalized(0-360)
-internal func deltaAngle(angle1: Double, angle2: Double) -> Double
+internal func deltaAngle(_ angle1: Double, angle2: Double) -> Double
 {
     var deltaAngle = angle1 - angle2
     
@@ -50,7 +50,7 @@ internal func deltaAngle(angle1: Double, angle2: Double) -> Double
 @objc public protocol ARDataSource : NSObjectProtocol
 {
     /// Asks the data source to provide annotation view for annotation. Annotation view must be subclass of ARAnnotationView.
-    func ar(arViewController: ARViewController, viewForAnnotation: ARAnnotation) -> ARAnnotationView
+    func ar(_ arViewController: ARViewController, viewForAnnotation: ARAnnotation) -> ARAnnotationView
    
    /**
     *       READ BEFORE IMPLEMENTING
@@ -64,7 +64,7 @@ internal func deltaAngle(angle1: Double, angle2: Double) -> Double
     *       - parameter location:                Current location of the user
     *       - returns:                       Annotations to load, previous annotations are removed
     */
-    optional func ar(arViewController: ARViewController, shouldReloadWithLocation location: CLLocation) -> [ARAnnotation]
+    @objc optional func ar(_ arViewController: ARViewController, shouldReloadWithLocation location: CLLocation) -> [ARAnnotation]
 
 }
 

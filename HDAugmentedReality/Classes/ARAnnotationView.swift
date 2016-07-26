@@ -18,7 +18,7 @@ public class ARAnnotationView: UIView
     
     public init()
     {
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
         self.initializeInternal()
     }
 

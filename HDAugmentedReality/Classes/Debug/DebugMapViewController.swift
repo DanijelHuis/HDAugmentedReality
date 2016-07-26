@@ -18,7 +18,7 @@ public class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLoca
     private var heading: Double = 0
     private var interactionInProgress = false
     
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -31,7 +31,7 @@ public class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLoca
     public override func viewDidLoad()
     {
         super.viewDidLoad()
-        self.mapView.rotateEnabled = false
+        self.mapView.isRotateEnabled = false
         
         if let annotations = self.annotations
         {
@@ -40,20 +40,20 @@ public class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLoca
         locationManager.delegate = self
     }
     
-    public override func viewDidAppear(animated: Bool)
+    public override func viewDidAppear(_ animated: Bool)
     {
         super.viewDidAppear(animated)
         locationManager.startUpdatingHeading()
     }
     
-    public override func viewDidDisappear(animated: Bool)
+    public override func viewDidDisappear(_ animated: Bool)
     {
         super.viewDidDisappear(animated)
         locationManager.stopUpdatingHeading()
     }
 
     
-    public func addAnnotations(annotations: [ARAnnotation])
+    public func addAnnotations(_ annotations: [ARAnnotation])
     {
         self.annotations = annotations
         
@@ -63,7 +63,7 @@ public class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLoca
         }
     }
     
-    private func addAnnotationsOnMap(annotations: [ARAnnotation])
+    private func addAnnotationsOnMap(_ annotations: [ARAnnotation])
     {
         var mapAnnotations: [MKPointAnnotation] = []
         for annotation in annotations
@@ -82,25 +82,25 @@ public class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLoca
     }
     
     
-    @IBAction func longTap(sender: UILongPressGestureRecognizer)
+    @IBAction func longTap(_ sender: UILongPressGestureRecognizer)
     {
-        if sender.state == UIGestureRecognizerState.Began
+        if sender.state == UIGestureRecognizerState.began
         {
-            let point = sender.locationInView(self.mapView)
-            let coordinate = self.mapView.convertPoint(point, toCoordinateFromView: self.mapView)
+            let point = sender.location(in: self.mapView)
+            let coordinate = self.mapView.convert(point, toCoordinateFrom: self.mapView)
             let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
             let userInfo: [NSObject : AnyObject] = ["location" : location]
-            NSNotificationCenter.defaultCenter().postNotificationName("kNotificationLocationSet", object: nil, userInfo: userInfo)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "kNotificationLocationSet"), object: nil, userInfo: userInfo)
         }
     }
     
-    @IBAction func closeButtonTap(sender: AnyObject)
+    @IBAction func closeButtonTap(_ sender: AnyObject)
     {
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     
-    public func locationManager(manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
+    public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
     {
         heading = newHeading.trueHeading
         
@@ -113,12 +113,12 @@ public class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLoca
         }
     }
     
-    public func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool)
+    public func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
     {
         self.interactionInProgress = true
     }
     
-    public func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
+    public func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
     {
         self.interactionInProgress = false
     }
