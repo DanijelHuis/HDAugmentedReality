@@ -248,6 +248,10 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         closeButton.autoresizingMask = [UIViewAutoresizing.FlexibleLeftMargin, UIViewAutoresizing.FlexibleBottomMargin]
         self.view.addSubview(closeButton)
         self.closeButton = closeButton
+        
+        if #available(iOS 8.0, *) {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ARViewController.statusBarOrientationChanged(_:)), name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
+        }
     }
     
     private func onViewDidAppear()
@@ -262,6 +266,9 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     private func onViewDidDisappear()
     {
         stopCamera()
+        if #available(iOS 8.0, *) {
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
+        }
     }
 
     
@@ -1022,12 +1029,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     public override func willAnimateRotationToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval)
     {
-        CATransaction.begin()
-        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        self.layoutUi()
-        self.reload(calculateDistanceAndAzimuth: false, calculateVerticalLevels: false, createAnnotationViews: false)
-        CATransaction.commit()
-        
+        reloadUIOnOrientationChange()
         super.willAnimateRotationToInterfaceOrientation(toInterfaceOrientation, duration: duration)
     }
     
@@ -1045,6 +1047,19 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         {
             self.trackingManager.orientation = deviceOrientation
         }
+    }
+    
+    internal func reloadUIOnOrientationChange() {
+        CATransaction.begin()
+        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+        self.layoutUi()
+        self.reload(calculateDistanceAndAzimuth: false, calculateVerticalLevels: false, createAnnotationViews: false)
+        CATransaction.commit()
+    }
+    
+    internal func statusBarOrientationChanged(notification: NSNotification) {
+        reloadUIOnOrientationChange()
+        setOrientation(UIApplication.sharedApplication().statusBarOrientation)
     }
     
     //==========================================================================================================================================================
