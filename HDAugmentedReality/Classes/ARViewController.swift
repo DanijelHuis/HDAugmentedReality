@@ -91,7 +91,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     //===== Private
     private var initialized: Bool = false
     private var cameraSession: AVCaptureSession = AVCaptureSession()
-    private var overlayView: UIView = UIView()
+    private var overlayView: OverlayView = OverlayView()
     private var displayTimer: CADisplayLink?
     private var cameraLayer: AVCaptureVideoPreviewLayer?    // Will be set in init
     private var annotationViews: [ARAnnotationView] = []
@@ -974,7 +974,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     private func loadOverlay()
     {
         self.overlayView.removeFromSuperview()
-        self.overlayView = UIView()
+        self.overlayView = OverlayView()
         self.view.addSubview(self.overlayView)
         /*self.overlayView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
         
@@ -1068,6 +1068,26 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         let mapViewController = DebugMapViewController(nibName: "DebugMapViewController", bundle: bundle)
         self.presentViewController(mapViewController, animated: true, completion: nil)
         mapViewController.addAnnotations(self.annotations)
+    }
+    
+    /// Normal UIView that registers taps on subviews out of its bounds.
+    private class OverlayView: UIView
+    {
+        override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView?
+        {
+            if(!self.clipsToBounds && !self.hidden)
+            {
+                for subview in self.subviews.reverse()
+                {
+                    let subPoint = subview.convertPoint(point, fromView: self)
+                    if let result:UIView = subview.hitTest(subPoint, withEvent:event)
+                    {
+                        return result;
+                    }
+                }
+            }
+            return nil
+        }
     }
 }
 
