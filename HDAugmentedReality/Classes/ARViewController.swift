@@ -189,6 +189,19 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         onViewDidLayoutSubviews()
     }
     
+    public override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        if #available(iOS 8.0, *) {
+            coordinator.animateAlongsideTransition({ [unowned self] (context: UIViewControllerTransitionCoordinatorContext) in
+                self.setOrientation(UIApplication.sharedApplication().statusBarOrientation)
+                }, completion: { [unowned self] (context: UIViewControllerTransitionCoordinatorContext) in
+                    self.reloadUIOnOrientationChange()
+            })
+            super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    
     private func onViewWillAppear()
     {
         // Adding camera layer if not added
@@ -248,10 +261,6 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         closeButton.autoresizingMask = [UIViewAutoresizing.FlexibleLeftMargin, UIViewAutoresizing.FlexibleBottomMargin]
         self.view.addSubview(closeButton)
         self.closeButton = closeButton
-        
-        if #available(iOS 8.0, *) {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ARViewController.statusBarOrientationChanged(_:)), name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
-        }
     }
     
     private func onViewDidAppear()
@@ -266,9 +275,6 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     private func onViewDidDisappear()
     {
         stopCamera()
-        if #available(iOS 8.0, *) {
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
-        }
     }
 
     
@@ -1023,14 +1029,22 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     public override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval)
     {
-        super.willRotateToInterfaceOrientation(toInterfaceOrientation, duration: duration)
-        self.setOrientation(toInterfaceOrientation)
+        if #available(iOS 8.0, *) {
+            // Do nothing
+        } else {
+            super.willRotateToInterfaceOrientation(toInterfaceOrientation, duration: duration)
+            self.setOrientation(toInterfaceOrientation)
+        }
     }
     
     public override func willAnimateRotationToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval)
     {
-        reloadUIOnOrientationChange()
-        super.willAnimateRotationToInterfaceOrientation(toInterfaceOrientation, duration: duration)
+        if #available(iOS 8.0, *) {
+            // Do nothing
+        } else {
+            reloadUIOnOrientationChange()
+            super.willAnimateRotationToInterfaceOrientation(toInterfaceOrientation, duration: duration)
+        }
     }
     
     private func setOrientation(orientation: UIInterfaceOrientation)
@@ -1055,11 +1069,6 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.layoutUi()
         self.reload(calculateDistanceAndAzimuth: false, calculateVerticalLevels: false, createAnnotationViews: false)
         CATransaction.commit()
-    }
-    
-    internal func statusBarOrientationChanged(notification: NSNotification) {
-        reloadUIOnOrientationChange()
-        setOrientation(UIApplication.sharedApplication().statusBarOrientation)
     }
     
     //==========================================================================================================================================================
