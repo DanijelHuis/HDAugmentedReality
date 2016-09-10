@@ -115,7 +115,8 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
 
     fileprivate var debugLabel: UILabel?
     fileprivate var debugMapButton: UIButton?
-    
+    fileprivate var didLayoutSubviews: Bool = false
+
     
     //==========================================================================================================================================================
     // MARK:                                                        Init
@@ -243,7 +244,17 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     fileprivate func onViewDidLayoutSubviews()
     {
+        if !self.didLayoutSubviews
+        {
+            self.didLayoutSubviews = true
+            self.layoutUi()
+            
+            self.view.layoutIfNeeded()
+        }
+        
         self.degreesPerScreen = (self.view.bounds.size.width / OVERLAY_VIEW_WIDTH) * 360.0
+        
+        
     }
     internal func appDidEnterBackground(_ notification: Notification)
     {
@@ -999,22 +1010,31 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         return UIInterfaceOrientationMask(rawValue: self.interfaceOrientationMask.rawValue)
     }
-    
-    open override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval)
+
+    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
     {
-        super.willRotate(to: toInterfaceOrientation, duration: duration)
-        self.setOrientation(toInterfaceOrientation)
+        super.viewWillTransition(to: size, with: coordinator)
+
+        coordinator.animate(alongsideTransition:
+        {
+            (coordinatorContext) in
+            
+            self.setOrientation(UIApplication.shared.statusBarOrientation)
+        })
+        {
+            [unowned self] (coordinatorContext) in
+            
+            self.layoutAndReloadOnOrientationChange()
+        }
     }
     
-    open override func willAnimateRotation(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval)
+    internal func layoutAndReloadOnOrientationChange()
     {
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
         self.layoutUi()
         self.reload(calculateDistanceAndAzimuth: false, calculateVerticalLevels: false, createAnnotationViews: false)
         CATransaction.commit()
-        
-        super.willAnimateRotation(to: toInterfaceOrientation, duration: duration)
     }
     
     fileprivate func setOrientation(_ orientation: UIInterfaceOrientation)
@@ -1032,9 +1052,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             self.trackingManager.orientation = deviceOrientation
         }
     }
-    
-    
-    
+
     //==========================================================================================================================================================
     //MARK:                                                        UI
     //==========================================================================================================================================================

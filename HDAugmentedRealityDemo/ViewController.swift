@@ -48,6 +48,7 @@ class ViewController: UIViewController, ARDataSource
         arViewController.trackingManager.userDistanceFilter = 25
         arViewController.trackingManager.reloadDistanceFilter = 75
         arViewController.setAnnotations(dummyAnnotations)
+        //arViewController.interfaceOrientationMask = .landscape
         arViewController.onDidFailToFindLocation =
             {
                 [weak self, weak arViewController] elapsedSeconds, acquiredLocationBefore in
