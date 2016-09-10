@@ -26,12 +26,12 @@ import CoreLocation
  *      https://github.com/DanijelHuis/HDAugmentedReality.git
  *
  */
-public class ARViewController: UIViewController, ARTrackingManagerDelegate
+open class ARViewController: UIViewController, ARTrackingManagerDelegate
 {
     /// Data source
-    public weak var dataSource: ARDataSource?
+    open weak var dataSource: ARDataSource?
     /// Orientation mask for view controller. Make sure orientations are enabled in project settings also.
-    public var interfaceOrientationMask: UIInterfaceOrientationMask = UIInterfaceOrientationMask.All
+    open var interfaceOrientationMask: UIInterfaceOrientationMask = UIInterfaceOrientationMask.all
    /**
     *       Defines in how many vertical levels can annotations be stacked. Default value is 5.
     *       Annotations are initially vertically arranged by distance from user, but if two annotations visibly collide with each other,
@@ -40,7 +40,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     *       NOTE: This property greatly impacts performance because collision detection is heavy operation, use it in range 1-10.
     *       Max value is 10.
     */
-    public var maxVerticalLevel = 0
+    open var maxVerticalLevel = 0
     {
         didSet
         {
@@ -51,7 +51,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
     }
     /// Total maximum number of visible annotation views. Default value is 100. Max value is 500
-    public var maxVisibleAnnotations = 0
+    open var maxVisibleAnnotations = 0
     {
         didSet
         {
@@ -68,44 +68,44 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     *       annotation that are closer to this value will be higher.
     *       Default value is 0 meters, which means that distances of annotations don't affect their visiblity.
     */
-    public var maxDistance: Double = 0
+    open var maxDistance: Double = 0
     /// Class for managing geographical calculations. Use it to set properties like reloadDistanceFilter, userDistanceFilter and altitudeSensitive
-    private(set) public var trackingManager: ARTrackingManager = ARTrackingManager()
+    fileprivate(set) open var trackingManager: ARTrackingManager = ARTrackingManager()
     /// Image for close button. If not set, default one is used.
     //public var closeButtonImage = UIImage(named: "hdar_close", inBundle: NSBundle(forClass: ARViewController.self), compatibleWithTraitCollection: nil)
-    public var closeButtonImage: UIImage?
+    open var closeButtonImage: UIImage?
     {
         didSet
         {
-            closeButton?.setImage(self.closeButtonImage, forState: UIControlState.Normal)
+            closeButton?.setImage(self.closeButtonImage, for: UIControlState())
         }
     }
     /// Enables map debugging and some other debugging features, set before controller is shown
-    public var debugEnabled = false;
+    open var debugEnabled = false;
     /**
      Smoothing factor for heading in range 0-1. It affects horizontal movement of annotaion views. The lower the value the bigger the smoothing.
      Value of 1 means no smoothing, should be greater than 0.
      */
-    public var headingSmoothingFactor: Double = 1
+    open var headingSmoothingFactor: Double = 1
     
     //===== Private
-    private var initialized: Bool = false
-    private var cameraSession: AVCaptureSession = AVCaptureSession()
-    private var overlayView: OverlayView = OverlayView()
-    private var displayTimer: CADisplayLink?
-    private var cameraLayer: AVCaptureVideoPreviewLayer?    // Will be set in init
-    private var annotationViews: [ARAnnotationView] = []
-    private var previosRegion: Int = 0
-    private var degreesPerScreen: CGFloat = 0
-    private var shouldReloadAnnotations: Bool = false
-    private var debugLabel: UILabel?
-    private var reloadInProgress = false
-    private var reloadToken: Int = 0
-    private var reloadLock = NSRecursiveLock()
-    private var annotations: [ARAnnotation] = []
-    private var activeAnnotations: [ARAnnotation] = []
-    private var closeButton: UIButton?
-    private var currentHeading: Double = 0
+    fileprivate var initialized: Bool = false
+    fileprivate var cameraSession: AVCaptureSession = AVCaptureSession()
+    fileprivate var overlayView: OverlayView = OverlayView()
+    fileprivate var displayTimer: CADisplayLink?
+    fileprivate var cameraLayer: AVCaptureVideoPreviewLayer?    // Will be set in init
+    fileprivate var annotationViews: [ARAnnotationView] = []
+    fileprivate var previosRegion: Int = 0
+    fileprivate var degreesPerScreen: CGFloat = 0
+    fileprivate var shouldReloadAnnotations: Bool = false
+    fileprivate var debugLabel: UILabel?
+    fileprivate var reloadInProgress = false
+    fileprivate var reloadToken: Int = 0
+    fileprivate var reloadLock = NSRecursiveLock()
+    fileprivate var annotations: [ARAnnotation] = []
+    fileprivate var activeAnnotations: [ARAnnotation] = []
+    fileprivate var closeButton: UIButton?
+    fileprivate var currentHeading: Double = 0
     //==========================================================================================================================================================
     // MARK:                                                        Init
     //==========================================================================================================================================================
@@ -123,7 +123,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
 
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.initializeInternal()
@@ -144,8 +144,8 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.maxVisibleAnnotations = 100
         self.maxDistance = 0
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ARViewController.locationNotification(_:)), name: "kNotificationLocationSet", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ARViewController.appWillEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.locationNotification(_:)), name: NSNotification.Name(rawValue: "kNotificationLocationSet"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.appWillEnterForeground(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
 
         self.initialize()
     }
@@ -158,38 +158,38 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     deinit
     {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
         self.stopCamera()
     }
 
     //==========================================================================================================================================================
     // MARK:                                                        View's lifecycle
     //==========================================================================================================================================================
-    public override func viewWillAppear(animated: Bool)
+    open override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
         onViewWillAppear()  // Doing like this to prevent subclassing problems
     }
     
-    public override func viewDidAppear(animated: Bool)
+    open override func viewDidAppear(_ animated: Bool)
     {
         super.viewDidAppear(animated)
         onViewDidAppear()   // Doing like this to prevent subclassing problems
     }
     
-    public override func viewDidDisappear(animated: Bool)
+    open override func viewDidDisappear(_ animated: Bool)
     {
         super.viewDidDisappear(animated)
         onViewDidDisappear()    // Doing like this to prevent subclassing problems
     }
     
-    public override func viewDidLayoutSubviews()
+    open override func viewDidLayoutSubviews()
     {
         super.viewDidLayoutSubviews()
         onViewDidLayoutSubviews()
     }
     
-    private func onViewWillAppear()
+    fileprivate func onViewWillAppear()
     {
         // Adding camera layer if not added
         if self.cameraLayer?.superlayer == nil
@@ -203,37 +203,37 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
             self.loadOverlay()
         }
         
-        self.setOrientation(UIApplication.sharedApplication().statusBarOrientation)
+        self.setOrientation(UIApplication.shared.statusBarOrientation)
         self.layoutUi()
         self.startCamera()
         
         if debugEnabled && self.debugLabel == nil
         {
             let debugLabel = UILabel()
-            debugLabel.backgroundColor = UIColor.whiteColor()
-            debugLabel.textColor = UIColor.blackColor()
-            debugLabel.font = UIFont.boldSystemFontOfSize(10)
+            debugLabel.backgroundColor = UIColor.white
+            debugLabel.textColor = UIColor.black
+            debugLabel.font = UIFont.boldSystemFont(ofSize: 10)
             debugLabel.frame = CGRect(x: 5, y: self.view.bounds.size.height - 50, width: self.view.bounds.size.width - 10, height: 45)
             debugLabel.numberOfLines = 0
-            debugLabel.autoresizingMask = [UIViewAutoresizing.FlexibleWidth, UIViewAutoresizing.FlexibleTopMargin, UIViewAutoresizing.FlexibleLeftMargin, UIViewAutoresizing.FlexibleRightMargin]
-            debugLabel.textAlignment = NSTextAlignment.Left
+            debugLabel.autoresizingMask = [UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleTopMargin, UIViewAutoresizing.flexibleLeftMargin, UIViewAutoresizing.flexibleRightMargin]
+            debugLabel.textAlignment = NSTextAlignment.left
             view.addSubview(debugLabel)
             self.debugLabel = debugLabel
             
-            let debugMapButton: UIButton = UIButton(type: UIButtonType.Custom)
+            let debugMapButton: UIButton = UIButton(type: UIButtonType.custom)
             debugMapButton.frame = CGRect(x: 5,y: 5,width: 40,height: 40);
-            debugMapButton.addTarget(self, action: #selector(ARViewController.debugButtonTap), forControlEvents: UIControlEvents.TouchUpInside)
-            debugMapButton.setTitle("map", forState: UIControlState.Normal)
-            debugMapButton.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
-            debugMapButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+            debugMapButton.addTarget(self, action: #selector(ARViewController.debugButtonTap), for: UIControlEvents.touchUpInside)
+            debugMapButton.setTitle("map", for: UIControlState())
+            debugMapButton.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+            debugMapButton.setTitleColor(UIColor.black, for: UIControlState())
             self.view.addSubview(debugMapButton)
         }
         
         
         if closeButtonImage == nil
         {
-            let bundle = NSBundle(forClass: ARViewController.self)
-            let path = bundle.pathForResource("hdar_close", ofType: "png")
+            let bundle = Bundle(for: ARViewController.self)
+            let path = bundle.path(forResource: "hdar_close", ofType: "png")
             if let path = path
             {
                 closeButtonImage = UIImage(contentsOfFile: path)
@@ -241,16 +241,16 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
         
         // Close button - make it customizable
-        let closeButton: UIButton = UIButton(type: UIButtonType.Custom)
-        closeButton.setImage(closeButtonImage, forState: UIControlState.Normal);
+        let closeButton: UIButton = UIButton(type: UIButtonType.custom)
+        closeButton.setImage(closeButtonImage, for: UIControlState());
         closeButton.frame = CGRect(x: self.view.bounds.size.width - 45, y: 5,width: 40,height: 40)
-        closeButton.addTarget(self, action: #selector(ARViewController.closeButtonTap), forControlEvents: UIControlEvents.TouchUpInside)
-        closeButton.autoresizingMask = [UIViewAutoresizing.FlexibleLeftMargin, UIViewAutoresizing.FlexibleBottomMargin]
+        closeButton.addTarget(self, action: #selector(ARViewController.closeButtonTap), for: UIControlEvents.touchUpInside)
+        closeButton.autoresizingMask = [UIViewAutoresizing.flexibleLeftMargin, UIViewAutoresizing.flexibleBottomMargin]
         self.view.addSubview(closeButton)
         self.closeButton = closeButton
     }
     
-    private func onViewDidAppear()
+    fileprivate func onViewDidAppear()
     {
         // Reload if we have all inputs
         if self.shouldReloadAnnotations && self.trackingManager.userLocation != nil
@@ -259,7 +259,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
     }
     
-    private func onViewDidDisappear()
+    fileprivate func onViewDidDisappear()
     {
         stopCamera()
     }
@@ -267,20 +267,20 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     internal func closeButtonTap()
     {
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    public override func prefersStatusBarHidden() -> Bool
+    open override var prefersStatusBarHidden : Bool
     {
         return true
     }
     
-    private func onViewDidLayoutSubviews()
+    fileprivate func onViewDidLayoutSubviews()
     {
         self.degreesPerScreen = (self.view.bounds.size.width / OVERLAY_VIEW_WIDTH) * 360.0
     }
     
-    internal func appWillEnterForeground(notification: NSNotification)
+    internal func appWillEnterForeground(_ notification: Notification)
     {
         if(self.view.window != nil)
         {
@@ -309,7 +309,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     *
     *       - parameter annotations: Annotations
     */
-    public func setAnnotations(annotations: [ARAnnotation])
+    open func setAnnotations(_ annotations: [ARAnnotation])
     {
         var validAnnotations: [ARAnnotation] = []
         // Don't use annotations without valid location
@@ -324,15 +324,15 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.reloadAnnotations()
     }
     
-    public func getAnnotations() -> [ARAnnotation]
+    open func getAnnotations() -> [ARAnnotation]
     {
         return self.annotations
     }
     
     /// Creates annotations views and recalculates all variables(distances, azimuths, vertical levels) if user location is available, else it will reload when it gets user location.
-    public func reloadAnnotations()
+    open func reloadAnnotations()
     {
-        if self.trackingManager.userLocation != nil && self.isViewLoaded()
+        if self.trackingManager.userLocation != nil && self.isViewLoaded
         {
             self.shouldReloadAnnotations = false
             self.reload(calculateDistanceAndAzimuth: true, calculateVerticalLevels: true, createAnnotationViews: true)
@@ -344,7 +344,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     }
     
     /// Creates annotation views. All views are created at once, for active annotations. This reduces lag when rotating.
-    private func createAnnotationViews()
+    fileprivate func createAnnotationViews()
     {
         var annotationViews: [ARAnnotationView] = []
         let activeAnnotations = self.activeAnnotations  // Which annotations are active is determined by number of properties - distance, vertical level etc.
@@ -395,7 +395,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     }
     
     
-    private func calculateDistanceAndAzimuthForAnnotations(sort sort: Bool, onlyForActiveAnnotations: Bool)
+    fileprivate func calculateDistanceAndAzimuthForAnnotations(sort: Bool, onlyForActiveAnnotations: Bool)
     {
         if self.trackingManager.userLocation == nil
         {
@@ -415,7 +415,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
             }
             
             // Distance
-            annotation.distanceFromUser = annotation.location!.distanceFromLocation(userLocation)
+            annotation.distanceFromUser = annotation.location!.distance(from: userLocation)
 
             // Azimuth
             let azimuth = self.trackingManager.azimuthFromUserToLocation(annotation.location!)
@@ -428,12 +428,12 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
             
             let sortedArray: NSMutableArray = NSMutableArray(array: self.annotations)
             let sortDesc = NSSortDescriptor(key: "distanceFromUser", ascending: true)
-            sortedArray.sortUsingDescriptors([sortDesc])
+            sortedArray.sort(using: [sortDesc])
             self.annotations = sortedArray as [AnyObject] as! [ARAnnotation]
         }
     }
     
-    private func updateAnnotationsForCurrentHeading()
+    fileprivate func updateAnnotationsForCurrentHeading()
     {
         //===== Removing views not in viewport, adding those that are. Also removing annotations view vertical level > maxVerticalLevel
         let degreesDelta = Double(degreesPerScreen)
@@ -488,7 +488,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     
  
     
-    private func positionAnnotationViews()
+    fileprivate func positionAnnotationViews()
     {
         for annotationView in self.annotationViews
         {
@@ -499,7 +499,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
     }
     
-    private func xPositionForAnnotationView(annotationView: ARAnnotationView, heading: Double) -> CGFloat
+    fileprivate func xPositionForAnnotationView(_ annotationView: ARAnnotationView, heading: Double) -> CGFloat
     {
         if annotationView.annotation == nil { return 0 }
         let annotation = annotationView.annotation!
@@ -533,7 +533,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         return xPos
     }
     
-    private func yPositionForAnnotationView(annotationView: ARAnnotationView) -> CGFloat
+    fileprivate func yPositionForAnnotationView(_ annotationView: ARAnnotationView) -> CGFloat
     {
         if annotationView.annotation == nil { return 0 }
         let annotation = annotationView.annotation!
@@ -544,26 +544,26 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         return yPos
     }
     
-    private func calculateVerticalLevels()
+    fileprivate func calculateVerticalLevels()
     {
         // Lot faster with NS stuff than swift collection classes
         let dictionary: NSMutableDictionary = NSMutableDictionary()
 
         // Creating dictionary for each vertical level
-        for level in 0.stride(to: self.maxVerticalLevel + 1, by: 1)
+        for level in stride(from: 0, to: self.maxVerticalLevel + 1, by: 1)
         {
             let array = NSMutableArray()
             dictionary[Int(level)] = array
         }
         
         // Putting each annotation in its dictionary(each level has its own dictionary)
-        for i in 0.stride(to: self.activeAnnotations.count, by: 1)
+        for i in stride(from: 0, to: self.activeAnnotations.count, by: 1)
         {
             let annotation = self.activeAnnotations[i] as ARAnnotation
             if annotation.verticalLevel <= self.maxVerticalLevel
             {
                 let array = dictionary[annotation.verticalLevel] as? NSMutableArray
-                array?.addObject(annotation)
+                array?.add(annotation)
             }
         }
 
@@ -577,17 +577,17 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         
         // Doing the shit
         var minVerticalLevel: Int = Int.max
-        for level in 0.stride(to: self.maxVerticalLevel + 1, by: 1)
+        for level in stride(from: 0, to: self.maxVerticalLevel + 1, by: 1)
         {
             let annotationsForCurrentLevel = dictionary[(level as Int)] as! NSMutableArray
             let annotationsForNextLevel = dictionary[((level + 1) as Int)] as? NSMutableArray
 
-            for i in 0.stride(to: annotationsForCurrentLevel.count, by: 1)
+            for i in stride(from: 0, to: annotationsForCurrentLevel.count, by: 1)
             {
                 let annotation1 = annotationsForCurrentLevel[i] as! ARAnnotation
                 if annotation1.verticalLevel != level { continue }  // Can happen if it was moved to next level by previous annotation, it will be handled in next loop
                 
-                for j in (i+1).stride(to: annotationsForCurrentLevel.count, by: 1)
+                for j in stride(from: (i+1), to: annotationsForCurrentLevel.count, by: 1)
                 {
                     let annotation2 = annotationsForCurrentLevel[j] as! ARAnnotation
                     if annotation1 == annotation2 || annotation2.verticalLevel != level
@@ -611,7 +611,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
                         annotation1.verticalLevel += 1
                         if annotationsForNextLevel != nil
                         {
-                            annotationsForNextLevel?.addObject(annotation1)
+                            annotationsForNextLevel?.add(annotation1)
                         }
                         // Current annotation was moved to next level so no need to continue with this level
                         break
@@ -622,7 +622,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
                         annotation2.verticalLevel += 1
                         if annotationsForNextLevel != nil
                         {
-                            annotationsForNextLevel?.addObject(annotation2)
+                            annotationsForNextLevel?.add(annotation2)
                         }
                     }
                 }
@@ -645,7 +645,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     }
     
     /// It is expected that annotations are sorted by distance before this method is called
-    private func setInitialVerticalLevels()
+    fileprivate func setInitialVerticalLevels()
     {
         if self.activeAnnotations.count == 0
         {
@@ -679,7 +679,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
     }
     
-    private func getAnyAnnotationView() -> ARAnnotationView?
+    fileprivate func getAnyAnnotationView() -> ARAnnotationView?
     {
         var anyAnnotationView: ARAnnotationView? = nil
         
@@ -698,7 +698,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     // MARK:                                    Main logic
     //==========================================================================================================================================================
     
-    private func reload(calculateDistanceAndAzimuth calculateDistanceAndAzimuth: Bool, calculateVerticalLevels: Bool, createAnnotationViews: Bool)
+    fileprivate func reload(calculateDistanceAndAzimuth: Bool, calculateVerticalLevels: Bool, createAnnotationViews: Bool)
     {
         //NSLog("==========")
         if calculateDistanceAndAzimuth
@@ -744,7 +744,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     }
     
     /// Determines which annotations are active and which are inactive. If some of the input parameters is nil, then it won't filter by that parameter.
-    private func filteredAnnotations(maxVerticalLevel: Int?, maxVisibleAnnotations: Int?, maxDistance: Double?) -> [ARAnnotation]
+    fileprivate func filteredAnnotations(_ maxVerticalLevel: Int?, maxVisibleAnnotations: Int?, maxDistance: Double?) -> [ARAnnotation]
     {
         let nsAnnotations: NSMutableArray = NSMutableArray(array: self.annotations)
         
@@ -808,7 +808,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         logText("Heading: \(self.trackingManager.heading)")
     }
     
-    internal func arTrackingManager(trackingManager: ARTrackingManager, didUpdateUserLocation: CLLocation?)
+    internal func arTrackingManager(_ trackingManager: ARTrackingManager, didUpdateUserLocation: CLLocation?)
     {
         // shouldReloadAnnotations will be true if reloadAnnotations was called before location was fetched
         if self.shouldReloadAnnotations
@@ -826,20 +826,20 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         {
             let view = UIView()
             view.frame = CGRect(x: self.view.bounds.size.width - 80, y: 10, width: 30, height: 30)
-            view.backgroundColor = UIColor.redColor()
+            view.backgroundColor = UIColor.red
             self.view.addSubview(view)
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1.5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue())
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(1.5 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC))
             {
                     view.removeFromSuperview()
             }
         }
     }
     
-    internal func arTrackingManager(trackingManager: ARTrackingManager, didUpdateReloadLocation: CLLocation?)
+    internal func arTrackingManager(_ trackingManager: ARTrackingManager, didUpdateReloadLocation: CLLocation?)
     {
         // Manual reload?
-        if didUpdateReloadLocation != nil && self.dataSource != nil && self.dataSource!.respondsToSelector(#selector(ARDataSource.ar(_:shouldReloadWithLocation:)))
+        if didUpdateReloadLocation != nil && self.dataSource != nil && self.dataSource!.responds(to: #selector(ARDataSource.ar(_:shouldReloadWithLocation:)))
         {
             let annotations = self.dataSource?.ar?(self, shouldReloadWithLocation: didUpdateReloadLocation!)
             if let annotations = annotations
@@ -857,17 +857,17 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         {
             let view = UIView()
             view.frame = CGRect(x: self.view.bounds.size.width - 80, y: 10, width: 30, height: 30)
-            view.backgroundColor = UIColor.blueColor()
+            view.backgroundColor = UIColor.blue
             self.view.addSubview(view)
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1.5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue())
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(1.5 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC))
             {
                     view.removeFromSuperview()
             }
         }
     }
     
-    internal func logText(text: String)
+    internal func logText(_ text: String)
     {
         self.debugLabel?.text = text
     }
@@ -875,7 +875,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     //==========================================================================================================================================================
     // MARK:                                                        Camera
     //==========================================================================================================================================================
-    private func loadCamera()
+    fileprivate func loadCamera()
     {
         //===== Video device/video input
         let captureSessionResult = ARViewController.createCaptureSession()
@@ -888,8 +888,8 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
             //@TODO check if resized OK on all devices
             //===== View preview layer
             let cameraLayer = AVCaptureVideoPreviewLayer(session: self.cameraSession)
-            cameraLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-            self.view.layer.insertSublayer(cameraLayer, atIndex: 0)
+            cameraLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
+            self.view.layer.insertSublayer(cameraLayer!, at: 0)
             self.cameraLayer = cameraLayer
         }
         else
@@ -899,17 +899,17 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     }
     
     /// Tries to find back video device and add video input to it. This method can be used to check if device has hardware available for augmented reality.
-    public class func createCaptureSession() -> (session: AVCaptureSession?, error: NSError?)
+    open class func createCaptureSession() -> (session: AVCaptureSession?, error: NSError?)
     {
         var error: NSError?
         var captureSession: AVCaptureSession?
         var backVideoDevice: AVCaptureDevice?
-        let videoDevices = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo)
+        let videoDevices = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo)
         
         // Get back video device
-        for captureDevice in videoDevices
+        for captureDevice in videoDevices!
         {
-            if captureDevice.position == AVCaptureDevicePosition.Back
+            if (captureDevice as AnyObject).position == AVCaptureDevicePosition.back
             {
                 backVideoDevice = captureDevice as? AVCaptureDevice
                 break
@@ -951,15 +951,15 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         return (session: captureSession, error: error)
     }
     
-    private func startCamera()
+    fileprivate func startCamera()
     {
         self.cameraSession.startRunning()
         self.trackingManager.startTracking()
         self.displayTimer = CADisplayLink(target: self, selector: #selector(ARViewController.displayTimerTick))
-        self.displayTimer?.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
+        self.displayTimer?.add(to: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
     }
     
-    private func stopCamera()
+    fileprivate func stopCamera()
     {
         self.cameraSession.stopRunning()
         self.trackingManager.stopTracking()
@@ -971,7 +971,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     // MARK:                                                        Overlay
     //==========================================================================================================================================================
     /// Overlay view is used to host annotation views.
-    private func loadOverlay()
+    fileprivate func loadOverlay()
     {
         self.overlayView.removeFromSuperview()
         self.overlayView = OverlayView()
@@ -987,7 +987,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         }*/
     }
     
-    private func overlayFrame() -> CGRect
+    fileprivate func overlayFrame() -> CGRect
     {
         let x: CGFloat = self.view.bounds.size.width / 2 - (CGFloat(currentHeading) * H_PIXELS_PER_DEGREE)
         let y: CGFloat = (CGFloat(self.trackingManager.pitch) * VERTICAL_SENS) + 60.0
@@ -996,7 +996,7 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         return newFrame
     }
     
-    private func layoutUi()
+    fileprivate func layoutUi()
     {
         self.cameraLayer?.frame = self.view.bounds
         self.overlayView.frame = self.overlayFrame()
@@ -1004,23 +1004,23 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     //==========================================================================================================================================================
     //MARK:                                                        Rotation/Orientation
     //==========================================================================================================================================================
-    public override func shouldAutorotate() -> Bool
+    open override var shouldAutorotate : Bool
     {
         return true
     }
     
-    public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask
+    open override var supportedInterfaceOrientations : UIInterfaceOrientationMask
     {
         return UIInterfaceOrientationMask(rawValue: self.interfaceOrientationMask.rawValue)
     }
     
-    public override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval)
+    open override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval)
     {
-        super.willRotateToInterfaceOrientation(toInterfaceOrientation, duration: duration)
+        super.willRotate(to: toInterfaceOrientation, duration: duration)
         self.setOrientation(toInterfaceOrientation)
     }
     
-    public override func willAnimateRotationToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval)
+    open override func willAnimateRotation(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval)
     {
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
@@ -1028,12 +1028,12 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.reload(calculateDistanceAndAzimuth: false, calculateVerticalLevels: false, createAnnotationViews: false)
         CATransaction.commit()
         
-        super.willAnimateRotationToInterfaceOrientation(toInterfaceOrientation, duration: duration)
+        super.willAnimateRotation(to: toInterfaceOrientation, duration: duration)
     }
     
-    private func setOrientation(orientation: UIInterfaceOrientation)
+    fileprivate func setOrientation(_ orientation: UIInterfaceOrientation)
     {
-        if self.cameraLayer?.connection?.supportsVideoOrientation != nil
+        if self.cameraLayer?.connection?.isVideoOrientationSupported != nil
         {
             if let videoOrientation = AVCaptureVideoOrientation(rawValue: Int(orientation.rawValue))
             {
@@ -1051,36 +1051,36 @@ public class ARViewController: UIViewController, ARTrackingManagerDelegate
     //MARK:                                                        Debug
     //==========================================================================================================================================================
     /// Called from DebugMapViewController when user fakes location.
-    internal func locationNotification(sender: NSNotification)
+    internal func locationNotification(_ sender: Notification)
     {
         if let location = sender.userInfo?["location"] as? CLLocation
         {
             self.trackingManager.startDebugMode(location)
             self.reloadAnnotations()
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
     /// Opening DebugMapViewController
     internal func debugButtonTap()
     {
-        let bundle = NSBundle(forClass: DebugMapViewController.self)
+        let bundle = Bundle(for: DebugMapViewController.self)
         let mapViewController = DebugMapViewController(nibName: "DebugMapViewController", bundle: bundle)
-        self.presentViewController(mapViewController, animated: true, completion: nil)
+        self.present(mapViewController, animated: true, completion: nil)
         mapViewController.addAnnotations(self.annotations)
     }
     
     /// Normal UIView that registers taps on subviews out of its bounds.
-    private class OverlayView: UIView
+    fileprivate class OverlayView: UIView
     {
-        override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView?
+        override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView?
         {
-            if(!self.clipsToBounds && !self.hidden)
+            if(!self.clipsToBounds && !self.isHidden)
             {
-                for subview in self.subviews.reverse()
+                for subview in self.subviews.reversed()
                 {
-                    let subPoint = subview.convertPoint(point, fromView: self)
-                    if let result:UIView = subview.hitTest(subPoint, withEvent:event)
+                    let subPoint = subview.convert(point, from: self)
+                    if let result:UIView = subview.hitTest(subPoint, with:event)
                     {
                         return result;
                     }

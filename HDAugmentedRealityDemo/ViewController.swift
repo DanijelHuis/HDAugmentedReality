@@ -48,11 +48,11 @@ class ViewController: UIViewController, ARDataSource
         arViewController.trackingManager.userDistanceFilter = 25
         arViewController.trackingManager.reloadDistanceFilter = 75
         arViewController.setAnnotations(dummyAnnotations)
-        self.presentViewController(arViewController, animated: true, completion: nil)
+        self.present(arViewController, animated: true, completion: nil)
     }
     
     /// This method is called by ARViewController, make sure to set dataSource property.
-    func ar(arViewController: ARViewController, viewForAnnotation: ARAnnotation) -> ARAnnotationView
+    func ar(_ arViewController: ARViewController, viewForAnnotation: ARAnnotation) -> ARAnnotationView
     {
         // Annotation views should be lightweight views, try to avoid xibs and autolayout all together.
         let annotationView = TestAnnotationView()
@@ -60,12 +60,12 @@ class ViewController: UIViewController, ARDataSource
         return annotationView;
     }
     
-    private func getDummyAnnotations(centerLatitude centerLatitude: Double, centerLongitude: Double, delta: Double, count: Int) -> Array<ARAnnotation>
+    fileprivate func getDummyAnnotations(centerLatitude: Double, centerLongitude: Double, delta: Double, count: Int) -> Array<ARAnnotation>
     {
         var annotations: [ARAnnotation] = []
         
         srand48(3)
-        for i in 0.stride(to: count, by: 1)
+        for i in stride(from: 0, to: count, by: 1)
         {
             let annotation = ARAnnotation()
             annotation.location = self.getRandomLocation(centerLatitude: centerLatitude, centerLongitude: centerLongitude, delta: delta)
@@ -75,7 +75,7 @@ class ViewController: UIViewController, ARDataSource
         return annotations
     }
     
-    private func getRandomLocation(centerLatitude centerLatitude: Double, centerLongitude: Double, delta: Double) -> CLLocation
+    fileprivate func getRandomLocation(centerLatitude: Double, centerLongitude: Double, delta: Double) -> CLLocation
     {
         var lat = centerLatitude
         var lon = centerLongitude
@@ -87,7 +87,7 @@ class ViewController: UIViewController, ARDataSource
         return CLLocation(latitude: lat, longitude: lon)
     }
     
-    @IBAction func buttonTap(sender: AnyObject)
+    @IBAction func buttonTap(_ sender: AnyObject)
     {
         showARViewController()
     }

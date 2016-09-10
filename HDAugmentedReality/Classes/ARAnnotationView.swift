@@ -11,14 +11,14 @@ import UIKit
 /// View for annotation. Subclass to customize. Annotation views should be lightweight,
 /// try to avoid xibs and autolayout.
 /// bindUi method is called when distance/azimuth is set in ARViewController.
-public class ARAnnotationView: UIView
+open class ARAnnotationView: UIView
 {
-    public weak var annotation: ARAnnotation?
-    private var initialized: Bool = false
+    open weak var annotation: ARAnnotation?
+    fileprivate var initialized: Bool = false
     
     public init()
     {
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
         self.initializeInternal()
     }
 
@@ -34,7 +34,7 @@ public class ARAnnotationView: UIView
         self.initializeInternal()
     }
     
-    private func initializeInternal()
+    fileprivate func initializeInternal()
     {
         if self.initialized
         {
@@ -44,19 +44,19 @@ public class ARAnnotationView: UIView
         self.initialize()
     }
     
-    public override func awakeFromNib()
+    open override func awakeFromNib()
     {
         self.bindUi()
     }
     
     /// Will always be called once, no need to call super
-    public func initialize()
+    open func initialize()
     {
     
     }
     
     /// Called when distance/azimuth changes, intended to be used in subclasses
-    public func bindUi()
+    open func bindUi()
     {
         
     }
