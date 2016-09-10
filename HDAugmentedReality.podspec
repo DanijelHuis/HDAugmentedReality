@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "HDAugmentedReality"
-  s.version          = "1.0.2"
+  s.version          = "1.0.3"
   s.summary          = "Augmented Reality component for iOS, written in Swift 2.0"
   s.description      = <<-DESC
                         ...

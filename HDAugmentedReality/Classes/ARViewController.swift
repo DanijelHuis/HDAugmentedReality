@@ -29,7 +29,7 @@ import CoreLocation
 public class ARViewController: UIViewController, ARTrackingManagerDelegate
 {
     /// Data source
-    public var dataSource: ARDataSource?
+    public weak var dataSource: ARDataSource?
     /// Orientation mask for view controller. Make sure orientations are enabled in project settings also.
     public var interfaceOrientationMask: UIInterfaceOrientationMask = UIInterfaceOrientationMask.All
    /**

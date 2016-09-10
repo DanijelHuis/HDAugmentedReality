@@ -56,7 +56,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     private(set) internal var tracking = false
     private(set) internal var userLocation: CLLocation?
     private(set) internal var heading: Double = 0
-    internal var delegate: ARTrackingManagerDelegate?
+    internal weak var delegate: ARTrackingManagerDelegate?
     internal var orientation: CLDeviceOrientation = CLDeviceOrientation.Portrait
     {
         didSet
