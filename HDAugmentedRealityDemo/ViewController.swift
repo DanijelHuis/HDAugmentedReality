@@ -28,7 +28,7 @@ class ViewController: UIViewController, ARDataSource
             alertView.show()
             return
         }
-       
+        
         // Create random annotations around center point    //@TODO
         //FIXME: set your initial position here, this is used to generate random POIs
         let lat = 45.558054
@@ -48,6 +48,12 @@ class ViewController: UIViewController, ARDataSource
         arViewController.trackingManager.userDistanceFilter = 25
         arViewController.trackingManager.reloadDistanceFilter = 75
         arViewController.setAnnotations(dummyAnnotations)
+        arViewController.onDidFailToFindLocation =
+            {
+                [weak self, weak arViewController] elapsedSeconds, acquiredLocationBefore in
+                
+                self?.handleLocationFailure(elapsedSeconds: elapsedSeconds, acquiredLocationBefore: acquiredLocationBefore, arViewController: arViewController)
+        }
         self.present(arViewController, animated: true, completion: nil)
     }
     
@@ -91,23 +97,29 @@ class ViewController: UIViewController, ARDataSource
     {
         showARViewController()
     }
+    
+    func handleLocationFailure(elapsedSeconds: TimeInterval, acquiredLocationBefore: Bool, arViewController: ARViewController?)
+    {
+        guard let arViewController = arViewController else { return }
+        
+        NSLog("Failed to find location after: \(elapsedSeconds) seconds, acquiredLocationBefore: \(acquiredLocationBefore)")
+        
+        // Example of handling location failure
+        if elapsedSeconds >= 20 && !acquiredLocationBefore
+        {
+            // Stopped bcs we don't want multiple alerts
+            arViewController.trackingManager.stopTracking()
+            
+            let alert = UIAlertController(title: "Problems", message: "Cannot find location, use Wi-Fi if possible!", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Close", style: .cancel)
+            {
+                (action) in
+                
+                self.dismiss(animated: true, completion: nil)
+            }
+            alert.addAction(okAction)
+            
+            self.presentedViewController?.present(alert, animated: true, completion: nil)
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
