@@ -1,16 +1,26 @@
 # HDAugmentedReality
 
-Augmented Reality component for iOS, written in Swift 2.0.
-Note: Version 0.1.0 was written in Swift 1.2 so use that for older Xcodes.
+Augmented Reality component for iOS, written in Swift 3.0.
+Versions:
+- 1.1.x: written in Swift 3.0, iOS 8+
+- 1.0.x: written in Swift 2.0, iOS 7+
+- 0.1.0: written in Swift 1.2, iOS 7+
+
+## Description
+
+HDAugmentedReality is designed to be used in areas with large concentration of POIs where
+primary goal is the visibility of all POIs. This is achieved by stacking POIs vertically, meaning
+that farther POIs that are obscured by nearer POIs are put higher, above the POIs that obscures them. 
+Altitudes of POIs are disregarded.
 
 ## Features
 
-- Fully customisable annotation views
 - Automatic vertical stacking of annotations views
 - Tracks user movement and updates visible annotations
+- Fully customisable annotation views
+- Smooth POI movement
 - Works on all iOS devices(with GPS) and supports all rotations
 - Works with large amount of annotations and on-screen annotation views
-- iOS 7+
 - Easy debugging with map controller
 - Simple and easy to use
 
@@ -20,18 +30,19 @@ Note: Version 0.1.0 was written in Swift 1.2 so use that for older Xcodes.
 - CoreMotion.Framework
 - MapKit.Framework (For debugging only, can be set ‘Optional’)
 
-Xcode 6.3 is needed for Swift 1.2.
+Xcode 8 is needed for Swift 3.
 
-## Manual installation (iOS7+)
+## Manual installation
 
 - Drag & drop HDAugmentedReality folder from demo project into your project.
 - Add native frameworks listed in “Dependencies & Requirements”
-- iOS 8: Add NSLocationWhenInUseUsageDescription to Info.plist. This is needed for location authorization.
+- Add NSLocationWhenInUseUsageDescription to Info.plist. This is needed for location authorization.
+- Add NSCameraUsageDescription to Info.plist. This is needed for camera authorization.
 
-## CocoaPods (iOS8+)
+## CocoaPods
 
-- Works only on iOS8+ because swift pod is built as dynamic framework and dynamic frameworks don't work on iOS7
-- iOS 8: Add NSLocationWhenInUseUsageDescription to Info.plist. This is needed for location authorization.
+- Add NSLocationWhenInUseUsageDescription to Info.plist. This is needed for location authorization.
+- Add NSCameraUsageDescription to Info.plist. This is needed for camera authorization.
 - Add this two lines to your podfile: 
 ```bash
 use_frameworks!
