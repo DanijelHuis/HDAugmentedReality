@@ -1,7 +1,8 @@
 # HDAugmentedReality
 
 Augmented Reality component for iOS, written in Swift 3.0.
-Versions:
+
+Version history:
 - 1.1.x: written in Swift 3.0, iOS 8+
 - 1.0.x: written in Swift 2.0, iOS 7+
 - 0.1.0: written in Swift 1.2, iOS 7+
@@ -78,7 +79,7 @@ return annotationView;
 ```
 Annotation views must subclass ARAnnotationView. Override bindUi method inside your custom annotation view to set your UI.
 
-Make sure NSLocationWhenInUseUsageDescription is added to your Info.plist file.
+Make sure NSLocationWhenInUseUsageDescription and NSCameraUsageDescription are added to your Info.plist file.
 
 # License 
 
