@@ -74,14 +74,21 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// Image for close button. If not set, default one is used.
     //public var closeButtonImage = UIImage(named: "hdar_close", inBundle: NSBundle(forClass: ARViewController.self), compatibleWithTraitCollection: nil)
     open var closeButtonImage: UIImage?
-        {
+    {
         didSet
         {
             closeButton?.setImage(self.closeButtonImage, for: UIControlState())
         }
     }
     /// Enables map debugging and some other debugging features, set before controller is shown
-    open var debugEnabled = false;
+    @available(*, deprecated, message: "Will be removed in next version, use uiOptions.debugEnabled.")
+    open var debugEnabled = false
+    {
+        didSet
+        {
+            self.uiOptions.debugEnabled = debugEnabled
+        }
+    }
     /**
      Smoothing factor for heading in range 0-1. It affects horizontal movement of annotaion views. The lower the value the bigger the smoothing.
      Value of 1 means no smoothing, should be greater than 0.
@@ -93,6 +100,11 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
      The timer is restarted when app comes from background or on didAppear.
      */
     open var onDidFailToFindLocation: ((_ timeElapsed: TimeInterval, _ acquiredLocationBefore: Bool) -> Void)?
+    
+    /**
+     Some ui options. Set it before controller is shown, changes made afterwards are disregarded.
+     */
+    open var uiOptions = UiOptions()
     
     //===== Private
     fileprivate var initialized: Bool = false
@@ -117,7 +129,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     fileprivate var debugMapButton: UIButton?
     fileprivate var didLayoutSubviews: Bool = false
 
-    
     //==========================================================================================================================================================
     // MARK:                                                        Init
     //==========================================================================================================================================================
@@ -209,12 +220,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         // Overlay
         if self.overlayView.superview == nil { self.loadOverlay() }
         
-        // Close button
-        if self.closeButton == nil { self.addCloseButton() }
-        
-        // Debug
-        if self.debugLabel == nil { self.addDebugUi() }
-        
         // Set orientation and start camera
         self.setOrientation(UIApplication.shared.statusBarOrientation)
         self.layoutUi()
@@ -244,9 +249,18 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     fileprivate func onViewDidLayoutSubviews()
     {
+        // Executed only first time when everything is layouted
         if !self.didLayoutSubviews
         {
             self.didLayoutSubviews = true
+            
+            // Close button
+            if self.uiOptions.closeButtonEnabled { self.addCloseButton() }
+            
+            // Debug
+            if self.uiOptions.debugEnabled { self.addDebugUi() }
+            
+            // Layout
             self.layoutUi()
             
             self.view.layoutIfNeeded()
@@ -811,7 +825,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
         
         // Debug view, indicating that update was done
-        if(debugEnabled)
+        if(self.uiOptions.debugEnabled)
         {
             let view = UIView()
             view.frame = CGRect(x: self.view.bounds.size.width - 80, y: 10, width: 30, height: 30)
@@ -842,7 +856,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
         
         // Debug view, indicating that reload was done
-        if(debugEnabled)
+        if(self.uiOptions.debugEnabled)
         {
             let view = UIView()
             view.frame = CGRect(x: self.view.bounds.size.width - 80, y: 10, width: 30, height: 30)
@@ -1151,6 +1165,17 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             }
             return nil
         }
+    }
+    //==========================================================================================================================================================
+    //MARK:                                                        UiOptions
+    //==========================================================================================================================================================
+    
+    public struct UiOptions
+    {
+        /// Enables/Disables debug UI, like heading label, map button, some views when updating/reloading.
+        public var debugEnabled = false
+        /// Enables/Disables close button.
+        public var closeButtonEnabled = true
     }
 }
 

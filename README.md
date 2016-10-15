@@ -53,8 +53,7 @@ pod 'HDAugmentedReality', :git => 'https://github.com/DanijelHuis/HDAugmentedRea
 ## How to use
 Setup controller and provide annotations:
 ```swift
-var arViewController = ARViewController()
-arViewController.debugEnabled = true
+let arViewController = ARViewController()
 arViewController.dataSource = self
 arViewController.maxDistance = 0
 arViewController.maxVisibleAnnotations = 100
@@ -62,19 +61,26 @@ arViewController.maxVerticalLevel = 5
 arViewController.headingSmoothingFactor = 0.05
 arViewController.trackingManager.userDistanceFilter = 25
 arViewController.trackingManager.reloadDistanceFilter = 75
-
 arViewController.setAnnotations(dummyAnnotations)
-self.presentViewController(arViewController, animated: true, completion: nil)
+arViewController.uiOptions.debugEnabled = true
+arViewController.uiOptions.closeButtonEnabled = true
+//arViewController.interfaceOrientationMask = .landscape
+arViewController.onDidFailToFindLocation =
+{
+    [weak self, weak arViewController] elapsedSeconds, acquiredLocationBefore in
+    // Show alert and dismiss
+}
+self.present(arViewController, animated: true, completion: nil)
 ```
 Implement ARDataSource and provide annotation views:
 ```swift
 func ar(arViewController: ARViewController, viewForAnnotation: ARAnnotation) -> ARAnnotationView
 {
-// Annotation views should be lightweight views, try to avoid xibs and autolayout all together.
-var annotationView = TestAnnotationView()
-annotationView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
-annotationView.frame = CGRect(x: 0,y: 0,width: 150,height: 50)
-return annotationView;
+    // Annotation views should be lightweight views, try to avoid xibs and autolayout all together.
+    var annotationView = TestAnnotationView()
+    annotationView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
+    annotationView.frame = CGRect(x: 0,y: 0,width: 150,height: 50)
+    return annotationView;
 }
 ```
 Annotation views must subclass ARAnnotationView. Override bindUi method inside your custom annotation view to set your UI.

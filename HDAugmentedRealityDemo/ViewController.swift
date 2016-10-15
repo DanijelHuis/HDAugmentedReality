@@ -39,7 +39,6 @@ class ViewController: UIViewController, ARDataSource
         
         // Present ARViewController
         let arViewController = ARViewController()
-        arViewController.debugEnabled = true
         arViewController.dataSource = self
         arViewController.maxDistance = 0
         arViewController.maxVisibleAnnotations = 100
@@ -48,12 +47,14 @@ class ViewController: UIViewController, ARDataSource
         arViewController.trackingManager.userDistanceFilter = 25
         arViewController.trackingManager.reloadDistanceFilter = 75
         arViewController.setAnnotations(dummyAnnotations)
+        arViewController.uiOptions.debugEnabled = true
+        arViewController.uiOptions.closeButtonEnabled = true
         //arViewController.interfaceOrientationMask = .landscape
         arViewController.onDidFailToFindLocation =
-            {
-                [weak self, weak arViewController] elapsedSeconds, acquiredLocationBefore in
+        {
+            [weak self, weak arViewController] elapsedSeconds, acquiredLocationBefore in
                 
-                self?.handleLocationFailure(elapsedSeconds: elapsedSeconds, acquiredLocationBefore: acquiredLocationBefore, arViewController: arViewController)
+            self?.handleLocationFailure(elapsedSeconds: elapsedSeconds, acquiredLocationBefore: acquiredLocationBefore, arViewController: arViewController)
         }
         self.present(arViewController, animated: true, completion: nil)
     }
