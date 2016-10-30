@@ -31,12 +31,12 @@ class ViewController: UIViewController, ARDataSource
         
         // Create random annotations around center point    //@TODO
         //FIXME: set your initial position here, this is used to generate random POIs
-        let lat = 45.558054
-        let lon = 18.682622
+        let lat = 45.554833
+        let lon = 18.695433
         let delta = 0.05
         let count = 50
         let dummyAnnotations = self.getDummyAnnotations(centerLatitude: lat, centerLongitude: lon, delta: delta, count: count)
-        
+   
         // Present ARViewController
         let arViewController = ARViewController()
         arViewController.dataSource = self

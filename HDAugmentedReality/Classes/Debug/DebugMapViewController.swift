@@ -105,12 +105,12 @@ open class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLocati
         heading = newHeading.trueHeading
         
         // Rotate map
-        if(!self.interactionInProgress && CLLocationCoordinate2DIsValid(mapView.centerCoordinate))
+        /*if(!self.interactionInProgress && CLLocationCoordinate2DIsValid(mapView.centerCoordinate))
         {
             let camera = mapView.camera.copy() as! MKMapCamera
             camera.heading = CLLocationDirection(heading);
             self.mapView.setCamera(camera, animated: false)
-        }
+        }*/
     }
     
     open func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
