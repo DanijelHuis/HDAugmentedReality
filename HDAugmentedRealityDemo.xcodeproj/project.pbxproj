@@ -7,10 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C02D0D61E041D0100B4A827 /* ARPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C02D0D51E041D0100B4A827 /* ARPresenter.swift */; };
 		0C10A15B1BC67B5C009EDF6A /* DebugMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C10A1571BC67B5C009EDF6A /* DebugMapViewController.xib */; };
 		0C10A15C1BC67B5C009EDF6A /* hdar_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C10A1581BC67B5C009EDF6A /* hdar_close.png */; };
 		0C10A15D1BC67B5C009EDF6A /* hdar_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C10A1591BC67B5C009EDF6A /* hdar_close@2x.png */; };
 		0C10A15E1BC67B5C009EDF6A /* hdar_close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C10A15A1BC67B5C009EDF6A /* hdar_close@3x.png */; };
+		0C4FD3671E06DFA700F20DAA /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4FD3661E06DFA700F20DAA /* CameraView.swift */; };
+		0C5E594B1E6769F8003CCA93 /* StackTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */; };
 		0CAD4EB31AE6FC14000F2A2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAD4EB21AE6FC14000F2A2A /* AppDelegate.swift */; };
 		0CAD4EB51AE6FC14000F2A2A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAD4EB41AE6FC14000F2A2A /* ViewController.swift */; };
 		0CAD4EB81AE6FC14000F2A2A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0CAD4EB61AE6FC14000F2A2A /* Main.storyboard */; };
@@ -28,10 +31,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0C02D0D51E041D0100B4A827 /* ARPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARPresenter.swift; sourceTree = "<group>"; };
 		0C10A1571BC67B5C009EDF6A /* DebugMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DebugMapViewController.xib; sourceTree = "<group>"; };
 		0C10A1581BC67B5C009EDF6A /* hdar_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hdar_close.png; sourceTree = "<group>"; };
 		0C10A1591BC67B5C009EDF6A /* hdar_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hdar_close@2x.png"; sourceTree = "<group>"; };
 		0C10A15A1BC67B5C009EDF6A /* hdar_close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hdar_close@3x.png"; sourceTree = "<group>"; };
+		0C4FD3661E06DFA700F20DAA /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackTestViewController.swift; sourceTree = "<group>"; };
 		0CAD4EAD1AE6FC14000F2A2A /* HDAugmentedRealityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HDAugmentedRealityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CAD4EB11AE6FC14000F2A2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0CAD4EB21AE6FC14000F2A2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +92,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		0C4FD3651E06DF8D00F20DAA /* External */ = {
+			isa = PBXGroup;
+			children = (
+				0C4FD3661E06DFA700F20DAA /* CameraView.swift */,
+			);
+			path = External;
+			sourceTree = "<group>";
+		};
 		0CAD4EA41AE6FC14000F2A2A = {
 			isa = PBXGroup;
 			children = (
@@ -114,6 +128,7 @@
 				0CAD4EB61AE6FC14000F2A2A /* Main.storyboard */,
 				0CAD4EB91AE6FC14000F2A2A /* Images.xcassets */,
 				0CAD4EB01AE6FC14000F2A2A /* Supporting Files */,
+				0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */,
 			);
 			path = HDAugmentedRealityDemo;
 			sourceTree = "<group>";
@@ -134,7 +149,9 @@
 				0CF0F8E21BC5E70C00C7646E /* ARConfiguration.swift */,
 				0CF0F8E31BC5E70C00C7646E /* ARTrackingManager.swift */,
 				0CF0F8E41BC5E70C00C7646E /* ARViewController.swift */,
+				0C02D0D51E041D0100B4A827 /* ARPresenter.swift */,
 				0CF0F8E51BC5E70C00C7646E /* Debug */,
+				0C4FD3651E06DF8D00F20DAA /* External */,
 			);
 			name = Classes;
 			path = HDAugmentedReality/Classes;
@@ -227,10 +244,13 @@
 				0CB2C2471AF18C620006E949 /* TestAnnotationView.swift in Sources */,
 				0CF0F8E81BC5E70C00C7646E /* ARAnnotationView.swift in Sources */,
 				0CAD4EB51AE6FC14000F2A2A /* ViewController.swift in Sources */,
+				0C4FD3671E06DFA700F20DAA /* CameraView.swift in Sources */,
 				0CF0F8E71BC5E70C00C7646E /* ARAnnotation.swift in Sources */,
+				0C5E594B1E6769F8003CCA93 /* StackTestViewController.swift in Sources */,
 				0CAD4EB31AE6FC14000F2A2A /* AppDelegate.swift in Sources */,
 				0CF0F8EB1BC5E70C00C7646E /* ARViewController.swift in Sources */,
 				0CF0F8E91BC5E70C00C7646E /* ARConfiguration.swift in Sources */,
+				0C02D0D61E041D0100B4A827 /* ARPresenter.swift in Sources */,
 				0CF0F8EC1BC5E70C00C7646E /* DebugMapViewController.swift in Sources */,
 				0CF0F8EA1BC5E70C00C7646E /* ARTrackingManager.swift in Sources */,
 			);
@@ -349,7 +369,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Huis.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e28b5d0e-47ea-46a9-9805-9d88b59efa0f";
+				PROVISIONING_PROFILE = "3721ebd7-c018-4626-95b5-5fd2ab7f49d0";
+				PROVISIONING_PROFILE_SPECIFIER = NTH_Development;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -367,6 +388,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Huis.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "e28b5d0e-47ea-46a9-9805-9d88b59efa0f";
+				PROVISIONING_PROFILE_SPECIFIER = NTH_Development;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
