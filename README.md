@@ -3,6 +3,7 @@
 Augmented Reality component for iOS, written in Swift 3.0.
 
 Version history:
+- 2.0.0: Branch 2.0.0, all done - coming out soon after some testing
 - 1.1.x: written in Swift 3.0, iOS 8+
 - 1.0.x: written in Swift 2.0, iOS 7+
 - 0.1.0: written in Swift 1.2, iOS 7+
