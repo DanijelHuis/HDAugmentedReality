@@ -73,11 +73,10 @@ open class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
             self.titleLabel?.text = text
         }
         
-        //@TODO
-        if let title = self.annotation?.title, !title.hasPrefix("POI")
+        /*if let title = self.annotation?.title, !title.hasPrefix("POI")
         {
             self.backgroundColor = UIColor.darkGray
-        }
+        }*/
     }
     
     open override func layoutSubviews()

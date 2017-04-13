@@ -28,14 +28,10 @@ class ViewController: UIViewController, ARDataSource
             return
         }
         
-        // Create random annotations around center point    //@TODO
+        // Create random annotations around center point
         //FIXME: set your initial position here, this is used to generate random POIs
-        //let lat = 45.554833
-        //let lon = 18.695433
-        let lat = 45.550325
-        let lon = 18.705848
-        //let lat = 45.556076
-        //let lon = 18.684297
+        let lat = 45.554864
+        let lon = 18.695441
         let delta = 0.075
         let altitudeDelta: Double = 0
         let count = 100
@@ -47,20 +43,22 @@ class ViewController: UIViewController, ARDataSource
 
         arViewController.presenter.distanceOffsetMode = .manual
         arViewController.presenter.distanceOffsetMultiplier = 0.02
-        arViewController.presenter.distanceOffsetMinThreshold = 200
+        arViewController.presenter.distanceOffsetMinThreshold = 500
 
-        arViewController.presenter.maxDistance = 4000
+        arViewController.presenter.maxDistance = 0
         arViewController.presenter.maxVisibleAnnotations = 100
         
         arViewController.presenter.verticalStackingEnabled = true
         arViewController.trackingManager.userDistanceFilter = 15
         arViewController.trackingManager.reloadDistanceFilter = 50
+        //arViewController.interfaceOrientationMask = .landscape
+
+        // Debugging
         arViewController.uiOptions.debugLabel = true
         arViewController.uiOptions.debugMap = true
         arViewController.uiOptions.simulatorDebugging = Platform.isSimulator
         arViewController.uiOptions.setUserLocationToCenterOfAnnotations =  Platform.isSimulator
         arViewController.uiOptions.closeButtonEnabled = true
-        //arViewController.interfaceOrientationMask = .landscape
         
         arViewController.setAnnotations(dummyAnnotations)
         arViewController.onDidFailToFindLocation =
@@ -83,48 +81,19 @@ class ViewController: UIViewController, ARDataSource
     
     fileprivate func getDummyAnnotations(centerLatitude: Double, centerLongitude: Double, delta: Double, altitudeDelta: Double, count: Int) -> Array<ARAnnotation>
     {
-        //@TODO
         var annotations: [ARAnnotation] = []
-        self.addDummyAnnotation(45.556379, 18.684218, altitude: 90, title: "90", annotations: &annotations)
-        self.addDummyAnnotation(45.556379, 18.684218, altitude: 91, title: "91", annotations: &annotations)
-        self.addDummyAnnotation(45.556379, 18.684218, altitude: 92, title: "92", annotations: &annotations)
-        self.addDummyAnnotation(45.556379, 18.684218, altitude: 93, title: "93", annotations: &annotations)
-        self.addDummyAnnotation(45.556379, 18.684218, altitude: 95, title: "95", annotations: &annotations)
-        self.addDummyAnnotation(45.556379, 18.684218, altitude: 100, title: "100", annotations: &annotations)
-        self.addDummyAnnotation(45.556094, 18.683011, altitude: 90, title: "Banka", annotations: &annotations)
-        self.addDummyAnnotation(45.555062, 18.695136, altitude: 150, title: "Eurodom", annotations: &annotations)
-        self.addDummyAnnotation(45.554530, 18.704624, altitude: 92, title: "Raskrizje", annotations: &annotations)
-        self.addDummyAnnotation(45.553453, 18.704167, altitude: 92, title: "DVD", annotations: &annotations)
-        self.addDummyAnnotation(45.556038, 18.690541, altitude: 92, title: "Otokar", annotations: &annotations)
-        self.addDummyAnnotation(45.554702, 18.700536, altitude: 92, title: "Pruga", annotations: &annotations)
-        self.addDummyAnnotation(45.554702, 18.700536, altitude: 92, title: "Kuca", annotations: &annotations)
         
         srand48(2)
         for i in stride(from: 0, to: count, by: 1)
         {
             let location = self.getRandomLocation(centerLatitude: centerLatitude, centerLongitude: centerLongitude, delta: delta, altitudeDelta: altitudeDelta)
-            
+
             if let annotation = ARAnnotation(identifier: nil, title: "POI \(i)", location: location)
             {
                 annotations.append(annotation)
             }
         }
-    
         return annotations
-        
-//        var annotations: [ARAnnotation] = []
-//        
-//        srand48(2)
-//        for i in stride(from: 0, to: count, by: 1)
-//        {
-//            let location = self.getRandomLocation(centerLatitude: centerLatitude, centerLongitude: centerLongitude, delta: delta, altitudeDelta: altitudeDelta)
-//
-//            if let annotation = ARAnnotation(identifier: nil, title: "POI \(i)", location: location)
-//            {
-//                annotations.append(annotation)
-//            }
-//        }
-//        return annotations
     }
     
     func addDummyAnnotation(_ lat: Double,_ lon: Double, altitude: Double, title: String, annotations: inout [ARAnnotation])

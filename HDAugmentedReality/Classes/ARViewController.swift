@@ -56,7 +56,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /**
      Presenter instance. It is responsible for creation and layout of annotation views. Subclass and provide your own implementation if needed.
      */
-    //@TODO test
+    //@TODO test custom presenter
     open var presenter: ARPresenter!
     {
         willSet

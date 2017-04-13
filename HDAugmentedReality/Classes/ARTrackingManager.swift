@@ -243,7 +243,6 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
 
         //===== Set current user location
         self.userLocation = location
-        //@TODO
         //self.userLocation = CLLocation(coordinate: location.coordinate, altitude: 95, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())
         
         if debugLocation != nil { self.userLocation = debugLocation }
