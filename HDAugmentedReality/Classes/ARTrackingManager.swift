@@ -157,7 +157,7 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
     }
     
     /// Stops location and motion manager
-    internal func stopTracking()
+    open func stopTracking()
     {
         self.reloadLocationPrevious = nil
         self.userLocation = nil
