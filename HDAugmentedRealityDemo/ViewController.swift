@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import HDAugmentedReality
 
 class ViewController: UIViewController, ARDataSource
 {

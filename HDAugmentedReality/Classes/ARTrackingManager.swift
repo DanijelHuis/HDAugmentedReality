@@ -157,7 +157,7 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
     }
     
     /// Stops location and motion manager
-    internal func stopTracking()
+    open func stopTracking()
     {
         self.reloadLocationPrevious = nil
         self.userLocation = nil
@@ -178,7 +178,21 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
     
     open func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
     {
-        self.heading = fmod(newHeading.trueHeading, 360.0)
+        //Heading updated
+        if newHeading.headingAccuracy < 0 {
+            //Invalid heading
+            return
+        }
+        
+        var heading =  newHeading.trueHeading
+        //Use magnetic heading if true heading is not available
+        if heading < 0 {
+            heading = newHeading.magneticHeading
+        }
+        
+        //Modular of 360
+        heading = fmod(heading, 360.0)
+        self.heading = heading
     }
     
     open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
