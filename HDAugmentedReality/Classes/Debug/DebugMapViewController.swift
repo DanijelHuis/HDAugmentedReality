@@ -68,14 +68,14 @@ open class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLocati
         var mapAnnotations: [MKPointAnnotation] = []
         for annotation in annotations
         {
-            if let coordinate = annotation.location?.coordinate
-            {
-                let mapAnnotation = MKPointAnnotation()
-                mapAnnotation.coordinate = coordinate
-                let text = String(format: "%@, AZ: %.0f, VL: %i, %.0fm", annotation.title != nil ? annotation.title! : "", annotation.azimuth, annotation.verticalLevel, annotation.distanceFromUser)
-                mapAnnotation.title = text
-                mapAnnotations.append(mapAnnotation)
-            }
+            let coordinate = annotation.location.coordinate
+            
+            let mapAnnotation = MKPointAnnotation()
+            mapAnnotation.coordinate = coordinate
+            let text = String(format: "%@, AZ: %.0f, %.0fm", annotation.title != nil ? annotation.title! : "", annotation.azimuth, annotation.distanceFromUser)
+            mapAnnotation.title = text
+            mapAnnotations.append(mapAnnotation)
+            
         }
         mapView.addAnnotations(mapAnnotations)
         mapView.showAnnotations(mapAnnotations, animated: false)
@@ -90,7 +90,13 @@ open class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLocati
             let coordinate = self.mapView.convert(point, toCoordinateFrom: self.mapView)
             let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
             let userInfo: [AnyHashable: Any] = ["location" : location]
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "kNotificationLocationSet"), object: nil, userInfo: userInfo)
+            self.presentingViewController?.dismiss(animated: true, completion: nil)
+            
+            // Delay to allow trackingManager to update heading/pitch etc
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC))
+            {
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "kNotificationLocationSet"), object: nil, userInfo: userInfo)
+            }
         }
     }
     

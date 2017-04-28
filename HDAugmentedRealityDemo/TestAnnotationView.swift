@@ -12,16 +12,14 @@ open class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
 {
     open var titleLabel: UILabel?
     open var infoButton: UIButton?
+    open var arFrame: CGRect = CGRect.zero  // Just for test stacking
 
-    override open func didMoveToSuperview()
+    override open func initialize()
     {
-        super.didMoveToSuperview()
-        if self.titleLabel == nil
-        {
-            self.loadUi()
-        }
+        super.initialize()
+        self.loadUi()
     }
-    
+ 
     func loadUi()
     {
         // Title label
@@ -46,7 +44,7 @@ open class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
         self.addGestureRecognizer(tapGesture)
         
         // Other
-        self.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        self.backgroundColor = UIColor.red.withAlphaComponent(0.5)
         self.layer.cornerRadius = 5
         
         if self.annotation != nil
@@ -91,5 +89,6 @@ open class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
         }
     }
 
+    
 
 }

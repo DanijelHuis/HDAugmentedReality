@@ -8,12 +8,27 @@
 
 import UIKit
 
-/// View for annotation. Subclass to customize. Annotation views should be lightweight,
-/// try to avoid xibs and autolayout.
-/// bindUi method is called when distance/azimuth is set in ARViewController.
+/**
+ Responsible for presenting annotations visually. Analogue to MKAnnotationView. 
+ It is usually subclassed to provide custom look.
+ 
+ Annotation views should be lightweight, try to avoid xibs and autolayout.
+ */
 open class ARAnnotationView: UIView
 {
+    //===== Public
+    /** 
+     Normally, center of annotationView points to real location of POI, but this property can be used to alter that.
+     E.g. if bottom-left edge of annotationView should point to real location, centerOffset should be (0, 1)
+     */
+    open var centerOffset = CGPoint(x: 0.5, y: 0.5)
     open weak var annotation: ARAnnotation?
+
+    // Used internally for stacking
+    internal var arStackOffset = CGPoint(x: 0, y: 0)
+    internal var arStackAlternateFrame: CGRect = CGRect.zero
+    internal var arStackAlternateFrameExists: Bool = false
+
     fileprivate var initialized: Bool = false
     
     public init()
@@ -60,4 +75,6 @@ open class ARAnnotationView: UIView
     {
         
     }
+    
+
 }

@@ -2,12 +2,8 @@ import CoreLocation
 import UIKit
 
 let LAT_LON_FACTOR: CGFloat = 1.33975031663                      // Used in azimuzh calculation, don't change
-let VERTICAL_SENS: CGFloat = 960
-let H_PIXELS_PER_DEGREE: CGFloat = 14                            // How many pixels per degree
-let OVERLAY_VIEW_WIDTH: CGFloat = 360 * H_PIXELS_PER_DEGREE      // 360 degrees x sensitivity
 
 let MAX_VISIBLE_ANNOTATIONS: Int = 500                           // Do not change, can affect performance
-let MAX_VERTICAL_LEVELS: Int = 10                                // Do not change, can affect performance
 
 internal func radiansToDegrees(_ radians: Double) -> Double
 {
@@ -19,7 +15,7 @@ internal func degreesToRadians(_ degrees: Double) -> Double
     return (degrees) * (M_PI / 180.0)
 }
 
-/// Normalizes degree to 360
+/// Normalizes degree to 0-360
 internal func normalizeDegree(_ degree: Double) -> Double
 {
     var degreeNormalized = fmod(degree, 360)
@@ -31,7 +27,7 @@ internal func normalizeDegree(_ degree: Double) -> Double
 }
 
 /// Finds shortes angle distance between two angles. Angles must be normalized(0-360)
-internal func deltaAngle(_ angle1: Double, angle2: Double) -> Double
+internal func deltaAngle(_ angle1: Double, _ angle2: Double) -> Double
 {
     var deltaAngle = angle1 - angle2
     
@@ -65,7 +61,57 @@ internal func deltaAngle(_ angle1: Double, angle2: Double) -> Double
     *       - returns:                       Annotations to load, previous annotations are removed
     */
     @objc optional func ar(_ arViewController: ARViewController, shouldReloadWithLocation location: CLLocation) -> [ARAnnotation]
-
 }
+
+/**
+ Holds all location and device related information
+ */
+public struct ARStatus
+{
+    /// Horizontal field of view od device. Changes when device rotates(hFov becomes vFov).
+    public var hFov: Double = 0
+    /// Vertical field of view od device. Changes when device rotates(vFov becomes hFov).
+    public var vFov: Double = 0
+    /// How much pixels(logical) on screen is 1 degree, horizontally.
+    public var hPixelsPerDegree: Double = 0
+    /// How much pixels(logical) on screen is 1 degree, vertically.
+    public var vPixelsPerDegree: Double = 0
+    /// Heading of the device, 0-360.
+    public var heading: Double = 0
+    /// Pitch of the device, device pointing straight = 0, up(upper edge tilted toward user) = 90, down = -90.
+    public var pitch: Double = 0
+    /// Last known location of the user.
+    public var userLocation: CLLocation?
+    
+    /// True if all properties have been set.
+    public var ready: Bool
+    {
+        get
+        {
+            let hFovOK = hFov > 0
+            let vFovOK = vFov > 0
+            let hPixelsPerDegreeOK = hPixelsPerDegree > 0
+            let vPixelsPerDegreeOK = vPixelsPerDegree > 0
+            let headingOK = heading != 0    //@TODO
+            let pitchOK = pitch != 0        //@TODO
+            let userLocationOK = self.userLocation != nil && CLLocationCoordinate2DIsValid(self.userLocation!.coordinate)
+
+            return hFovOK && vFovOK && hPixelsPerDegreeOK && vPixelsPerDegreeOK && headingOK && pitchOK && userLocationOK
+        }
+    }
+}
+
+public struct Platform
+{
+    public static let isSimulator: Bool =
+    {
+        var isSim = false
+        #if arch(i386) || arch(x86_64)
+            isSim = true
+        #endif
+        return isSim
+    }()
+}
+
 
 
