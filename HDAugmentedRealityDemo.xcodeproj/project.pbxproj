@@ -14,6 +14,7 @@
 		0C10A15E1BC67B5C009EDF6A /* hdar_close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C10A15A1BC67B5C009EDF6A /* hdar_close@3x.png */; };
 		0C4FD3671E06DFA700F20DAA /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4FD3661E06DFA700F20DAA /* CameraView.swift */; };
 		0C56798D1EA00F7300E4613C /* ARPresenter+Stacking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C56798C1EA00F7300E4613C /* ARPresenter+Stacking.swift */; };
+		0C56798F1EA0160800E4613C /* TestARPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C56798E1EA0160800E4613C /* TestARPresenter.swift */; };
 		0C5E594B1E6769F8003CCA93 /* StackTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */; };
 		0CAD4EB31AE6FC14000F2A2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAD4EB21AE6FC14000F2A2A /* AppDelegate.swift */; };
 		0CAD4EB51AE6FC14000F2A2A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAD4EB41AE6FC14000F2A2A /* ViewController.swift */; };
@@ -39,6 +40,7 @@
 		0C10A15A1BC67B5C009EDF6A /* hdar_close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hdar_close@3x.png"; sourceTree = "<group>"; };
 		0C4FD3661E06DFA700F20DAA /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		0C56798C1EA00F7300E4613C /* ARPresenter+Stacking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ARPresenter+Stacking.swift"; sourceTree = "<group>"; };
+		0C56798E1EA0160800E4613C /* TestARPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestARPresenter.swift; sourceTree = "<group>"; };
 		0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackTestViewController.swift; sourceTree = "<group>"; };
 		0CAD4EAD1AE6FC14000F2A2A /* HDAugmentedRealityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HDAugmentedRealityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CAD4EB11AE6FC14000F2A2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				0CAD4EB91AE6FC14000F2A2A /* Images.xcassets */,
 				0CAD4EB01AE6FC14000F2A2A /* Supporting Files */,
 				0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */,
+				0C56798E1EA0160800E4613C /* TestARPresenter.swift */,
 			);
 			path = HDAugmentedRealityDemo;
 			sourceTree = "<group>";
@@ -253,6 +256,7 @@
 				0CAD4EB31AE6FC14000F2A2A /* AppDelegate.swift in Sources */,
 				0CF0F8EB1BC5E70C00C7646E /* ARViewController.swift in Sources */,
 				0C56798D1EA00F7300E4613C /* ARPresenter+Stacking.swift in Sources */,
+				0C56798F1EA0160800E4613C /* TestARPresenter.swift in Sources */,
 				0CF0F8E91BC5E70C00C7646E /* ARConfiguration.swift in Sources */,
 				0C02D0D61E041D0100B4A827 /* ARPresenter.swift in Sources */,
 				0CF0F8EC1BC5E70C00C7646E /* DebugMapViewController.swift in Sources */,

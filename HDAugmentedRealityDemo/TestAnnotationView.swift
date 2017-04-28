@@ -12,7 +12,7 @@ open class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
 {
     open var titleLabel: UILabel?
     open var infoButton: UIButton?
-    open var arFrame: CGRect = CGRect.zero  // Just for test
+    open var arFrame: CGRect = CGRect.zero  // Just for test stacking
 
     override open func initialize()
     {
@@ -72,11 +72,6 @@ open class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
             let text = String(format: "%@\nAZ: %.0f°\nDST: %@", title, annotation.azimuth, distance)
             self.titleLabel?.text = text
         }
-        
-        /*if let title = self.annotation?.title, !title.hasPrefix("POI")
-        {
-            self.backgroundColor = UIColor.darkGray
-        }*/
     }
     
     open override func layoutSubviews()

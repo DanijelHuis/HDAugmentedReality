@@ -10,7 +10,13 @@ import UIKit
 import CoreLocation
 
 /**
- ARPresenter handles creation and layout of annotation views.
+ Adds ARAnnotationViews on the screen and calculates its screen positions. Before anything 
+ is done, it first filters annotations by distance and count for improved performance. This 
+ class is also responsible for vertical stacking of the annotation views. 
+ 
+ It can be subclassed if custom positioning is needed, e.g. if you wan't to position 
+ annotations relative to its altitudes you would subclass ARPresenter and override 
+ xPositionForAnnotationView and yPositionForAnnotationView.
  */
 open class ARPresenter: UIView
 {
@@ -67,10 +73,10 @@ open class ARPresenter: UIView
         case automatic
     }
 
-    internal weak var arViewController: ARViewController!
-    internal var annotations: [ARAnnotation] = []
-    internal var activeAnnotations: [ARAnnotation] = []
-    internal var annotationViews: [ARAnnotationView] = []
+    open weak var arViewController: ARViewController!
+    open var annotations: [ARAnnotation] = []
+    open var activeAnnotations: [ARAnnotation] = []
+    open var annotationViews: [ARAnnotationView] = []
     
     init(arViewController: ARViewController)
     {
@@ -165,7 +171,7 @@ open class ARPresenter: UIView
      
      Default implementation filters by maxVisibleAnnotations and maxDistance.
      */
-    fileprivate func activeAnnotationsFromAnnotations(annotations: [ARAnnotation]) -> [ARAnnotation]
+    open func activeAnnotationsFromAnnotations(annotations: [ARAnnotation]) -> [ARAnnotation]
     {
         var activeAnnotations: [ARAnnotation] = []
         
@@ -200,7 +206,7 @@ open class ARPresenter: UIView
      Creates views for active annotations and removes views from inactive annotations.
      @IMPROVEMENT: Add reuse logic
     */
-    fileprivate func createAnnotationViews()
+    open func createAnnotationViews()
     {
         var annotationViews: [ARAnnotationView] = []
         let activeAnnotations = self.activeAnnotations
@@ -274,7 +280,7 @@ open class ARPresenter: UIView
      
      The intention is to reduce number of views on screen, not sure if this helps...
     */
-    func addRemoveAnnotationViews(arStatus: ARStatus)
+    open func addRemoveAnnotationViews(arStatus: ARStatus)
     {
         let degreesDeltaH = arStatus.hFov
         let heading = arStatus.heading
@@ -324,7 +330,7 @@ open class ARPresenter: UIView
      Simplified formula:
      x = center_of_screen(in px) + (annotation_heading(in degrees) - device_heading(in degrees)) * pixelsPerDegree
     */
-    fileprivate func xPositionForAnnotationView(_ annotationView: ARAnnotationView, arStatus: ARStatus) -> CGFloat
+    open func xPositionForAnnotationView(_ annotationView: ARAnnotationView, arStatus: ARStatus) -> CGFloat
     {
         guard let annotation = annotationView.annotation else { return 0}
         let heading = arStatus.heading
@@ -339,7 +345,7 @@ open class ARPresenter: UIView
      Simplified formula:
      y = center_of_screen(in px) + device_pitch(in degrees) * pixelsPerDegree + distance_offset(px)
     */
-    fileprivate func yPositionForAnnotationView(_ annotationView: ARAnnotationView, arStatus: ARStatus) -> CGFloat
+    open func yPositionForAnnotationView(_ annotationView: ARAnnotationView, arStatus: ARStatus) -> CGFloat
     {
         guard let annotation = annotationView.annotation else { return 0}
         let pitch = arStatus.pitch
@@ -371,7 +377,7 @@ open class ARPresenter: UIView
         return y
     }
     
-    fileprivate func adjustVerticalOffsetParameters()
+    open func adjustVerticalOffsetParameters()
     {
         guard var minDistance = self.activeAnnotations.first?.distanceFromUser else { return }
         guard let maxDistance = self.activeAnnotations.last?.distanceFromUser else { return }

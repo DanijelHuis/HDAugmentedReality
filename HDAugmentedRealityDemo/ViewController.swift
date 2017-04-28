@@ -32,41 +32,47 @@ class ViewController: UIViewController, ARDataSource
         //FIXME: set your initial position here, this is used to generate random POIs
         let lat = 45.554864
         let lon = 18.695441
-        let delta = 0.075
+        let deltaLat = 0.04 // Area in which to generate annotations
+        let deltaLon = 0.07 // Area in which to generate annotations
         let altitudeDelta: Double = 0
         let count = 100
-        let dummyAnnotations = self.getDummyAnnotations(centerLatitude: lat, centerLongitude: lon, delta: delta, altitudeDelta: altitudeDelta, count: count)
+        let dummyAnnotations = self.getDummyAnnotations(centerLatitude: lat, centerLongitude: lon, deltaLat: deltaLat, deltaLon: deltaLon, altitudeDelta: altitudeDelta, count: count)
    
         // Present ARViewController
         let arViewController = ARViewController()
+        //arViewController.presenter = TestARPresenter(arViewController: arViewController)  // Always set custom presenter first
         arViewController.dataSource = self
-
+        // Vertical offset by distance
         arViewController.presenter.distanceOffsetMode = .manual
-        arViewController.presenter.distanceOffsetMultiplier = 0.02
-        arViewController.presenter.distanceOffsetMinThreshold = 500
-
-        arViewController.presenter.maxDistance = 0
-        arViewController.presenter.maxVisibleAnnotations = 100
-        
+        arViewController.presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter
+        arViewController.presenter.distanceOffsetMinThreshold = 500 // Doesn't raise annotations that are nearer than this
+        // Filtering for performance
+        arViewController.presenter.maxDistance = 3000               // Don't show annotations if they are farther than this
+        arViewController.presenter.maxVisibleAnnotations = 100      // Max number of annotations on the screen
+        // Stacking
         arViewController.presenter.verticalStackingEnabled = true
+        // Location precision
         arViewController.trackingManager.userDistanceFilter = 15
         arViewController.trackingManager.reloadDistanceFilter = 50
-        //arViewController.interfaceOrientationMask = .landscape
-
+        // Ui
+        arViewController.uiOptions.closeButtonEnabled = true
         // Debugging
         arViewController.uiOptions.debugLabel = true
         arViewController.uiOptions.debugMap = true
         arViewController.uiOptions.simulatorDebugging = Platform.isSimulator
         arViewController.uiOptions.setUserLocationToCenterOfAnnotations =  Platform.isSimulator
-        arViewController.uiOptions.closeButtonEnabled = true
-        
-        arViewController.setAnnotations(dummyAnnotations)
+        // Interface orientation
+        arViewController.interfaceOrientationMask = .all
+        // Failure handling
         arViewController.onDidFailToFindLocation =
-        {
-            [weak self, weak arViewController] elapsedSeconds, acquiredLocationBefore in
+            {
+                [weak self, weak arViewController] elapsedSeconds, acquiredLocationBefore in
                 
-            self?.handleLocationFailure(elapsedSeconds: elapsedSeconds, acquiredLocationBefore: acquiredLocationBefore, arViewController: arViewController)
+                self?.handleLocationFailure(elapsedSeconds: elapsedSeconds, acquiredLocationBefore: acquiredLocationBefore, arViewController: arViewController)
         }
+        // Setting annotations
+        arViewController.setAnnotations(dummyAnnotations)
+        // Presenting controller
         self.present(arViewController, animated: true, completion: nil)
     }
     
@@ -79,14 +85,14 @@ class ViewController: UIViewController, ARDataSource
         return annotationView;
     }
     
-    fileprivate func getDummyAnnotations(centerLatitude: Double, centerLongitude: Double, delta: Double, altitudeDelta: Double, count: Int) -> Array<ARAnnotation>
+    fileprivate func getDummyAnnotations(centerLatitude: Double, centerLongitude: Double, deltaLat: Double, deltaLon: Double, altitudeDelta: Double, count: Int) -> Array<ARAnnotation>
     {
         var annotations: [ARAnnotation] = []
         
         srand48(2)
         for i in stride(from: 0, to: count, by: 1)
         {
-            let location = self.getRandomLocation(centerLatitude: centerLatitude, centerLongitude: centerLongitude, delta: delta, altitudeDelta: altitudeDelta)
+            let location = self.getRandomLocation(centerLatitude: centerLatitude, centerLongitude: centerLongitude, deltaLat: deltaLat, deltaLon: deltaLon, altitudeDelta: altitudeDelta)
 
             if let annotation = ARAnnotation(identifier: nil, title: "POI \(i)", location: location)
             {
@@ -105,13 +111,13 @@ class ViewController: UIViewController, ARDataSource
         }
     }
     
-    fileprivate func getRandomLocation(centerLatitude: Double, centerLongitude: Double, delta: Double, altitudeDelta: Double) -> CLLocation
+    fileprivate func getRandomLocation(centerLatitude: Double, centerLongitude: Double, deltaLat: Double, deltaLon: Double, altitudeDelta: Double) -> CLLocation
     {
         var lat = centerLatitude
         var lon = centerLongitude
         
-        let latDelta = -(delta / 2) + drand48() * delta
-        let lonDelta = -(delta / 2) + drand48() * delta
+        let latDelta = -(deltaLat / 2) + drand48() * deltaLat
+        let lonDelta = -(deltaLon / 2) + drand48() * deltaLon
         lat = lat + latDelta
         lon = lon + lonDelta
         

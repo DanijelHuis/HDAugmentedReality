@@ -8,8 +8,12 @@
 
 import UIKit
 
-/// View for annotation. Subclass to customize. Annotation views should be lightweight,
-/// try to avoid xibs and autolayout.
+/**
+ Responsible for presenting annotations visually. Analogue to MKAnnotationView. 
+ It is usually subclassed to provide custom look.
+ 
+ Annotation views should be lightweight, try to avoid xibs and autolayout.
+ */
 open class ARAnnotationView: UIView
 {
     //===== Public

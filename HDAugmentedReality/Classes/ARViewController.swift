@@ -54,9 +54,8 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     open var uiOptions = UiOptions()
     
     /**
-     Presenter instance. It is responsible for creation and layout of annotation views. Subclass and provide your own implementation if needed.
+     Presenter instance. It is responsible for creation and layout of annotation views. Subclass and provide your own implementation if needed. Always set it before anything else is set on this controller.
      */
-    //@TODO test custom presenter
     open var presenter: ARPresenter!
     {
         willSet
@@ -229,7 +228,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     //==========================================================================================================================================================
     
     /// This is called only once when view is fully layouted.
-    private func loadUi()
+    fileprivate func loadUi()
     {
         // Presenter
         if self.presenter.superview == nil { self.view.insertSubview(self.presenter, at: 0) }
@@ -458,7 +457,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.cameraView.setVideoOrientation(orientation)
     }
     
-    func calculateFOV()
+    internal func calculateFOV()
     {
         var hFov: Double = 0
         var vFov: Double = 0

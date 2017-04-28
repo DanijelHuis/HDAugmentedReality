@@ -23,21 +23,23 @@ import GLKit
 
 
 /**
- Class used internally by ARViewController for tracking location/heading/pitch etc.
+ Class used internally by ARViewController for tracking and filtering location/heading/pitch etc.
+ ARViewController takes all these informations and stores them in ARViewController.arStatus object,
+ which is then passed to ARPresenter. Not intended for subclassing.
  */
-open class ARTrackingManager: NSObject, CLLocationManagerDelegate
+public class ARTrackingManager: NSObject, CLLocationManagerDelegate
 {    
     /**
      Specifies how often are new annotations fetched and annotation views are recreated.
      Default value is 50m.
      */
-    open var reloadDistanceFilter: CLLocationDistance!    // Will be set in init
+    public var reloadDistanceFilter: CLLocationDistance!    // Will be set in init
     
     /**
      Specifies how often are distances and azimuths recalculated for visible annotations. Stacking is also done on this which is heavy operation.
      Default value is 15m.
      */
-    open var userDistanceFilter: CLLocationDistance!      // Will be set in init
+    public var userDistanceFilter: CLLocationDistance!      // Will be set in init
     {
         didSet
         {
@@ -49,13 +51,13 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
      Filter(Smoothing) factor for heading in range 0-1. It affects horizontal movement of annotaion views. The lower the value the bigger the smoothing.
      Value of 1 means no smoothing, should be greater than 0. Default value is 0.05
      */
-    open var headingFilterFactor: Double = 0.05
+    public var headingFilterFactor: Double = 0.05
     
     /**
      Filter(Smoothing) factor for pitch in range 0-1. It affects vertical movement of annotaion views. The lower the value the bigger the smoothing.
      Value of 1 means no smoothing, should be greater than 0. Default value is 0.05
      */
-    open var pitchFilterFactor: Double = 0.05
+    public var pitchFilterFactor: Double = 0.05
     
     //===== Internal variables
     /// Delegate
@@ -124,7 +126,7 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
         self.deviceOrientationDidChange()
     }
     
-    func deviceOrientationDidChange()
+    internal func deviceOrientationDidChange()
     {
         if let deviceOrientation = CLDeviceOrientation(rawValue: Int32(UIDevice.current.orientation.rawValue))
         {
@@ -144,7 +146,7 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
      
      - Parameter notifyFailure:     If true, will call arTrackingManager:didFailToFindLocationAfter: if location is not found.
      */
-    internal func startTracking(notifyLocationFailure: Bool = false)
+    public func startTracking(notifyLocationFailure: Bool = false)
     {
         self.resetAllTrackingData()
 
@@ -181,7 +183,7 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
     }
     
     /// Stops location and motion manager
-    internal func stopTracking()
+    public func stopTracking()
     {
         self.resetAllTrackingData()
         
@@ -194,7 +196,7 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
     }
     
     /// Stops all timers and resets all data.
-    internal func resetAllTrackingData()
+    public func resetAllTrackingData()
     {
         self.stopLocationSearchTimer()
         self.locationSearchStartTime = nil
@@ -220,14 +222,21 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
     // MARK:                                                        CLLocationManagerDelegate
     //==========================================================================================================================================================
     
-    open func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
+    public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
     {
         // filteredHeading is not updated here bcs this is not called too often. filterHeading method should be called manually
         // with display timer.
-        self.heading = fmod(newHeading.trueHeading, 360.0)
+        if newHeading.trueHeading < 0
+        {
+            self.heading = fmod(newHeading.magneticHeading, 360.0)
+        }
+        else
+        {
+            self.heading = fmod(newHeading.trueHeading, 360.0)
+        }
     }
     
-    open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         guard let location = locations.first else { return }
         
@@ -506,7 +515,7 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
     // MARK:                                                        Location search
     //==========================================================================================================================================================
     
-    func startLocationSearchTimer(resetStartTime: Bool = true)
+    internal func startLocationSearchTimer(resetStartTime: Bool = true)
     {
         self.stopLocationSearchTimer()
         
@@ -517,13 +526,13 @@ open class ARTrackingManager: NSObject, CLLocationManagerDelegate
         self.locationSearchTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ARTrackingManager.locationSearchTimerTick), userInfo: nil, repeats: false)
     }
     
-    func stopLocationSearchTimer(resetStartTime: Bool = true)
+    internal func stopLocationSearchTimer(resetStartTime: Bool = true)
     {
         self.locationSearchTimer?.invalidate()
         self.locationSearchTimer = nil
     }
     
-    func locationSearchTimerTick()
+    internal func locationSearchTimerTick()
     {
         guard let locationSearchStartTime = self.locationSearchStartTime else { return }
         let elapsedSeconds = Date().timeIntervalSince1970 - locationSearchStartTime
