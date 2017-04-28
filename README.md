@@ -1,3 +1,5 @@
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/HDAugmentedReality.svg)](https://img.shields.io/cocoapods/v/HDAugmentedReality.svg)
+
 # HDAugmentedReality
 
 Augmented Reality component for iOS, written in Swift 3.0.
@@ -47,6 +49,13 @@ Xcode 8 is needed for Swift 3.
 - Add NSCameraUsageDescription to Info.plist. This is needed for camera authorization.
 - Add this two lines to your podfile: 
 ```bash
+platform :ios, '8.0'
+use_frameworks!
+ 
+target "TargetName" do
+pod 'HDAugmentedReality', '~> 2.0'
+end
+ 
 use_frameworks!
 pod 'HDAugmentedReality', :git => 'https://github.com/DanijelHuis/HDAugmentedReality.git'
 ```
