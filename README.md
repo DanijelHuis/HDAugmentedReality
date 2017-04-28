@@ -55,10 +55,7 @@ use_frameworks!
 target "TargetName" do
 pod 'HDAugmentedReality', '~> 2.0'
 end
- 
-use_frameworks!
-pod 'HDAugmentedReality', :git => 'https://github.com/DanijelHuis/HDAugmentedReality.git'
-```
+ ```
 
 ## How to use
 Import
