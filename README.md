@@ -1,4 +1,4 @@
-[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/HDAugmentedReality.svg)](https://img.shields.io/cocoapods/v/HDAugmentedReality.svg)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/HDAugmentedReality.svg)](https://cocoapods.org/pods/HDAugmentedReality)
 
 # HDAugmentedReality
 
