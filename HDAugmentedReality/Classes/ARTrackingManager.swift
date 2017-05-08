@@ -80,6 +80,16 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     /// If set, filteredPitch will return this value
     internal var debugPitch: Double?
     
+    /// Headings with greater headingAccuracy than this will be disregarded. In Degrees.
+    public var minimumHeadingAccuracy: Double = 25
+    /// App will show compass calibration if headingAccuracy is greater than this and CLLocationManager calls compass calibration.
+    /// Value of 0 means compass calibration is never shown.
+    public var minimumHeadingAccuracyToShowHeadingCalibration: Double = 0
+    /// Locations with greater horizontalAccuracy than this will be disregarded. In meters.
+    public var minimumLocationHorizontalAccuracy: Double = 500
+    /// Locations older than this will be disregarded. In seconds.
+    public var minimumLocationAge: Double = 30
+    
     //===== Private variables
     fileprivate var motionManager: CMMotionManager = CMMotionManager()
     fileprivate var previousAcceleration: CMAcceleration = CMAcceleration(x: 0, y: 0, z: 0)
@@ -224,6 +234,11 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
     {
+        if newHeading.headingAccuracy < 0 || newHeading.headingAccuracy > self.minimumHeadingAccuracy
+        {
+            return
+        }
+
         // filteredHeading is not updated here bcs this is not called too often. filterHeading method should be called manually
         // with display timer.
         if newHeading.trueHeading < 0
@@ -242,7 +257,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         
         //===== Disregarding old and low quality location detections
         let age = location.timestamp.timeIntervalSinceNow;
-        if age < -30 || location.horizontalAccuracy > 500 || location.horizontalAccuracy < 0
+        if age < -self.minimumLocationAge || location.horizontalAccuracy > self.minimumLocationHorizontalAccuracy || location.horizontalAccuracy < 0
         {
             print("Disregarding location: age: \(age), ha: \(location.horizontalAccuracy)")
             return
@@ -281,6 +296,19 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         {
             self.startReportLocationTimer()
         }
+    }
+    
+    public func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool
+    {
+        if let heading = manager.heading, self.minimumHeadingAccuracyToShowHeadingCalibration > 0
+        {
+            if heading.headingAccuracy < 0 || heading.headingAccuracy > self.minimumHeadingAccuracyToShowHeadingCalibration
+            {
+                return true
+            }
+        }
+
+        return false
     }
     
     internal func stopReportLocationTimer()

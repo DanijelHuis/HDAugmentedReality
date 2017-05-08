@@ -36,7 +36,7 @@ class ViewController: UIViewController, ARDataSource
         let deltaLon = 0.07 // Area in which to generate annotations
         let altitudeDelta: Double = 0
         let count = 100
-        let dummyAnnotations = self.getDummyAnnotations(centerLatitude: lat, centerLongitude: lon, deltaLat: deltaLat, deltaLon: deltaLon, altitudeDelta: altitudeDelta, count: count)
+        let dummyAnnotations = ViewController.getDummyAnnotations(centerLatitude: lat, centerLongitude: lon, deltaLat: deltaLat, deltaLon: deltaLon, altitudeDelta: altitudeDelta, count: count)
    
         // Present ARViewController
         let arViewController = ARViewController()
@@ -85,7 +85,7 @@ class ViewController: UIViewController, ARDataSource
         return annotationView;
     }
     
-    fileprivate func getDummyAnnotations(centerLatitude: Double, centerLongitude: Double, deltaLat: Double, deltaLon: Double, altitudeDelta: Double, count: Int) -> Array<ARAnnotation>
+    public class func getDummyAnnotations(centerLatitude: Double, centerLongitude: Double, deltaLat: Double, deltaLon: Double, altitudeDelta: Double, count: Int) -> Array<ARAnnotation>
     {
         var annotations: [ARAnnotation] = []
         
@@ -111,7 +111,7 @@ class ViewController: UIViewController, ARDataSource
         }
     }
     
-    fileprivate func getRandomLocation(centerLatitude: Double, centerLongitude: Double, deltaLat: Double, deltaLon: Double, altitudeDelta: Double) -> CLLocation
+    public class func getRandomLocation(centerLatitude: Double, centerLongitude: Double, deltaLat: Double, deltaLon: Double, altitudeDelta: Double) -> CLLocation
     {
         var lat = centerLatitude
         var lon = centerLongitude
