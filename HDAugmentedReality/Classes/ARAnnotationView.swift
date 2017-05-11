@@ -28,6 +28,9 @@ open class ARAnnotationView: UIView
     internal var arStackOffset = CGPoint(x: 0, y: 0)
     internal var arStackAlternateFrame: CGRect = CGRect.zero
     internal var arStackAlternateFrameExists: Bool = false
+    /// Position of annotation view as if device was pointing North(heading = 0°) and leveled with the ground(pitch = 0°),
+    /// meaning that heading/pitch of device are not in this.
+    internal var arZeroPoint: CGPoint = CGPoint(x: 0, y: 0)
 
     fileprivate var initialized: Bool = false
     
