@@ -725,6 +725,24 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         /// Enables/Disables close button.
         public var closeButtonEnabled = true
     }
+    
+    public func captureImage(callback: @escaping (UIImage) -> Void)
+    {
+        var stillImageOutput = AVCaptureStillImageOutput.init()
+        stillImageOutput.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
+        self.cameraSession.addOutput(stillImageOutput)
+        
+        if let videoConnection = stillImageOutput.connection(withMediaType:AVMediaTypeVideo){
+            stillImageOutput.captureStillImageAsynchronously(from:videoConnection, completionHandler: {
+                (sampleBuffer, error) in
+                var imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
+                var dataProvider = CGDataProvider.init(data: imageData as! CFData)
+                var cgImageRef = CGImage.init(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+                var image = UIImage.init(cgImage: cgImageRef!, scale: 1.0, orientation: .right)
+                callback(image)
+            })
+        }
+    }
 }
 
 
