@@ -231,8 +231,6 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     // MARK:                                                        CLLocationManagerDelegate
     //==========================================================================================================================================================
     
-    var headingIndex = 0
-    var testHeading = [(180, 180), (30, 30), (10, 20), (80, 20), (80, 20)];
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
     {
         if newHeading.headingAccuracy < 0 || newHeading.headingAccuracy > self.minimumHeadingAccuracy
@@ -277,7 +275,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
             if headingStartDate.timeIntervalSinceNow > -headingFilteringStartTime
             {
                 // Disabling filtering if heading difference(current and previous) is > 10
-                if fabs(self.heading - previousHeading) > 10
+                if fabs(deltaAngle(self.heading, previousHeading)) > 10
                 {
                     recommendedHeadingFilterFactor = 1  // We could also just set self.filteredHeading = self.heading
                 }
