@@ -319,54 +319,48 @@ open class ARPresenter: UIView
     //==========================================================================================================================================================
     // MARK:                                                               Layout
     //==========================================================================================================================================================
-    
-    /**
+       /**
      Layouts annotation views.
      - Parameter relayoutAll: If true it will call xPositionForAnnotationView/yPositionForAnnotationView for each annotation view, else
                               it will only take previously calculated x/y positions and add heading/pitch offsets to visible annotation views.
      */
     open func layoutAnnotationViews(arStatus: ARStatus, relayoutAll: Bool)
     {
-        let headingXOffset = CGFloat(deltaAngle(arStatus.heading, 0)) * CGFloat(arStatus.hPixelsPerDegree)
         let pitchYOffset = CGFloat(arStatus.pitch * arStatus.vPixelsPerDegree)
         let annotationViews = relayoutAll ? self.annotationViews : self.visibleAnnotationViews
         
         for annotationView in annotationViews
         {
+            guard let annotation = annotationView.annotation else { continue }
+            
             if(relayoutAll)
             {
                 let x = self.xPositionForAnnotationView(annotationView, arStatus: arStatus)
                 let y = self.yPositionForAnnotationView(annotationView, arStatus: arStatus)
                 annotationView.arZeroPoint = CGPoint(x: x, y: y)
             }
-            
-            let x: CGFloat = annotationView.arZeroPoint.x - headingXOffset
+            let headingXOffset = CGFloat(deltaAngle(annotation.azimuth, arStatus.heading)) * CGFloat(arStatus.hPixelsPerDegree)
+
+            let x: CGFloat = annotationView.arZeroPoint.x + headingXOffset
             let y: CGFloat = annotationView.arZeroPoint.y + pitchYOffset + annotationView.arStackOffset.y
             
+            // Final position of annotation
             annotationView.frame = CGRect(x: x, y: y, width: annotationView.bounds.size.width, height: annotationView.bounds.size.height)
         }
     }
+    
     /**
-     Here we calculate x position for annotation view, heading of the device is not taken into account here bcs of performance. 
-     X calculated by this method is x as if device was pointing North(heading = 0°) and correction for heading is added later
-     in layoutAnnotationViews. This way we must calculate x only when user or annotation changes location and not every time
-     heading changes.
+     x position without the heading, heading offset is added in layoutAnnotationViews due to performance.
      */
     open func xPositionForAnnotationView(_ annotationView: ARAnnotationView, arStatus: ARStatus) -> CGFloat
     {
-        guard let annotation = annotationView.annotation else { return 0}
-        let hPixelsPerDegree = CGFloat(arStatus.hPixelsPerDegree)
         let centerX = self.bounds.size.width * 0.5
-        let delta = CGFloat(deltaAngle(annotation.azimuth, 0))
-        let x = centerX - (annotationView.bounds.size.width * annotationView.centerOffset.x) + delta * hPixelsPerDegree
+        let x = centerX - (annotationView.bounds.size.width * annotationView.centerOffset.x)
         return x
     }
     
     /**
-     Here we calculate y position for annotation view, pitch of the device is not taken into account here bcs of performance.
-     Y calculated by this method is y as if device is leveled with the ground(pitch = 0°) and correction for pitch is added later
-     in layoutAnnotationViews. This way we must calculate y only when user or annotation changes location and not every time
-     pitch changes.
+     y position without the pitch, pitch offset is added in layoutAnnotationViews due to performance.
      */
     open func yPositionForAnnotationView(_ annotationView: ARAnnotationView, arStatus: ARStatus) -> CGFloat
     {

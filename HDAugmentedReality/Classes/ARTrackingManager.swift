@@ -52,6 +52,8 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
      Value of 1 means no smoothing, should be greater than 0. Default value is 0.05
      */
     public var headingFilterFactor: Double = 0.05
+    private var _headingFilterFactor: Double = 0
+    
     
     /**
      Filter(Smoothing) factor for pitch in range 0-1. It affects vertical movement of annotaion views. The lower the value the bigger the smoothing.
@@ -81,10 +83,9 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     internal var debugPitch: Double?
     
     /// Headings with greater headingAccuracy than this will be disregarded. In Degrees.
-    public var minimumHeadingAccuracy: Double = 25
-    /// App will show compass calibration if headingAccuracy is greater than this and CLLocationManager calls compass calibration.
-    /// Value of 0 means compass calibration is never shown.
-    public var minimumHeadingAccuracyToShowHeadingCalibration: Double = 0
+    public var minimumHeadingAccuracy: Double = 120
+    /// Return value for locationManagerShouldDisplayHeadingCalibration.
+    public var allowCompassCalibration: Bool = false
     /// Locations with greater horizontalAccuracy than this will be disregarded. In meters.
     public var minimumLocationHorizontalAccuracy: Double = 500
     /// Locations older than this will be disregarded. In seconds.
@@ -98,8 +99,8 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     fileprivate var reportLocationDate: TimeInterval?
     fileprivate var locationSearchTimer: Timer? = nil
     fileprivate var locationSearchStartTime: TimeInterval? = nil
-    fileprivate var catchupHeading = false;
     fileprivate var catchupPitch = false;
+    fileprivate var headingStartDate: Date?
     fileprivate var orientation: CLDeviceOrientation = CLDeviceOrientation.portrait
     {
         didSet
@@ -188,7 +189,6 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         self.motionManager.startAccelerometerUpdates()
         self.locationManager.startUpdatingHeading()
         self.locationManager.startUpdatingLocation()
-        
         self.tracking = true
     }
     
@@ -222,23 +222,25 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         self.filteredHeading = 0
         self.filteredPitch = 0
         
-        // This will make filteredHeading catchup current heading value on next heading calculation
-        self.catchupHeading = true
         // This will make filteredPitch catchup current pitch value on next heading calculation
         self.catchupPitch = true
+        self.headingStartDate = nil
     }
     
     //==========================================================================================================================================================
     // MARK:                                                        CLLocationManagerDelegate
     //==========================================================================================================================================================
     
+    var headingIndex = 0
+    var testHeading = [(180, 180), (30, 30), (10, 20), (80, 20), (80, 20)];
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
     {
         if newHeading.headingAccuracy < 0 || newHeading.headingAccuracy > self.minimumHeadingAccuracy
         {
             return
         }
-
+        let previousHeading = self.heading
+        
         // filteredHeading is not updated here bcs this is not called too often. filterHeading method should be called manually
         // with display timer.
         if newHeading.trueHeading < 0
@@ -248,6 +250,40 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         else
         {
             self.heading = fmod(newHeading.trueHeading, 360.0)
+        }
+        
+        /** 
+         Handling unprecise readings, this whole section should prevent annotations from spinning because of
+         unprecise readings & filtering. e.g. if first reading is 10° and second is 80°, due to filtering, annotations
+         would move slowly from 10°-80°. So when we detect such situtation, we set _headingFilterFactor to 1, meaning that
+         filtering is temporarily disabled and annotatoions will immediately jump to new heading.
+         
+         This is done only first 5 seconds after first heading.
+        */
+        
+        // First heading after tracking started. Catching up filteredHeading.
+        if self.headingStartDate == nil
+        {
+            self.headingStartDate = Date()
+            self.filteredHeading = self.heading
+        }
+        
+        if let headingStartDate = self.headingStartDate // Always true
+        {
+            var recommendedHeadingFilterFactor = self.headingFilterFactor
+            let headingFilteringStartTime: TimeInterval = 5
+            
+            // First 5 seconds after first heading?
+            if headingStartDate.timeIntervalSinceNow > -headingFilteringStartTime
+            {
+                // Disabling filtering if heading difference(current and previous) is > 10
+                if fabs(self.heading - previousHeading) > 10
+                {
+                    recommendedHeadingFilterFactor = 1  // We could also just set self.filteredHeading = self.heading
+                }
+            }
+            
+            _headingFilterFactor = recommendedHeadingFilterFactor
         }
     }
     
@@ -300,15 +336,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     
     public func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool
     {
-        if let heading = manager.heading, self.minimumHeadingAccuracyToShowHeadingCalibration > 0
-        {
-            if heading.headingAccuracy < 0 || heading.headingAccuracy > self.minimumHeadingAccuracyToShowHeadingCalibration
-            {
-                return true
-            }
-        }
-
-        return false
+        return self.allowCompassCalibration
     }
     
     internal func stopReportLocationTimer()
@@ -398,17 +426,10 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     
     internal func filterHeading()
     {
-        // First real reading after startTracking? Making filter catch up
-        if self.catchupHeading && self.heading != 0
-        {
-            self.filteredHeading = self.heading
-            self.catchupHeading = false
-        }
-        
-        let headingFilterFactor = self.headingFilterFactor
+        let headingFilterFactor = _headingFilterFactor
         let previousFilteredHeading = self.filteredHeading
         let newHeading = self.debugHeading ?? self.heading
-        
+
         /*
          Low pass filter on heading cannot be done by using regular formula because our input(heading)
          is circular so we would have problems on heading passing North(0). Example:
@@ -444,7 +465,6 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         }
         self.filteredHeading = (newHeadingTransformed * headingFilterFactor) + (previousFilteredHeading  * (1.0 - headingFilterFactor))
         self.filteredHeading = normalizeDegree(self.filteredHeading)
-        
     }
 
     //@TODO rename to heading

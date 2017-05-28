@@ -448,7 +448,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
         self.layoutUi()
-        self.reload(reloadType: .headingChanged)
+        self.reload(reloadType: .annotationsChanged)
         CATransaction.commit()
     }
     
