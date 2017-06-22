@@ -278,7 +278,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         return self.annotations
     }
     
-    fileprivate func reload(reloadType currentReload: ARViewController.ReloadType)
+    open func reload(reloadType currentReload: ARViewController.ReloadType)
     {
         // Explanation why pendingHighestRankingReload is used: if this method is called in this order:
         // 1. currentReload = annotationsChanged, arStatus.ready = false
@@ -305,7 +305,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.presenter.reload(annotations: self.annotations, reloadType: highestRankingReload)
     }
     
-    fileprivate func calculateDistancesForAnnotations()
+    open func calculateDistancesForAnnotations()
     {
         guard let userLocation = self.arStatus.userLocation else { return }
         
@@ -314,10 +314,10 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             annotation.distanceFromUser = annotation.location.distance(from: userLocation)
         }
         
-        //self.annotations = self.annotations.sorted { $0.distanceFromUser < $1.distanceFromUser }
+        self.annotations = self.annotations.sorted { $0.distanceFromUser < $1.distanceFromUser }
     }
     
-    fileprivate func calculateAzimuthsForAnnotations()
+    open func calculateAzimuthsForAnnotations()
     {
         guard let userLocation = self.arStatus.userLocation else { return }
         

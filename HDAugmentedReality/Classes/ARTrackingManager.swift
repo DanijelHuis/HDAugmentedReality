@@ -52,7 +52,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
      Value of 1 means no smoothing, should be greater than 0. Default value is 0.05
      */
     public var headingFilterFactor: Double = 0.05
-    private var _headingFilterFactor: Double = 0
+    private var _headingFilterFactor: Double = 0.05
     
     
     /**
