@@ -7,12 +7,12 @@ let MAX_VISIBLE_ANNOTATIONS: Int = 500                           // Do not chang
 
 internal func radiansToDegrees(_ radians: Double) -> Double
 {
-    return (radians) * (180.0 / M_PI)
+    return (radians) * (180.0 / Double.pi)
 }
 
 internal func degreesToRadians(_ degrees: Double) -> Double
 {
-    return (degrees) * (M_PI / 180.0)
+    return (degrees) * (Double.pi / 180.0)
 }
 
 /// Normalizes degree to 0-360

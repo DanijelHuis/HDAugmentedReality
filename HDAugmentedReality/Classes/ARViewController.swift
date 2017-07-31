@@ -647,7 +647,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             
             self.debugPitchSlider?.transform = .identity
             self.debugPitchSlider?.frame = CGRect(x: width - (height - 40) / 2 - 20, y: height/2, width: height - 40, height: 20);
-            self.debugPitchSlider?.transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI * 0.5))
+            self.debugPitchSlider?.transform = CGAffineTransform(rotationAngle: -CGFloat.pi * 0.5)
         }
     }
     
