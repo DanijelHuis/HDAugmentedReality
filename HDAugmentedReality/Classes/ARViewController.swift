@@ -96,7 +96,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     //==========================================================================================================================================================
     // MARK:                                                        Init
     //==========================================================================================================================================================
-    init()
+    public init()
     {
         super.init(nibName: nil, bundle: nil)
         self.initializeInternal()
@@ -131,7 +131,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     }
     
     /// Intended for use in subclasses, no need to call super
-    internal func initialize()
+    open func initialize()
     {
         
     }
