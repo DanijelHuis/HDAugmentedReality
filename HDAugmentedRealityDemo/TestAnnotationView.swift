@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import HDAugmentedReality
 
 open class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
 {
