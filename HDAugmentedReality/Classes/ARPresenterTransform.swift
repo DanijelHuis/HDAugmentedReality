@@ -9,11 +9,40 @@
 import Foundation
 import UIKit
 
-extension ARPresenter
+/**
+ Responsible for transform/layout of annotations, usually after they have been layouted by ARPresenter. 
+ e.g. stacking.
+ 
+ ARPresenterTransform can change arPositionOffset of annotations, or set transform.
+
+ */
+public protocol ARPresenterTransform: class
 {
-    //==========================================================================================================================================================
-    // MARK:                                                               Stacking
-    //==========================================================================================================================================================
+    /// ARresenter, it is set when setting presenterTransform on presenter.
+    var arPresenter: ARPresenter! { set get }
+
+    func preLayout(arStatus: ARStatus, reloadType: ARViewController.ReloadType, needsRelayout: Bool)
+    func postLayout(arStatus: ARStatus, reloadType: ARViewController.ReloadType, needsRelayout: Bool)
+
+}
+
+open class ARPresenterStackTransform: ARPresenterTransform
+{
+    open var arPresenter: ARPresenter!
+    
+    public func preLayout(arStatus: ARStatus, reloadType: ARViewController.ReloadType, needsRelayout: Bool)
+    {
+        
+    }
+    
+    public func postLayout(arStatus: ARStatus, reloadType: ARViewController.ReloadType, needsRelayout: Bool)
+    {
+        if needsRelayout
+        {
+            self.stackAnnotationViews()
+        }
+    }
+    
     
     /**
      Stacks annotationViews vertically if they are overlapping. This works by comparing frames of annotationViews.
@@ -26,12 +55,12 @@ extension ARPresenter
      */
     open func stackAnnotationViews()
     {
-        guard self.annotationViews.count > 0 else { return }
-        guard let arStatus = self.arViewController?.arStatus else { return }
+        guard self.arPresenter.annotationViews.count > 0 else { return }
+        guard let arStatus = self.arPresenter.arViewController?.arStatus else { return }
         
         // Sorting makes stacking faster
-        let sortedAnnotationViews = self.annotationViews.sorted(by: { $0.frame.origin.y > $1.frame.origin.y })
-        let centerX = self.bounds.size.width * 0.5
+        let sortedAnnotationViews = self.arPresenter.annotationViews.sorted(by: { $0.frame.origin.y > $1.frame.origin.y })
+        let centerX = self.arPresenter.bounds.size.width * 0.5
         let totalWidth = CGFloat( arStatus.hPixelsPerDegree * 360 )
         let rightBorder = centerX + totalWidth / 2
         let leftBorder = centerX - totalWidth / 2
@@ -52,14 +81,14 @@ extension ARPresenter
             // Assuming that annotationViews have same width
             if right > (rightBorder - annotationView1.frame.size.width)
             {
-                annotationView1.arStackAlternateFrame = annotationView1.frame
-                annotationView1.arStackAlternateFrame.origin.x = annotationView1.frame.origin.x - totalWidth
+                annotationView1.arAlternateFrame = annotationView1.frame
+                annotationView1.arAlternateFrame.origin.x = annotationView1.frame.origin.x - totalWidth
                 hasAlternateFrame = true
             }
             else if left < (leftBorder + annotationView1.frame.size.width)
             {
-                annotationView1.arStackAlternateFrame = annotationView1.frame
-                annotationView1.arStackAlternateFrame.origin.x = annotationView1.frame.origin.x + totalWidth
+                annotationView1.arAlternateFrame = annotationView1.frame
+                annotationView1.arAlternateFrame.origin.x = annotationView1.frame.origin.x + totalWidth
                 hasAlternateFrame = true
             }
             
@@ -87,31 +116,20 @@ extension ARPresenter
                 if collision
                 {
                     annotationView1.frame.origin.y = annotationView2.frame.origin.y - annotationView1.frame.size.height - 5
-                    annotationView1.arStackAlternateFrame.origin.y = annotationView1.frame.origin.y
+                    annotationView1.arAlternateFrame.origin.y = annotationView1.frame.origin.y
                     hasCollision = true
                 }
-                else if hasAlternateFrame && annotationView1.arStackAlternateFrame.intersects(annotationView2.frame)
+                else if hasAlternateFrame && annotationView1.arAlternateFrame.intersects(annotationView2.frame)
                 {
                     annotationView1.frame.origin.y = annotationView2.frame.origin.y - annotationView1.frame.size.height - 5
-                    annotationView1.arStackAlternateFrame.origin.y = annotationView1.frame.origin.y
+                    annotationView1.arAlternateFrame.origin.y = annotationView1.frame.origin.y
                     hasCollision = true
                 }
                 
                 i = i + 1
             }
-            annotationView1.arStackOffset.y = annotationView1.frame.origin.y - y;
+            annotationView1.arPositionOffset.y = annotationView1.frame.origin.y - y;
         }
     }
     
-    /**
-     Resets temporary stacking fields. This must be called before stacking and before layout.
-     */
-    open func resetStackParameters()
-    {
-        for annotationView in self.annotationViews
-        {
-            annotationView.arStackOffset = CGPoint.zero
-            annotationView.arStackAlternateFrame = CGRect.zero
-        }
-    }
 }

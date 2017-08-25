@@ -559,10 +559,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// Opening DebugMapViewController
     internal func debugButtonTap()
     {
-       // self.presenter.reload(annotations: self.annotations, reloadType: .userLocationChanged)
-        //return
-
-            // DEBUG
+        // DEBUG
         let bundle = Bundle(for: DebugMapViewController.self)
         let mapViewController = DebugMapViewController(nibName: "DebugMapViewController", bundle: bundle)
         self.present(mapViewController, animated: true, completion: nil)

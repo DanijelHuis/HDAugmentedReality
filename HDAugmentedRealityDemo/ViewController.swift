@@ -38,23 +38,31 @@ class ViewController: UIViewController, ARDataSource
         let count = 100
         let dummyAnnotations = ViewController.getDummyAnnotations(centerLatitude: lat, centerLongitude: lon, deltaLat: deltaLat, deltaLon: deltaLon, altitudeDelta: altitudeDelta, count: count)
    
-        // Present ARViewController
+        
+        // ARViewController
         let arViewController = ARViewController()
-        //arViewController.presenter = TestARPresenter(arViewController: arViewController)  // Always set custom presenter first
-        arViewController.dataSource = self
+        
+        //===== Presenter - handles visual presentation of annotations
+        let presenter = arViewController.presenter!
         // Vertical offset by distance
-        arViewController.presenter.distanceOffsetMode = .manual
-        arViewController.presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter
-        arViewController.presenter.distanceOffsetMinThreshold = 500 // Doesn't raise annotations that are nearer than this
+        presenter.distanceOffsetMode = .manual
+        presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter
+        presenter.distanceOffsetMinThreshold = 500 // Doesn't raise annotations that are nearer than this
         // Filtering for performance
-        arViewController.presenter.maxDistance = 3000               // Don't show annotations if they are farther than this
-        arViewController.presenter.maxVisibleAnnotations = 100      // Max number of annotations on the screen
+        presenter.maxDistance = 3000               // Don't show annotations if they are farther than this
+        presenter.maxVisibleAnnotations = 100      // Max number of annotations on the screen
         // Stacking
-        arViewController.presenter.verticalStackingEnabled = true
+        presenter.presenterTransform = ARPresenterStackTransform()
+
+        //===== Tracking manager - handles location tracking, heading, pitch, calculations etc.
         // Location precision
-        arViewController.trackingManager.userDistanceFilter = 15
-        arViewController.trackingManager.reloadDistanceFilter = 50
+        let trackingManager = arViewController.trackingManager
+        trackingManager.userDistanceFilter = 15
+        trackingManager.reloadDistanceFilter = 50
+        
+        //===== ARViewController
         // Ui
+        arViewController.dataSource = self
         arViewController.uiOptions.closeButtonEnabled = true
         // Debugging
         arViewController.uiOptions.debugLabel = true
