@@ -30,6 +30,8 @@ open class ARPresenterStackTransform: ARPresenterTransform
 {
     open var arPresenter: ARPresenter!
     
+    public init() {}
+    
     public func preLayout(arStatus: ARStatus, reloadType: ARViewController.ReloadType, needsRelayout: Bool)
     {
         
