@@ -123,10 +123,10 @@ class StackTestViewController: UIViewController
             self.scrollView.addSubview(annotationView)
             self.annotationViews.append(annotationView)
             
-            let r: Float = Float(drand48() * 200) / Float(255)
-            let g: Float = Float(drand48() * 200) / Float(255)
-            let b: Float = Float(drand48() * 200) / Float(255)
-            let color = UIColor(colorLiteralRed: r, green: g, blue: b, alpha: 0.5)
+            let r: CGFloat = CGFloat(drand48() * 200) / CGFloat(255)
+            let g: CGFloat = CGFloat(drand48() * 200) / CGFloat(255)
+            let b: CGFloat = CGFloat(drand48() * 200) / CGFloat(255)
+            let color = UIColor(red: r, green: g, blue: b, alpha: 0.5)
             annotationView.backgroundColor = color
             
             annotationView.titleLabel?.textColor = UIColor.black

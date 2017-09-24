@@ -143,21 +143,19 @@ open class ARPresenter: UIView
     {
         guard self.arViewController.arStatus.ready else { return }
         
+        // Detecting some rare cases, e.g. if clear was called then we need to recreate everything.
+        let changeDetected = self.annotations.count != annotations.count
         // needsRelayout indicates that position of user or positions of annotations have changed. e.g. user moved, annotations moved/changed.
         // This means that positions of annotations on the screen must be recalculated.
-        let needsRelayout = reloadType == .annotationsChanged || reloadType == .reloadLocationChanged || reloadType == .userLocationChanged || self.annotations.count == 0
+        let needsRelayout = reloadType == .annotationsChanged || reloadType == .reloadLocationChanged || reloadType == .userLocationChanged || changeDetected
 
-        // Set annotations if changed
-        if reloadType == .annotationsChanged || self.annotations.count == 0
-        {
-            self.annotations = annotations
-        }
-        
         // Doing heavier stuff here
         if needsRelayout
         {
+            self.annotations = annotations
+            
             // Filtering annotations and creating annotation views. Doing this only on big location changes, not on any user location change.
-            if reloadType != .userLocationChanged
+            if reloadType != .userLocationChanged || changeDetected
             {
                 self.activeAnnotations = self.activeAnnotationsFromAnnotations(annotations: annotations)
                 self.createAnnotationViews()

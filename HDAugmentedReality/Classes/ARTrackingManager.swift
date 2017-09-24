@@ -12,13 +12,12 @@ import CoreLocation
 import GLKit
 
 
-@objc protocol ARTrackingManagerDelegate : NSObjectProtocol
+protocol ARTrackingManagerDelegate : NSObjectProtocol
 {
-    @objc optional func arTrackingManager(_ trackingManager: ARTrackingManager, didUpdateUserLocation location: CLLocation)
-    @objc optional func arTrackingManager(_ trackingManager: ARTrackingManager, didUpdateReloadLocation location: CLLocation)
-    @objc optional func arTrackingManager(_ trackingManager: ARTrackingManager, didFailToFindLocationAfter elapsedSeconds: TimeInterval)
-    
-    @objc optional func logText(_ text: String)
+    func arTrackingManager(_ trackingManager: ARTrackingManager, didUpdateUserLocation location: CLLocation)
+    func arTrackingManager(_ trackingManager: ARTrackingManager, didUpdateReloadLocation location: CLLocation)
+    func arTrackingManager(_ trackingManager: ARTrackingManager, didFailToFindLocationAfter elapsedSeconds: TimeInterval)
+    func logText(_ text: String)
 }
 
 
@@ -137,7 +136,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         self.deviceOrientationDidChange()
     }
     
-    internal func deviceOrientationDidChange()
+    @objc internal func deviceOrientationDidChange()
     {
         if let deviceOrientation = CLDeviceOrientation(rawValue: Int32(UIDevice.current.orientation.rawValue))
         {
@@ -176,7 +175,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
             self.startLocationSearchTimer()
             
             // Calling delegate with value 0 to be flexible, for example user might want to show indicator when search is starting.
-            self.delegate?.arTrackingManager?(self, didFailToFindLocationAfter: 0)
+            self.delegate?.arTrackingManager(self, didFailToFindLocationAfter: 0)
         }
         
         // Debug
@@ -349,7 +348,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         self.reportLocationTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ARTrackingManager.reportLocationToDelegate), userInfo: nil, repeats: false)
     }
     
-    internal func reportLocationToDelegate()
+    @objc internal func reportLocationToDelegate()
     {
         self.stopReportLocationTimer()
         self.reportLocationDate = Date().timeIntervalSince1970
@@ -360,11 +359,11 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         if reloadLocationPrevious.distance(from: userLocation) > reloadDistanceFilter
         {
             self.reloadLocationPrevious = userLocation
-            self.delegate?.arTrackingManager?(self, didUpdateReloadLocation: userLocation)
+            self.delegate?.arTrackingManager(self, didUpdateReloadLocation: userLocation)
         }
         else
         {
-            self.delegate?.arTrackingManager?(self, didUpdateUserLocation: userLocation)
+            self.delegate?.arTrackingManager(self, didUpdateUserLocation: userLocation)
         }
     }
     
@@ -463,6 +462,12 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         }
         self.filteredHeading = (newHeadingTransformed * headingFilterFactor) + (previousFilteredHeading  * (1.0 - headingFilterFactor))
         self.filteredHeading = normalizeDegree(self.filteredHeading)
+    }
+    
+    internal func catchupHeadingPitch()
+    {
+        self.catchupPitch = true
+        self.filteredHeading = self.debugHeading ?? self.heading
     }
 
     //@TODO rename to heading
@@ -578,12 +583,12 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         self.locationSearchTimer = nil
     }
     
-    internal func locationSearchTimerTick()
+    @objc internal func locationSearchTimerTick()
     {
         guard let locationSearchStartTime = self.locationSearchStartTime else { return }
         let elapsedSeconds = Date().timeIntervalSince1970 - locationSearchStartTime
         
         self.startLocationSearchTimer(resetStartTime: false)
-        self.delegate?.arTrackingManager?(self, didFailToFindLocationAfter: elapsedSeconds)
+        self.delegate?.arTrackingManager(self, didFailToFindLocationAfter: elapsedSeconds)
     }
 }

@@ -204,7 +204,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.layoutUi()
     }
     
-    internal func appDidEnterBackground(_ notification: Notification)
+    @objc internal func appDidEnterBackground(_ notification: Notification)
     {
         if self.view.window != nil
         {
@@ -214,7 +214,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
     }
     
-    internal func appWillEnterForeground(_ notification: Notification)
+    @objc internal func appWillEnterForeground(_ notification: Notification)
     {
         if self.view.window != nil
         {
@@ -331,7 +331,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     //==========================================================================================================================================================
     // MARK:                                    Events: ARLocationManagerDelegate/Display timer
     //==========================================================================================================================================================
-    internal func displayTimerTick()
+    @objc internal func displayTimerTick()
     {
         if self.uiOptions.simulatorDebugging
         {
@@ -429,7 +429,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
     {
         super.viewWillTransition(to: size, with: coordinator)
-
+        self.presenter.isHidden = true
         coordinator.animate(alongsideTransition:
         {
             (coordinatorContext) in
@@ -438,7 +438,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         })
         {
             [unowned self] (coordinatorContext) in
-            
+            self.presenter.isHidden = false
             self.layoutAndReloadOnOrientationChange()
         }
     }
@@ -447,6 +447,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+        self.trackingManager.catchupHeadingPitch()
         self.layoutUi()
         self.reload(reloadType: .annotationsChanged)
         CATransaction.commit()
@@ -527,7 +528,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.closeButton = closeButton
     }
     
-    internal func closeButtonTap()
+    @objc internal func closeButtonTap()
     {
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
@@ -540,14 +541,14 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// Checks if back video device is available.
     open static func isAllHardwareAvailable() -> NSError?
     {
-        return CameraView.createCaptureSession(withMediaType: AVMediaTypeVideo, position: AVCaptureDevicePosition.back).error
+        return CameraView.createCaptureSession(withMediaType: AVMediaType.video, position: AVCaptureDevice.Position.back).error
     }
     
     //==========================================================================================================================================================
     //MARK:                                                        Debug
     //==========================================================================================================================================================
     /// Called from DebugMapViewController when user fakes location.
-    internal func locationNotification(_ sender: Notification)
+    @objc internal func locationNotification(_ sender: Notification)
     {
         if let location = sender.userInfo?["location"] as? CLLocation
         {
@@ -557,7 +558,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     }
     
     /// Opening DebugMapViewController
-    internal func debugButtonTap()
+    @objc internal func debugButtonTap()
     {
         // DEBUG
         let bundle = Bundle(for: DebugMapViewController.self)
@@ -644,7 +645,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             
             self.debugPitchSlider?.transform = .identity
             self.debugPitchSlider?.frame = CGRect(x: width - (height - 40) / 2 - 20, y: height/2, width: height - 40, height: 20);
-            self.debugPitchSlider?.transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI * 0.5))
+            self.debugPitchSlider?.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi * 0.5))
         }
     }
     

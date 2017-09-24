@@ -2,9 +2,10 @@
 
 # HDAugmentedReality
 
-Augmented Reality component for iOS, written in Swift 3.0.
+Augmented Reality component for iOS, written in Swift 4.0.
 
 Version history:
+- 2.3.0: written in swift 4.0, iOS 8+
 - 2.0.0: written in swift 3.0, iOS 8+
 - 1.1.x: written in Swift 3.0, iOS 8+
 - 1.0.x: written in Swift 2.0, iOS 7+
@@ -28,13 +29,17 @@ Altitudes of POIs are disregarded.
 - Simulator debugging and debugging with map controller
 - Configurable vertical offset by distance
 
+## What is next?
+- Improve heading and pitch accuracy by using CMDeviceMotion and new heading property on iOS 11. This will lower the need for high filtering 
+and improve responsiveness.
+- Notify ARAnnotationView when device is targeting it (Focus mode). This could be used as alternative to stacking or used with it. Similar feature can be seen in Flightradar app.
+- Add radar view as standalone accessory. Add support for accessories.
+
 ## Dependencies & Requirements
 
 - CoreLocation.Framework
 - CoreMotion.Framework
 - MapKit.Framework (For debugging only, can be set ‘Optional’)
-
-Xcode 8 is needed for Swift 3.
 
 ## Manual installation
 
@@ -47,13 +52,13 @@ Xcode 8 is needed for Swift 3.
 
 - Add NSLocationWhenInUseUsageDescription to Info.plist. This is needed for location authorization.
 - Add NSCameraUsageDescription to Info.plist. This is needed for camera authorization.
-- Add this two lines to your podfile: 
+- Setup your podfile: 
 ```bash
 platform :ios, '8.0'
 use_frameworks!
  
 target "TargetName" do
-pod 'HDAugmentedReality', '~> 2.2'
+pod 'HDAugmentedReality', '~> 2.3'
 end
  ```
 
