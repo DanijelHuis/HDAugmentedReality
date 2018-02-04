@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import HDAugmentedReality
 
 class FrontRowTransform: ARPresenterTransform
 {

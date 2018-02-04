@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import HDAugmentedReality
 import CoreLocation
 import CoreMotion
 
