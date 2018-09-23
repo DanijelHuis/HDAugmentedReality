@@ -1,0 +1,5 @@
+use_frameworks!
+
+target 'HDAugmentedRealityDemo' do
+  pod 'HDAugmentedReality', :path => '../'
+end

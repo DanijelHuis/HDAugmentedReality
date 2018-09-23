@@ -1,0 +1,6 @@
+framework module HDAugmentedReality {
+  umbrella header "HDAugmentedReality-umbrella.h"
+
+  export *
+  module * { export * }
+}
