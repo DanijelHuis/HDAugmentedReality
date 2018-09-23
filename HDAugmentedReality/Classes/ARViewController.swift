@@ -38,7 +38,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         didSet
         {
-            self.closeButton?.setImage(self.closeButtonImage, for: UIControlState())
+            self.closeButton?.setImage(self.closeButtonImage, for: UIControl.State.normal)
         }
     }
     
@@ -125,8 +125,8 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.trackingManager.delegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.locationNotification(_:)), name: NSNotification.Name(rawValue: "kNotificationLocationSet"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.appWillEnterForeground(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.appDidEnterBackground(_:)), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.appWillEnterForeground(_:)), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.appDidEnterBackground(_:)), name: UIApplication.didEnterBackgroundNotification, object: nil)
         self.initialize()
     }
     
@@ -402,7 +402,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.cameraView.startRunning()
         self.trackingManager.startTracking(notifyLocationFailure: notifyLocationFailure)
         self.displayTimer = CADisplayLink(target: self, selector: #selector(ARViewController.displayTimerTick))
-        self.displayTimer?.add(to: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
+        self.displayTimer?.add(to: RunLoop.current, forMode: RunLoop.Mode.default)
     }
     
     fileprivate func stopCameraAndTracking()
@@ -469,7 +469,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             // Formula: hFOV = 2 * atan[ tan(vFOV/2) * (width/height) ]
             // width, height are camera width/height
             
-            if UIInterfaceOrientationIsLandscape(UIApplication.shared.statusBarOrientation)
+            if UIApplication.shared.statusBarOrientation.isLandscape
             {
                 hFov = Double(retrieviedDevice.activeFormat.videoFieldOfView)   // This is horizontal FOV - FOV of the wider side of the screen
                 vFov = radiansToDegrees(2 * atan( tan(degreesToRadians(hFov / 2)) * Double(frame.size.height / frame.size.width)))
@@ -483,7 +483,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         // Used in simulator
         else
         {
-            if UIInterfaceOrientationIsLandscape(UIApplication.shared.statusBarOrientation)
+            if UIApplication.shared.statusBarOrientation.isLandscape
             {
                 hFov = Double(58)   // This is horizontal FOV - FOV of the wider side of the screen
                 vFov = radiansToDegrees(2 * atan( tan(degreesToRadians(hFov / 2)) * Double(self.view.bounds.size.height / self.view.bounds.size.width)))
@@ -519,11 +519,11 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
         
         // Close button - make it customizable
-        let closeButton: UIButton = UIButton(type: UIButtonType.custom)
-        closeButton.setImage(closeButtonImage, for: UIControlState());
+        let closeButton: UIButton = UIButton(type: UIButton.ButtonType.custom)
+        closeButton.setImage(closeButtonImage, for: UIControl.State.normal);
         closeButton.frame = CGRect(x: self.view.bounds.size.width - 45, y: 5,width: 40,height: 40)
-        closeButton.addTarget(self, action: #selector(ARViewController.closeButtonTap), for: UIControlEvents.touchUpInside)
-        closeButton.autoresizingMask = [UIViewAutoresizing.flexibleLeftMargin, UIViewAutoresizing.flexibleBottomMargin]
+        closeButton.addTarget(self, action: #selector(ARViewController.closeButtonTap), for: UIControl.Event.touchUpInside)
+        closeButton.autoresizingMask = [UIView.AutoresizingMask.flexibleLeftMargin, UIView.AutoresizingMask.flexibleBottomMargin]
         self.view.addSubview(closeButton)
         self.closeButton = closeButton
     }
@@ -539,7 +539,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     }
     
     /// Checks if back video device is available.
-    open static func isAllHardwareAvailable() -> NSError?
+    public static func isAllHardwareAvailable() -> NSError?
     {
         return CameraView.createCaptureSession(withMediaType: AVMediaType.video, position: AVCaptureDevice.Position.back).error
     }
@@ -576,12 +576,12 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         {
             self.debugMapButton?.removeFromSuperview()
             
-            let debugMapButton: UIButton = UIButton(type: UIButtonType.custom)
+            let debugMapButton: UIButton = UIButton(type: UIButton.ButtonType.custom)
             debugMapButton.frame = CGRect(x: 5,y: 5,width: 40,height: 40);
-            debugMapButton.addTarget(self, action: #selector(ARViewController.debugButtonTap), for: UIControlEvents.touchUpInside)
-            debugMapButton.setTitle("map", for: UIControlState())
+            debugMapButton.addTarget(self, action: #selector(ARViewController.debugButtonTap), for: UIControl.Event.touchUpInside)
+            debugMapButton.setTitle("map", for: UIControl.State())
             debugMapButton.backgroundColor = UIColor.white.withAlphaComponent(0.5)
-            debugMapButton.setTitleColor(UIColor.black, for: UIControlState())
+            debugMapButton.setTitleColor(UIColor.black, for: UIControl.State())
             self.view.addSubview(debugMapButton)
             self.debugMapButton = debugMapButton
         }
@@ -596,7 +596,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             debugLabel.font = UIFont.boldSystemFont(ofSize: 10)
             debugLabel.frame = CGRect(x: 5, y: self.view.bounds.size.height - 55, width: self.view.bounds.size.width - 10, height: 40)
             debugLabel.numberOfLines = 0
-            debugLabel.autoresizingMask = [UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleTopMargin]
+            debugLabel.autoresizingMask = [UIView.AutoresizingMask.flexibleWidth, UIView.AutoresizingMask.flexibleTopMargin]
             debugLabel.textAlignment = NSTextAlignment.left
             view.addSubview(debugLabel)
             self.debugLabel = debugLabel

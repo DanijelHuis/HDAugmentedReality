@@ -34,7 +34,7 @@ open class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
         
         // Info button
         self.infoButton?.removeFromSuperview()
-        let button = UIButton(type: UIButtonType.detailDisclosure)
+        let button = UIButton(type: UIButton.ButtonType.detailDisclosure)
         button.isUserInteractionEnabled = false   // Whole view will be tappable, using it for appearance
         self.addSubview(button)
         self.infoButton = button

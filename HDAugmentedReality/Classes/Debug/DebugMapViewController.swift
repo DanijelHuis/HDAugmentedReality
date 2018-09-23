@@ -84,7 +84,7 @@ open class DebugMapViewController: UIViewController, MKMapViewDelegate, CLLocati
     
     @IBAction func longTap(_ sender: UILongPressGestureRecognizer)
     {
-        if sender.state == UIGestureRecognizerState.began
+        if sender.state == UIGestureRecognizer.State.began
         {
             let point = sender.location(in: self.mapView)
             let coordinate = self.mapView.convert(point, toCoordinateFrom: self.mapView)
