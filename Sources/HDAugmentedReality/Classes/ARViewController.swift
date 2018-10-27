@@ -534,7 +534,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         if #available(iOS 11, *) {
             let guide = view.safeAreaLayoutGuide
             NSLayoutConstraint.activate([
-                closeButton.topAnchor.constraint(equalTo: guide.topAnchor, constant: 5),
+                closeButton.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0),
                 closeButton.rightAnchor.constraint(equalTo: guide.rightAnchor, constant: -5)
                 ])
             
