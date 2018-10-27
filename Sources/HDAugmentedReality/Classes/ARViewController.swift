@@ -29,13 +29,13 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     /// Orientation mask for view controller. Make sure orientations are enabled in project settings also.
     open var interfaceOrientationMask: UIInterfaceOrientationMask = UIInterfaceOrientationMask.all
-
+    
     /// Class for tracking location/heading/pitch. Use it to set properties like reloadDistanceFilter, userDistanceFilter etc.
     fileprivate(set) open var trackingManager: ARTrackingManager = ARTrackingManager()
     
     /// Image for close button. If not set, default one is used.
     open var closeButtonImage: UIImage?
-    {
+        {
         didSet
         {
             self.closeButton?.setImage(self.closeButtonImage, for: UIControl.State.normal)
@@ -57,7 +57,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
      Presenter instance. It is responsible for creation and layout of annotation views. Subclass and provide your own implementation if needed. Always set it before anything else is set on this controller.
      */
     open var presenter: ARPresenter!
-    {
+        {
         willSet
         {
             self.presenter?.removeFromSuperview()
@@ -74,25 +74,25 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /**
      Structure that holds all information related to AR. All device/location properties gathered by ARTrackingManager and
      camera properties gathered by ARViewController. It is intended to be used by ARPresenters and external objects.
-    */
+     */
     open var arStatus: ARStatus = ARStatus()
     
     //===== Private
     fileprivate var annotations: [ARAnnotation] = []
     fileprivate var cameraView: CameraView = CameraView()
-
+    
     fileprivate var initialized: Bool = false
     fileprivate var displayTimer: CADisplayLink?
     fileprivate var closeButton: UIButton?
     fileprivate var lastLocation: CLLocation?
     fileprivate var didLayoutSubviews: Bool = false
     fileprivate var pendingHighestRankingReload: ReloadType?
-
+    
     fileprivate var debugLabel: UILabel?
     fileprivate var debugMapButton: UIButton?
     fileprivate var debugHeadingSlider: UISlider?
     fileprivate var debugPitchSlider: UISlider?
-
+    
     //==========================================================================================================================================================
     // MARK:                                                        Init
     //==========================================================================================================================================================
@@ -121,7 +121,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         
         // Default values
         self.presenter = ARPresenter(arViewController: self)
-
+        
         self.trackingManager.delegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.locationNotification(_:)), name: NSNotification.Name(rawValue: "kNotificationLocationSet"), object: nil)
@@ -301,7 +301,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             self.calculateDistancesForAnnotations()
             self.calculateAzimuthsForAnnotations()
         }
-    
+        
         self.presenter.reload(annotations: self.annotations, reloadType: highestRankingReload)
     }
     
@@ -327,7 +327,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             annotation.azimuth = azimuth
         }
     }
-
+    
     //==========================================================================================================================================================
     // MARK:                                    Events: ARLocationManagerDelegate/Display timer
     //==========================================================================================================================================================
@@ -378,8 +378,8 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
                 self.setAnnotations(annotations)
             }
         }
-        // If no manual reload, calling reload with .reloadLocationChanged, this will give the opportunity to the presenter
-        // to filter existing annotations with distance, max count etc.
+            // If no manual reload, calling reload with .reloadLocationChanged, this will give the opportunity to the presenter
+            // to filter existing annotations with distance, max count etc.
         else
         {
             self.reload(reloadType: .reloadLocationChanged)
@@ -425,16 +425,16 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         return self.interfaceOrientationMask
     }
-
+    
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
     {
         super.viewWillTransition(to: size, with: coordinator)
         self.presenter.isHidden = true
         coordinator.animate(alongsideTransition:
-        {
-            (coordinatorContext) in
-            
-            self.setOrientation(UIApplication.shared.statusBarOrientation)
+            {
+                (coordinatorContext) in
+                
+                self.setOrientation(UIApplication.shared.statusBarOrientation)
         })
         {
             [unowned self] (coordinatorContext) in
@@ -480,7 +480,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
                 hFov = radiansToDegrees(2 * atan( tan(degreesToRadians(vFov / 2)) * Double(frame.size.width / frame.size.height)))
             }
         }
-        // Used in simulator
+            // Used in simulator
         else
         {
             if UIApplication.shared.statusBarOrientation.isLandscape
@@ -500,7 +500,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.arStatus.hPixelsPerDegree = hFov > 0 ? Double(frame.size.width / CGFloat(hFov)) : 0
         self.arStatus.vPixelsPerDegree = vFov > 0 ? Double(frame.size.height / CGFloat(vFov)) : 0
     }
-
+    
     //==========================================================================================================================================================
     //MARK:                                                        UI
     //==========================================================================================================================================================
@@ -521,10 +521,29 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         // Close button - make it customizable
         let closeButton: UIButton = UIButton(type: UIButton.ButtonType.custom)
         closeButton.setImage(closeButtonImage, for: UIControl.State.normal);
-        closeButton.frame = CGRect(x: self.view.bounds.size.width - 45, y: 5,width: 40,height: 40)
         closeButton.addTarget(self, action: #selector(ARViewController.closeButtonTap), for: UIControl.Event.touchUpInside)
-        closeButton.autoresizingMask = [UIView.AutoresizingMask.flexibleLeftMargin, UIView.AutoresizingMask.flexibleBottomMargin]
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(closeButton)
+        
+        // Close Button - add constraints
+        let widthConstraing = NSLayoutConstraint(item: closeButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
+        let heightConstraing = NSLayoutConstraint(item: closeButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
+        
+        NSLayoutConstraint.activate([widthConstraing, heightConstraing])
+        
+        if #available(iOS 11, *) {
+            let guide = view.safeAreaLayoutGuide
+            NSLayoutConstraint.activate([
+                closeButton.topAnchor.constraint(equalTo: guide.topAnchor, constant: 5),
+                closeButton.rightAnchor.constraint(equalTo: guide.rightAnchor, constant: -5)
+                ])
+            
+        } else {
+            NSLayoutConstraint.activate([ NSLayoutConstraint(item: closeButton, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 30),
+                                          NSLayoutConstraint(item: closeButton, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: -45)
+                ])
+        }
+        
         self.closeButton = closeButton
     }
     
@@ -676,7 +695,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         var maxLat: CLLocationDegrees = -1000
         var minLon: CLLocationDegrees = 1000
         var maxLon: CLLocationDegrees = -1000
-
+        
         for annotation in annotations
         {
             let latitude = annotation.location.coordinate.latitude
@@ -709,7 +728,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         case reloadLocationChanged = 2
         case annotationsChanged = 3
     }
- 
+    
     public struct UiOptions
     {
         /// Enables/Disables debug map
