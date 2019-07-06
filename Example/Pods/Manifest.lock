@@ -1,5 +1,5 @@
 PODS:
-  - HDAugmentedReality (2.4.0)
+  - HDAugmentedReality (3.0.0)
 
 DEPENDENCIES:
   - HDAugmentedReality (from `../`)
@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  HDAugmentedReality: fa0a69b8e3bf183feed35d283e521dc59cc62344
+  HDAugmentedReality: 70bac24683dfa9a7e3c3d9aae31bf7ee14c059f9
 
-PODFILE CHECKSUM: f7912dea3f2bcd20e2c73663c86839b1e1f82ebc
+PODFILE CHECKSUM: 7fe0b00a8642790c16137e59c6046bc58bb72868
 
-COCOAPODS: 1.6.0.beta.1
+COCOAPODS: 1.7.2

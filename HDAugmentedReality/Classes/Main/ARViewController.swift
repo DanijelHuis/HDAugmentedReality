@@ -76,6 +76,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
      camera properties gathered by ARViewController. It is intended to be used by ARPresenters and external objects.
     */
     open var arStatus: ARStatus = ARStatus()
+    private(set) open var controlsView = TouchView()
     
     //===== Private
     fileprivate var annotations: [ARAnnotation] = []
@@ -93,6 +94,8 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     fileprivate var debugHeadingSlider: UISlider?
     fileprivate var debugPitchSlider: UISlider?
 
+    private var shouldRecalculateDebugLocation = true
+    private var fixedDebugLocation: CLLocation?
     //==========================================================================================================================================================
     // MARK:                                                        Init
     //==========================================================================================================================================================
@@ -230,6 +233,13 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// This is called only once when view is fully layouted.
     fileprivate func loadUi()
     {
+        // Controls view
+        let view = self.controlsView
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.clear
+        self.view.addSubview(view)
+        view.pinToLayoutGuide(self.view.safeAreaLayoutGuide, leading: 0, trailing: 0, top: 0, bottom: 0, width: nil, height: nil)
+
         // Presenter
         if self.presenter.superview == nil { self.view.insertSubview(self.presenter, at: 0) }
         
@@ -252,7 +262,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         self.cameraView.frame = self.view.bounds
         self.presenter.frame = self.view.bounds
-        self.layoutDebugUi()
         self.calculateFOV()
     }
     
@@ -262,13 +271,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// Sets annotations and calls reload on presenter
     open func setAnnotations(_ annotations: [ARAnnotation])
     {
-        // If simulatorDebugging is true, getting center location from all annotations and setting it as current user location
-        if self.uiOptions.setUserLocationToCenterOfAnnotations, let location = self.centerLocationFromAnnotations(annotations: annotations)
-        {
-            self.arStatus.userLocation = location
-            self.trackingManager.startDebugMode(location: location)
-        }
-        
+        self.shouldRecalculateDebugLocation = true
         self.annotations = annotations
         self.reload(reloadType: .annotationsChanged)
     }
@@ -323,7 +326,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         
         for annotation in self.annotations
         {
-            let azimuth = self.trackingManager.azimuthFromUserToLocation(userLocation: userLocation, location: annotation.location)
+            let azimuth = self.trackingManager.bearingFromUserToLocation(userLocation: userLocation, location: annotation.location)
             annotation.azimuth = azimuth
         }
     }
@@ -335,22 +338,41 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         if self.uiOptions.simulatorDebugging
         {
-            // Getting heading and pitch from sliders
-            var heading: Double = Double(self.debugHeadingSlider?.value ?? 0)
-            heading = normalizeDegree(heading)
-            self.trackingManager.startDebugMode(location: nil, heading: Double(heading), pitch: Double(self.debugPitchSlider?.value ?? 0))
+            self.trackingManager.isDebugging = true
+            
+            //===== Heading and pitch
+            self.arStatus.heading = normalizeDegree(Double(self.debugHeadingSlider?.value ?? 0))
+            self.arStatus.pitch =  Double(self.debugPitchSlider?.value ?? 0)
+            
+            //===== Location
+            var location: CLLocation? = self.fixedDebugLocation
+  
+            if location == nil, self.shouldRecalculateDebugLocation, self.uiOptions.setUserLocationToCenterOfAnnotations
+            {
+                location = self.centerLocationFromAnnotations(annotations: annotations)
+                self.shouldRecalculateDebugLocation = false
+            }
+            
+            if let location = location { self.arStatus.userLocation = location }
+        }
+        else
+        {
+            self.trackingManager.isDebugging = false
+
+            self.trackingManager.calculatePitch()
+            self.trackingManager.calculateHeading()
+            self.arStatus.pitch = self.trackingManager.pitch
+            self.arStatus.heading = self.trackingManager.heading
+            self.arStatus.userLocation = self.trackingManager.userLocation
         }
         
-        self.trackingManager.filterPitch()
-        self.trackingManager.filterHeading()
-        self.arStatus.pitch = self.trackingManager.filteredPitch
-        self.arStatus.heading = self.trackingManager.filteredHeading
+        
         self.reload(reloadType: .headingChanged)
         
         if self.uiOptions.debugLabel
         {
-            let heading = String(format: "%.0f(%.0f)", self.trackingManager.debugHeading ?? self.trackingManager.heading, self.trackingManager.filteredHeading)
-            let pitch = String(format: "%.3f", self.trackingManager.filteredPitch)
+            let heading = String(format: "%.0f(%.0f)", self.arStatus.heading, self.trackingManager.heading)
+            let pitch = String(format: "%.3f", self.trackingManager.pitch)
             logText("Heading: \(heading) -- Pitch: \(pitch)")
         }
     }
@@ -447,7 +469,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        self.trackingManager.catchupHeadingPitch()
         self.layoutUi()
         self.reload(reloadType: .annotationsChanged)
         CATransaction.commit()
@@ -472,12 +493,12 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             if UIApplication.shared.statusBarOrientation.isLandscape
             {
                 hFov = Double(retrieviedDevice.activeFormat.videoFieldOfView)   // This is horizontal FOV - FOV of the wider side of the screen
-                vFov = radiansToDegrees(2 * atan( tan(degreesToRadians(hFov / 2)) * Double(frame.size.height / frame.size.width)))
+                vFov = (2 * atan( tan((hFov / 2).toRadians) * Double(frame.size.height / frame.size.width))).toDegrees
             }
             else
             {
                 vFov = Double(retrieviedDevice.activeFormat.videoFieldOfView)   // This is horizontal FOV - FOV of the wider side of the screen
-                hFov = radiansToDegrees(2 * atan( tan(degreesToRadians(vFov / 2)) * Double(frame.size.width / frame.size.height)))
+                hFov = (2 * atan( tan((vFov / 2).toRadians) * Double(frame.size.width / frame.size.height))).toDegrees
             }
         }
         // Used in simulator
@@ -486,12 +507,12 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             if UIApplication.shared.statusBarOrientation.isLandscape
             {
                 hFov = Double(58)   // This is horizontal FOV - FOV of the wider side of the screen
-                vFov = radiansToDegrees(2 * atan( tan(degreesToRadians(hFov / 2)) * Double(self.view.bounds.size.height / self.view.bounds.size.width)))
+                vFov = (2 * atan( tan((hFov / 2).toRadians) * Double(self.view.bounds.size.height / self.view.bounds.size.width))).toDegrees
             }
             else
             {
                 vFov = Double(58)   // This is horizontal FOV - FOV of the wider side of the screen
-                hFov = radiansToDegrees(2 * atan( tan(degreesToRadians(vFov / 2)) * Double(self.view.bounds.size.width / self.view.bounds.size.height)))
+                hFov = (2 * atan( tan((vFov / 2).toRadians) * Double(self.view.bounds.size.width / self.view.bounds.size.height))).toDegrees
             }
         }
         
@@ -520,11 +541,12 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         
         // Close button - make it customizable
         let closeButton: UIButton = UIButton(type: UIButton.ButtonType.custom)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
         closeButton.setImage(closeButtonImage, for: UIControl.State.normal);
-        closeButton.frame = CGRect(x: self.view.bounds.size.width - 45, y: 5,width: 40,height: 40)
         closeButton.addTarget(self, action: #selector(ARViewController.closeButtonTap), for: UIControl.Event.touchUpInside)
-        closeButton.autoresizingMask = [UIView.AutoresizingMask.flexibleLeftMargin, UIView.AutoresizingMask.flexibleBottomMargin]
-        self.view.addSubview(closeButton)
+        self.controlsView.addSubview(closeButton)
+        closeButton.pinToSuperview(leading: nil, trailing: 0, top: 0, bottom: nil, width: 40, height: 40)
+        
         self.closeButton = closeButton
     }
     
@@ -552,7 +574,8 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         if let location = sender.userInfo?["location"] as? CLLocation
         {
-            self.trackingManager.startDebugMode(location: location)
+            self.fixedDebugLocation = location
+            self.displayTimerTick()
             self.reload(reloadType: .reloadLocationChanged)
         }
     }
@@ -569,20 +592,18 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     func addDebugUi()
     {
-        let width = self.view.bounds.size.width
-        let height = self.view.bounds.size.height
-        
         if self.uiOptions.debugMap
         {
             self.debugMapButton?.removeFromSuperview()
             
             let debugMapButton: UIButton = UIButton(type: UIButton.ButtonType.custom)
-            debugMapButton.frame = CGRect(x: 5,y: 5,width: 40,height: 40);
+            debugMapButton.translatesAutoresizingMaskIntoConstraints = false
             debugMapButton.addTarget(self, action: #selector(ARViewController.debugButtonTap), for: UIControl.Event.touchUpInside)
             debugMapButton.setTitle("map", for: UIControl.State())
             debugMapButton.backgroundColor = UIColor.white.withAlphaComponent(0.5)
             debugMapButton.setTitleColor(UIColor.black, for: UIControl.State())
-            self.view.addSubview(debugMapButton)
+            self.controlsView.addSubview(debugMapButton)
+            debugMapButton.pinToSuperview(leading: 5, trailing: nil, top: 5, bottom: nil, width: 40, height: 40)
             self.debugMapButton = debugMapButton
         }
         
@@ -591,61 +612,61 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             self.debugLabel?.removeFromSuperview()
             
             let debugLabel = UILabel()
+            debugLabel.translatesAutoresizingMaskIntoConstraints = false
             debugLabel.backgroundColor = UIColor.white
             debugLabel.textColor = UIColor.black
             debugLabel.font = UIFont.boldSystemFont(ofSize: 10)
-            debugLabel.frame = CGRect(x: 5, y: self.view.bounds.size.height - 55, width: self.view.bounds.size.width - 10, height: 40)
             debugLabel.numberOfLines = 0
             debugLabel.autoresizingMask = [UIView.AutoresizingMask.flexibleWidth, UIView.AutoresizingMask.flexibleTopMargin]
             debugLabel.textAlignment = NSTextAlignment.left
-            view.addSubview(debugLabel)
+            self.controlsView.addSubview(debugLabel)
+            debugLabel.pinToSuperview(leading: 10, trailing: 10, top: nil, bottom: 5, width: nil, height: 40)
+
             self.debugLabel = debugLabel
             
             let debugHorizontalLine = UIView()
-            debugHorizontalLine.frame = CGRect(x: 0, y: height/2, width: width, height: 1)
+            debugHorizontalLine.translatesAutoresizingMaskIntoConstraints = false
             debugHorizontalLine.backgroundColor = UIColor.green.withAlphaComponent(0.5)
             debugHorizontalLine.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin, .flexibleWidth]
-            view.addSubview(debugHorizontalLine)
+            self.controlsView.addSubview(debugHorizontalLine)
+            debugHorizontalLine.pinToSuperview(leading: 0, trailing: 0, top: nil, bottom: nil, width: nil, height: 1)
+            debugHorizontalLine.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
             
             let debugVerticalLine = UIView()
-            debugVerticalLine.frame = CGRect(x: width / 2, y: 0, width: 1, height: height)
+            debugVerticalLine.translatesAutoresizingMaskIntoConstraints = false
             debugVerticalLine.backgroundColor = UIColor.green.withAlphaComponent(0.5)
             debugVerticalLine.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleHeight]
-            view.addSubview(debugVerticalLine)
+            self.controlsView.addSubview(debugVerticalLine)
+            debugVerticalLine.pinToSuperview(leading: nil, trailing: nil, top: 0, bottom: 0, width: 1, height: nil)
+            debugVerticalLine.centerXAnchor.constraint(equalTo: self.controlsView.centerXAnchor).isActive = true
+
         }
         
         if self.uiOptions.simulatorDebugging
         {
             let headingSlider: UISlider = UISlider()
+            headingSlider.translatesAutoresizingMaskIntoConstraints = false
             headingSlider.autoresizingMask = []
             headingSlider.minimumValue = -180
             headingSlider.maximumValue = 180
             headingSlider.value = 1
-            self.view.addSubview(headingSlider)
+            self.controlsView.addSubview(headingSlider)
+            headingSlider.pinToSuperview(leading: 10, trailing: 10, top: nil, bottom: 0, width: nil, height: 20)
             self.debugHeadingSlider = headingSlider
             
             let pitchSlider: UISlider = UISlider()
+            pitchSlider.translatesAutoresizingMaskIntoConstraints = false
             pitchSlider.autoresizingMask = []
             pitchSlider.minimumValue = -90
             pitchSlider.maximumValue = 90
             pitchSlider.value = 1
-            self.view.addSubview(pitchSlider)
+            self.controlsView.addSubview(pitchSlider)
+            pitchSlider.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            pitchSlider.centerYAnchor.constraint(equalTo: self.controlsView.centerYAnchor).isActive = true
+            pitchSlider.centerXAnchor.constraint(equalTo: self.controlsView.trailingAnchor, constant: -10).isActive = true
+            pitchSlider.widthAnchor.constraint(equalTo: self.controlsView.heightAnchor, multiplier: 1.0, constant: -20).isActive = true
+            pitchSlider.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi * 0.5))
             self.debugPitchSlider = pitchSlider
-        }
-    }
-    
-    func layoutDebugUi()
-    {
-        if self.uiOptions.simulatorDebugging
-        {
-            let width = self.view.bounds.size.width
-            let height = self.view.bounds.size.height
-            
-            self.debugHeadingSlider?.frame = CGRect(x: 20,y: self.view.frame.size.height - 20, width: self.view.frame.size.width - 40,height: 20);
-            
-            self.debugPitchSlider?.transform = .identity
-            self.debugPitchSlider?.frame = CGRect(x: width - (height - 40) / 2 - 20, y: height/2, width: height - 40, height: 20);
-            self.debugPitchSlider?.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi * 0.5))
         }
     }
     
@@ -724,7 +745,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         public var closeButtonEnabled = true
     }
 }
-
 
 
 

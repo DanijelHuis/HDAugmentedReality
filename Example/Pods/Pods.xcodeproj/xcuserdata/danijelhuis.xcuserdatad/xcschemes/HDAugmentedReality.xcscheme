@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1100"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DB2106148DC0460C9267F834384F9986"
+               BlueprintIdentifier = "3FB7B74DBC0D96D7F97242370637B8DB"
+               BuildableName = "HDAugmentedReality.framework"
                BlueprintName = "HDAugmentedReality"
-               ReferencedContainer = "container:Pods.xcodeproj"
-               BuildableName = "HDAugmentedReality.framework">
+               ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

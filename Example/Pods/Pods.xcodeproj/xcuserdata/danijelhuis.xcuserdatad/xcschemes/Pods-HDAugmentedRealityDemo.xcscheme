@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1100"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "185FA1E5BEC1614325EC638DE335B814"
+               BlueprintIdentifier = "4E2A4AFC0646CF7331856A51B4F46549"
                BuildableName = "Pods_HDAugmentedRealityDemo.framework"
                BlueprintName = "Pods-HDAugmentedRealityDemo"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "185FA1E5BEC1614325EC638DE335B814"
+            BlueprintIdentifier = "4E2A4AFC0646CF7331856A51B4F46549"
             BuildableName = "Pods_HDAugmentedRealityDemo.framework"
             BlueprintName = "Pods-HDAugmentedRealityDemo"
             ReferencedContainer = "container:Pods.xcodeproj">

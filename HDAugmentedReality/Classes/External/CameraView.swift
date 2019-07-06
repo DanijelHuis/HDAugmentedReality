@@ -61,6 +61,9 @@ open class CameraView: UIView
     /// Starts running capture session
     open func startRunning()
     {
+        #if targetEnvironment(simulator)
+            self.backgroundColor = UIColor.darkGray
+        #endif
         //print("CameraView: Called startRunning before added to subview")
         self.captureSession?.startRunning()
     }

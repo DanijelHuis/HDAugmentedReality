@@ -1,62 +1,10 @@
 import CoreLocation
 import UIKit
+import Foundation
+import CoreMotion
 
 let LAT_LON_FACTOR: CGFloat = 1.33975031663                      // Used in azimuzh calculation, don't change
-
 let MAX_VISIBLE_ANNOTATIONS: Int = 500                           // Do not change, can affect performance
-
-internal func radiansToDegrees(_ radians: Double) -> Double
-{
-    return (radians) * (180.0 / Double.pi)
-}
-
-internal func degreesToRadians(_ degrees: Double) -> Double
-{
-    return (degrees) * (Double.pi / 180.0)
-}
-
-/// Normalizes degree to 0-360
-internal func normalizeDegree(_ degree: Double) -> Double
-{
-    var degreeNormalized = fmod(degree, 360)
-    if degreeNormalized < 0
-    {
-        degreeNormalized = 360 + degreeNormalized
-    }
-    return degreeNormalized
-}
-
-/// Normalizes degree to 0...180, 0...-180
-internal func normalizeDegree2(_ degree: Double) -> Double
-{
-    var degreeNormalized = fmod(degree, 360)
-    if degreeNormalized > 180
-    {
-        degreeNormalized -= 360
-    }
-    else if degreeNormalized < -180
-    {
-        degreeNormalized += 360
-    }
-    
-    return degreeNormalized
-}
-
-/// Finds shortes angle distance between two angles. Angles must be normalized(0-360)
-internal func deltaAngle(_ angle1: Double, _ angle2: Double) -> Double
-{
-    var deltaAngle = angle1 - angle2
-    
-    if deltaAngle > 180
-    {
-        deltaAngle -= 360
-    }
-    else if deltaAngle < -180
-    {
-        deltaAngle += 360
-    }
-    return deltaAngle
-}
 
 /// DataSource provides the ARViewController with the information needed to display annotations.
 @objc public protocol ARDataSource : NSObjectProtocol
@@ -128,6 +76,3 @@ public struct Platform
         return isSim
     }()
 }
-
-
-
