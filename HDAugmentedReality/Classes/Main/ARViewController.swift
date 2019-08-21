@@ -76,7 +76,19 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
      camera properties gathered by ARViewController. It is intended to be used by ARPresenters and external objects.
     */
     open var arStatus: ARStatus = ARStatus()
-    private(set) open var controlsView = TouchView()
+    
+    /**
+     You can use this property to add accessory from Interface builder, do not use it for anything else.
+     If you want to add accessory via code, use "accessories" property.
+     */
+    @IBOutlet open var accessoriesOutlet: [AnyObject] = []
+    
+    /**
+     Accessories. You can also add accessory from Interface builder by connecting it to "accessoriesOutlet".
+     */
+    private(set) open var accessories: [ARAccessory] = []
+    @IBOutlet var controlsView: UIView?
+    @IBOutlet var labelCollection: [UILabel]!
     
     //===== Private
     fileprivate var annotations: [ARAnnotation] = []
@@ -89,13 +101,14 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     fileprivate var didLayoutSubviews: Bool = false
     fileprivate var pendingHighestRankingReload: ReloadType?
 
-    fileprivate var debugLabel: UILabel?
+    fileprivate var debugTextView: UITextView?
     fileprivate var debugMapButton: UIButton?
     fileprivate var debugHeadingSlider: UISlider?
     fileprivate var debugPitchSlider: UISlider?
 
     private var shouldRecalculateDebugLocation = true
     private var fixedDebugLocation: CLLocation?
+    private var debugDateFormatter = DateFormatter()
     //==========================================================================================================================================================
     // MARK:                                                        Init
     //==========================================================================================================================================================
@@ -111,7 +124,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.initializeInternal()
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
+    override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.initializeInternal()
@@ -124,7 +137,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         
         // Default values
         self.presenter = ARPresenter(arViewController: self)
-
         self.trackingManager.delegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.locationNotification(_:)), name: NSNotification.Name(rawValue: "kNotificationLocationSet"), object: nil)
@@ -233,13 +245,20 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// This is called only once when view is fully layouted.
     fileprivate func loadUi()
     {
-        // Controls view
-        let view = self.controlsView
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.clear
-        self.view.addSubview(view)
-        view.pinToLayoutGuide(self.view.safeAreaLayoutGuide, leading: 0, trailing: 0, top: 0, bottom: 0, width: nil, height: nil)
-
+        // Controls view, if not given via xib - create it.
+        if self.controlsView == nil
+        {
+            let controlsView = TouchView()
+            controlsView.translatesAutoresizingMaskIntoConstraints = false
+            controlsView.backgroundColor = UIColor.clear
+            self.view.addSubview(controlsView)
+            controlsView.pinToLayoutGuide(self.view.safeAreaLayoutGuide, leading: 0, trailing: 0, top: 0, bottom: 0, width: nil, height: nil)
+            self.controlsView = controlsView
+        }
+        
+        // Accessories: Adding accessoriesOutlet to accessories. accessoriesOutlet is used only as shortcut to add accessory via Interface Builder.
+        self.accessories.append(contentsOf: self.accessoriesOutlet.compactMap({ $0 as? ARAccessory }))
+        
         // Presenter
         if self.presenter.superview == nil { self.view.insertSubview(self.presenter, at: 0) }
         
@@ -306,6 +325,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
     
         self.presenter.reload(annotations: self.annotations, reloadType: highestRankingReload)
+        self.accessories.forEach({ $0.reload(reloadType: highestRankingReload, status: arStatus) })
     }
     
     open func calculateDistancesForAnnotations()
@@ -326,7 +346,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         
         for annotation in self.annotations
         {
-            let azimuth = self.trackingManager.bearingFromUserToLocation(userLocation: userLocation, location: annotation.location)
+            let azimuth = ARMath.bearingFromUserToLocation(userLocation: userLocation, location: annotation.location)
             annotation.azimuth = azimuth
         }
     }
@@ -336,18 +356,17 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     //==========================================================================================================================================================
     @objc internal func displayTimerTick()
     {
+        //@TODO fix map long tap
         if self.uiOptions.simulatorDebugging
         {
-            self.trackingManager.isDebugging = true
-            
             //===== Heading and pitch
-            self.arStatus.heading = normalizeDegree(Double(self.debugHeadingSlider?.value ?? 0))
+            self.arStatus.heading = ARMath.normalizeDegree(Double(self.debugHeadingSlider?.value ?? 0))
             self.arStatus.pitch =  Double(self.debugPitchSlider?.value ?? 0)
             
             //===== Location
             var location: CLLocation? = self.fixedDebugLocation
   
-            if location == nil, self.shouldRecalculateDebugLocation, self.uiOptions.setUserLocationToCenterOfAnnotations
+            if self.uiOptions.setUserLocationToCenterOfAnnotations, self.shouldRecalculateDebugLocation, location == nil
             {
                 location = self.centerLocationFromAnnotations(annotations: annotations)
                 self.shouldRecalculateDebugLocation = false
@@ -357,24 +376,18 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
         else
         {
-            self.trackingManager.isDebugging = false
-
-            self.trackingManager.calculatePitch()
-            self.trackingManager.calculateHeading()
-            self.arStatus.pitch = self.trackingManager.pitch
-            self.arStatus.heading = self.trackingManager.heading
-            self.arStatus.userLocation = self.trackingManager.userLocation
+            self.trackingManager.calculateAndFilterPitchAndHeading()
+            if let heading = self.trackingManager.heading, let pitch = self.trackingManager.pitch
+            {
+                self.arStatus.pitch = pitch
+                self.arStatus.heading = heading
+            }
+            self.arStatus.userLocation = self.fixedDebugLocation ?? self.trackingManager.userLocation
         }
         
         
         self.reload(reloadType: .headingChanged)
-        
-        if self.uiOptions.debugLabel
-        {
-            let heading = String(format: "%.0f(%.0f)", self.arStatus.heading, self.trackingManager.heading)
-            let pitch = String(format: "%.3f", self.trackingManager.pitch)
-            logText("Heading: \(heading) -- Pitch: \(pitch)")
-        }
+        self.debug()
     }
     
     internal func arTrackingManager(_ trackingManager: ARTrackingManager, didUpdateUserLocation location: CLLocation)
@@ -462,6 +475,8 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             [unowned self] (coordinatorContext) in
             self.presenter.isHidden = false
             self.layoutAndReloadOnOrientationChange()
+            //@TODO fix transition
+            //@TODO update filtered values
         }
     }
     
@@ -544,7 +559,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         closeButton.setImage(closeButtonImage, for: UIControl.State.normal);
         closeButton.addTarget(self, action: #selector(ARViewController.closeButtonTap), for: UIControl.Event.touchUpInside)
-        self.controlsView.addSubview(closeButton)
+        self.controlsView?.addSubview(closeButton)
         closeButton.pinToSuperview(leading: nil, trailing: 0, top: 0, bottom: nil, width: 40, height: 40)
         
         self.closeButton = closeButton
@@ -592,6 +607,8 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     func addDebugUi()
     {
+        guard let controlsView = self.controlsView else { return }
+        
         if self.uiOptions.debugMap
         {
             self.debugMapButton?.removeFromSuperview()
@@ -602,33 +619,38 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             debugMapButton.setTitle("map", for: UIControl.State())
             debugMapButton.backgroundColor = UIColor.white.withAlphaComponent(0.5)
             debugMapButton.setTitleColor(UIColor.black, for: UIControl.State())
-            self.controlsView.addSubview(debugMapButton)
+            controlsView.addSubview(debugMapButton)
             debugMapButton.pinToSuperview(leading: 5, trailing: nil, top: 5, bottom: nil, width: 40, height: 40)
             self.debugMapButton = debugMapButton
         }
         
         if self.uiOptions.debugLabel
         {
-            self.debugLabel?.removeFromSuperview()
+            self.debugTextView?.removeFromSuperview()
             
-            let debugLabel = UILabel()
+            let debugLabel = UITextView()
             debugLabel.translatesAutoresizingMaskIntoConstraints = false
             debugLabel.backgroundColor = UIColor.white
             debugLabel.textColor = UIColor.black
             debugLabel.font = UIFont.boldSystemFont(ofSize: 10)
-            debugLabel.numberOfLines = 0
             debugLabel.autoresizingMask = [UIView.AutoresizingMask.flexibleWidth, UIView.AutoresizingMask.flexibleTopMargin]
             debugLabel.textAlignment = NSTextAlignment.left
-            self.controlsView.addSubview(debugLabel)
-            debugLabel.pinToSuperview(leading: 10, trailing: 10, top: nil, bottom: 5, width: nil, height: 40)
-
-            self.debugLabel = debugLabel
+            debugLabel.isScrollEnabled = false
+            debugLabel.isEditable = false
+            controlsView.addSubview(debugLabel)
+            debugLabel.pinToSuperview(leading: 10, trailing: 10, top: nil, bottom: 5, width: nil, height: 100)
+            self.debugTextView = debugLabel
+            
+            // Debug
+            self.debugDateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+            let debugTap = UITapGestureRecognizer(target: self, action: #selector(self.debugTextViewTapped))
+            self.debugTextView?.addGestureRecognizer(debugTap)
             
             let debugHorizontalLine = UIView()
             debugHorizontalLine.translatesAutoresizingMaskIntoConstraints = false
             debugHorizontalLine.backgroundColor = UIColor.green.withAlphaComponent(0.5)
             debugHorizontalLine.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin, .flexibleWidth]
-            self.controlsView.addSubview(debugHorizontalLine)
+            controlsView.addSubview(debugHorizontalLine)
             debugHorizontalLine.pinToSuperview(leading: 0, trailing: 0, top: nil, bottom: nil, width: nil, height: 1)
             debugHorizontalLine.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
             
@@ -636,9 +658,9 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             debugVerticalLine.translatesAutoresizingMaskIntoConstraints = false
             debugVerticalLine.backgroundColor = UIColor.green.withAlphaComponent(0.5)
             debugVerticalLine.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleHeight]
-            self.controlsView.addSubview(debugVerticalLine)
+            controlsView.addSubview(debugVerticalLine)
             debugVerticalLine.pinToSuperview(leading: nil, trailing: nil, top: 0, bottom: 0, width: 1, height: nil)
-            debugVerticalLine.centerXAnchor.constraint(equalTo: self.controlsView.centerXAnchor).isActive = true
+            debugVerticalLine.centerXAnchor.constraint(equalTo: controlsView.centerXAnchor).isActive = true
 
         }
         
@@ -650,7 +672,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             headingSlider.minimumValue = -180
             headingSlider.maximumValue = 180
             headingSlider.value = 1
-            self.controlsView.addSubview(headingSlider)
+            controlsView.addSubview(headingSlider)
             headingSlider.pinToSuperview(leading: 10, trailing: 10, top: nil, bottom: 0, width: nil, height: 20)
             self.debugHeadingSlider = headingSlider
             
@@ -660,11 +682,11 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             pitchSlider.minimumValue = -90
             pitchSlider.maximumValue = 90
             pitchSlider.value = 1
-            self.controlsView.addSubview(pitchSlider)
+            controlsView.addSubview(pitchSlider)
             pitchSlider.heightAnchor.constraint(equalToConstant: 20).isActive = true
-            pitchSlider.centerYAnchor.constraint(equalTo: self.controlsView.centerYAnchor).isActive = true
-            pitchSlider.centerXAnchor.constraint(equalTo: self.controlsView.trailingAnchor, constant: -10).isActive = true
-            pitchSlider.widthAnchor.constraint(equalTo: self.controlsView.heightAnchor, multiplier: 1.0, constant: -20).isActive = true
+            pitchSlider.centerYAnchor.constraint(equalTo: controlsView.centerYAnchor).isActive = true
+            pitchSlider.centerXAnchor.constraint(equalTo: controlsView.trailingAnchor, constant: -10).isActive = true
+            pitchSlider.widthAnchor.constraint(equalTo: controlsView.heightAnchor, multiplier: 1.0, constant: -20).isActive = true
             pitchSlider.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi * 0.5))
             self.debugPitchSlider = pitchSlider
         }
@@ -685,7 +707,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     internal func logText(_ text: String)
     {
-        self.debugLabel?.text = text
+        self.debugTextView?.text = text
     }
     
     func centerLocationFromAnnotations(annotations: [ARAnnotation]) -> CLLocation?
@@ -718,6 +740,43 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         return location
     }
     
+    func debug(printToConsole: Bool = false)
+    {
+        if self.uiOptions.debugLabel, let deviceMotion = self.trackingManager.motionManager.deviceMotion, let userLocation = arStatus.userLocation
+        {
+            let q = deviceMotion.attitude.quaternion
+            let simd_q = simd_quatd(q)
+            
+            let heading = String(format: "%.0f(%.0f,%.0f)", self.trackingManager.heading ?? 0, self.trackingManager.motionManager.deviceMotion?.heading ?? 0, self.trackingManager.clHeading ?? 0)
+            let pitch = String(format: "%.3f", self.trackingManager.pitch ?? 0)
+            let attitude = String(format: "%.1f,%.1f,%.1f,%.1f", q.w, q.x, q.y, q.z)
+            let axisAngle = String(format: "%.1f,%.1f,%.1f,%.1f", simd_q.angle.toDegrees, simd_q.axis.x, simd_q.axis.y, simd_q.axis.z)
+            
+            let location = String(format: "%.7f,%.7f", userLocation.coordinate.latitude, userLocation.coordinate.longitude)
+            let gravity = String(format: "%.1f,%.1f,%.1f", deviceMotion.gravity.x, deviceMotion.gravity.y, deviceMotion.gravity.z)
+            let userAcceleration = String(format: "%.1f,%.1f,%.1f", deviceMotion.userAcceleration.x, deviceMotion.userAcceleration.y, deviceMotion.userAcceleration.z)
+            let rotationRate = String(format: "%.1f,%.1f,%.1f", deviceMotion.rotationRate.x, deviceMotion.rotationRate.y, deviceMotion.rotationRate.z)
+            let magneticField = String(format: "%.1f,%.1f,%.1f [%i]", deviceMotion.magneticField.field.x, deviceMotion.magneticField.field.y, deviceMotion.magneticField.field.z, deviceMotion.magneticField.accuracy.rawValue)
+            
+            var text = "Heading: \(heading) --- Pitch: \(pitch)"
+            text += "\nAttitude: \(attitude) (\(axisAngle)) --- Location: \(location)"
+            text += "\nGravity: \(gravity) --- User acceleration: \(userAcceleration)"
+            text += "\nRotation rate: \(rotationRate)\nMagnetic field: \(magneticField)"
+            
+            logText(text)
+            if printToConsole
+            {
+                let dateString = self.debugDateFormatter.string(from: Date())
+                text = "==================== \(dateString)\n\(text)"
+                print(text)
+            }
+        }
+    }
+    
+    @objc func debugTextViewTapped()
+    {
+        self.debug(printToConsole: true)
+    }
     //==========================================================================================================================================================
     //MARK:                                                        Inner classes/enums/structs
     //==========================================================================================================================================================

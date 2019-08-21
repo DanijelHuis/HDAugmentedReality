@@ -8,14 +8,20 @@
 
 import UIKit
 import CoreLocation
+import MapKit
 
 /**
  Serves as the source of information(location, title etc.) about a single annotation. Annotation objects do not provide 
  the visual representation of the annotation. It is analogue to MKAnnotation. It can be subclassed if additional 
  information for some annotation is needed.
  */
-open class ARAnnotation: NSObject
+open class ARAnnotation: NSObject, MKAnnotation
 {
+    public var coordinate: CLLocationCoordinate2D
+    {
+        return location.coordinate
+    }
+    
     /// Identifier of annotation, not used by HDAugmentedReality internally.
     open var identifier: String?
     

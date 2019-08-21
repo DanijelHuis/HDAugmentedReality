@@ -30,20 +30,34 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
      Specifies how often are new annotations fetched and annotation views are recreated.
      Default value is 50m.
      */
-    public var reloadDistanceFilter: CLLocationDistance!
+    public var reloadDistanceFilter: CLLocationDistance = 50
     
     /**
      Specifies how often are distances and azimuths recalculated for visible annotations. Stacking is also done on this which is heavy operation.
-     Default value is 15m.
+     Default value is 10m.
      */
-    public var userDistanceFilter: CLLocationDistance!
-    {
-        didSet
-        {
-            self.locationManager.distanceFilter = self.userDistanceFilter
-        }
-    }
+    public var userDistanceFilter: CLLocationDistance = 10 { didSet { self.locationManager.distanceFilter = self.userDistanceFilter } }
     
+    /// Headings with greater headingAccuracy than this will be disregarded. Used only when headingSource = .coreLocation. In Degrees.
+    public var minimumHeadingAccuracy: Double = 120
+    /// Return value for locationManagerShouldDisplayHeadingCalibration. Doesn't seem to be used anymore.
+    public var allowCompassCalibration: Bool = true
+    /// Locations with greater horizontalAccuracy than this will be disregarded. In meters.
+    public var minimumLocationHorizontalAccuracy: Double = 500
+    /// Locations older than this will be disregarded. In seconds.
+    public var minimumLocationAge: Double = 30
+    /**
+     On iOS 11+, it will be set to .deviceMotion and headingFilterFactor will be set to 1.0 (no filtering).
+     */
+    public var headingSource: HeadingSource = .coreLocation
+    /**
+     Filter(Smoothing) factor for heading and pitch in range 0-1. It affects horizontal and vertical movement of annotaion views. The lower the value the bigger the smoothing.
+     */
+    public var filterFactor: Double? = 0.4
+    
+    /// Minimum time between location updates, don't go lower than 1 sec. Default is 2 sec.
+    public var minimumTimeBetweenLocationUpdates: TimeInterval = 2
+
     //===== Internal variables
     /// Delegate
     internal weak var delegate: ARTrackingManagerDelegate?
@@ -53,32 +67,20 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     /// Last detected user location
     fileprivate(set) internal var userLocation: CLLocation?
     /// Heading. This is set when calculateHeading is called.
-    fileprivate(set) internal var heading: Double = 0
+    fileprivate(set) internal var heading: Double?
     /// Pitch. This is set when calculatePitch is called.
-    fileprivate(set) internal var pitch: Double = 0
-    internal var isDebugging = false
-
-    /// Return value for locationManagerShouldDisplayHeadingCalibration.
-    public var allowCompassCalibration: Bool = false
-    /// Locations with greater horizontalAccuracy than this will be disregarded. In meters.
-    public var minimumLocationHorizontalAccuracy: Double = 500
-    /// Locations older than this will be disregarded. In seconds.
-    public var minimumLocationAge: Double = 30
+    fileprivate(set) internal var pitch: Double?
     
     //===== Private variables
-    fileprivate var motionManager: CMMotionManager = CMMotionManager()
+    internal var motionManager: CMMotionManager = CMMotionManager()
     fileprivate var reloadLocationPrevious: CLLocation?
     fileprivate var reportLocationTimer: Timer?
     fileprivate var reportLocationDate: TimeInterval?
     fileprivate var locationSearchTimer: Timer? = nil
     fileprivate var locationSearchStartTime: TimeInterval? = nil
-    fileprivate var orientation: CLDeviceOrientation = CLDeviceOrientation.portrait
-    {
-        didSet
-        {
-            self.locationManager.headingOrientation = self.orientation
-        }
-    }
+    internal var clHeading: Double?
+    fileprivate var headingStartDate: Date?
+    fileprivate var orientation: CLDeviceOrientation = CLDeviceOrientation.portrait { didSet { self.locationManager.headingOrientation = self.orientation } }
 
     override init()
     {
@@ -92,15 +94,16 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         NotificationCenter.default.removeObserver(self)
     }
     
+    /*
+     //@TODO Info.plist.
+     https://developer.apple.com/documentation/coremotion/getting_processed_device-motion_data
+    */
     fileprivate func initialize()
     {
-        // Defaults
-        self.reloadDistanceFilter = 50
-        self.userDistanceFilter = 15
-        
         // Setup location manager
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.distanceFilter = CLLocationDistance(self.userDistanceFilter)
+        self.locationManager.headingFilter = 0.1    //@TODO test
         self.locationManager.delegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(ARTrackingManager.deviceOrientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
@@ -150,8 +153,10 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         }
         
         // Start motion and location managers
-        self.motionManager.startDeviceMotionUpdates(using: CMAttitudeReferenceFrame.xTrueNorthZVertical)
+        self.motionManager.showsDeviceMovementDisplay = self.allowCompassCalibration
+        self.motionManager.startDeviceMotionUpdates(using: CMAttitudeReferenceFrame.xMagneticNorthZVertical)
         self.locationManager.startUpdatingLocation()
+        if self.headingSource == .coreLocation { self.locationManager.startUpdatingHeading() }
         self.tracking = true
     }
     
@@ -163,6 +168,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         // Stop motion and location managers
         self.motionManager.stopDeviceMotionUpdates()
         self.locationManager.stopUpdatingLocation()
+        self.locationManager.stopUpdatingHeading()
         self.tracking = false
     }
     
@@ -177,16 +183,25 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         //self.reloadLocationPrevious = nil // Leave it, bcs of reload
 
         self.userLocation = nil
-        self.heading = 0
-        self.pitch = 0
+        self.heading = nil
+        self.pitch = nil
+        self.clHeading = nil
+        self.headingStartDate = nil
+        self.previousRawPitch = nil
+        self.previousRawHeading = nil
     }
     
     //==========================================================================================================================================================
     // MARK:                                                        CLLocationManagerDelegate
     //==========================================================================================================================================================
+    //@CL
+    public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
+    {
+        self.setClHeading(newHeading: newHeading)
+    }
+    
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
-        guard !self.isDebugging else { return }
         guard let location = locations.first else { return }
         
         //===== Disregarding old and low quality location detections
@@ -218,7 +233,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         {
             self.reportLocationToDelegate()
         }
-        // Report is already scheduled, doing nothing, it will report last location delivered in max 5s
+        // Report is already scheduled, doing nothing, it will report last location delivered in max minimumTimeBetweenLocationUpdates.
         else if reportIsScheduled
         {
             
@@ -244,7 +259,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     internal func startReportLocationTimer()
     {
         self.stopReportLocationTimer()
-        self.reportLocationTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ARTrackingManager.reportLocationToDelegate), userInfo: nil, repeats: false)
+        self.reportLocationTimer = Timer.scheduledTimer(timeInterval: self.minimumTimeBetweenLocationUpdates, target: self, selector: #selector(ARTrackingManager.reportLocationToDelegate), userInfo: nil, repeats: false)
     }
     
     @objc internal func reportLocationToDelegate()
@@ -253,9 +268,8 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         self.reportLocationDate = Date().timeIntervalSince1970
         
         guard let userLocation = self.userLocation, let reloadLocationPrevious = self.reloadLocationPrevious else { return }
-        guard let reloadDistanceFilter = self.reloadDistanceFilter else { return }
         
-        if reloadLocationPrevious.distance(from: userLocation) > reloadDistanceFilter
+        if reloadLocationPrevious.distance(from: userLocation) > self.reloadDistanceFilter
         {
             self.reloadLocationPrevious = userLocation
             self.delegate?.arTrackingManager(self, didUpdateReloadLocation: userLocation)
@@ -265,163 +279,102 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
             self.delegate?.arTrackingManager(self, didUpdateUserLocation: userLocation)
         }
     }
-    
     //==========================================================================================================================================================
-    // MARK:                                                        Pitch and heading calculations
+    // MARK:                                                    Pitch & Heading
     //==========================================================================================================================================================
-    internal func calculatePitch()
+    private var previousRawPitch: Double?
+    private var previousRawHeading: Double?
+    internal func calculateAndFilterPitchAndHeading()
     {
-        guard !self.isDebugging else { return }
-        guard let gravity = self.motionManager.deviceMotion?.gravity else { return }
+        guard let newPitch = self.calculatePitch(), let newHeading = self.calculateHeading(pitch: newPitch) else { return }
+        
+        //== Filter
+        if var filterFactor = self.filterFactor
+        {
+            let previousRawPitch = self.previousRawPitch ?? newPitch
+            let previousRawHeading = self.previousRawHeading ?? newHeading
+
+            // Don't filter if first time.
+            guard let previousPitch = self.pitch, let previousHeading = self.heading else
+            {
+                self.pitch = newPitch
+                self.heading = newHeading
+                self.previousRawPitch = newPitch
+                self.previousRawHeading = newHeading
+                return
+            }
+            
+            /*
+             There is a high chance that first few headings/pitch will be inacurate, so if filterFactor is very low (e.g. 0.05), you will see
+             annotations spinning at the start because they are filtering from 0 to current heading/pitch.
+             
+             We are trying to fix that in first 10 sec by setting filterFactor to 1.0 if delta heading or pitch (raw) is greater than some value.
+            */
+            let headingStartDate = self.headingStartDate ?? Date()
+            if self.headingStartDate == nil { self.headingStartDate = headingStartDate }
+            if headingStartDate.timeIntervalSinceNow > -10 && (fabs(ARMath.deltaAngle(previousRawPitch, newPitch)) > 20 || fabs(ARMath.deltaAngle(previousRawHeading, newHeading)) > 20) { filterFactor = 1.0 }
+        
+            // Filter pitch and heading
+            self.pitch = ARMath.normalizeDegree2(ARMath.exponentialFilter(newPitch, previousValue: previousPitch, filterFactor: filterFactor, isCircular: true))
+            self.heading = ARMath.normalizeDegree(ARMath.exponentialFilter(newHeading, previousValue: previousHeading, filterFactor: filterFactor, isCircular: true))
+        }
+        //== No filter, use newest values
+        else
+        {
+            self.pitch = newPitch
+            self.heading = newHeading
+        }
+        
+        self.previousRawPitch = newPitch
+        self.previousRawHeading = newHeading
+    }
+
+    //==========================================================================================================================================================
+    // MARK:                                                        Pitch
+    //==========================================================================================================================================================
+    internal func calculatePitch() -> Double?
+    {
+        guard let gravity = self.motionManager.deviceMotion?.gravity else { return nil}
         let deviceOrientation = self.orientation
         
-        self.pitch = self.calculatePitch(gravity: simd_double3(gravity), deviceOrientation: deviceOrientation)
-    }
-    
-    /// Pitch. -90(looking down), 0(looking straight), 90(looking up)
-    internal func calculatePitch(gravity: simd_double3, deviceOrientation: CLDeviceOrientation) -> Double
-    {
-        // Calculate pitch
-        var pitch: Double = 0
-        if deviceOrientation == CLDeviceOrientation.portrait { pitch = atan2(gravity.y, gravity.z) }
-        else if deviceOrientation == CLDeviceOrientation.portraitUpsideDown { pitch = atan2(-gravity.y, gravity.z) }
-        else if deviceOrientation == CLDeviceOrientation.landscapeLeft { pitch = atan2(gravity.x, gravity.z) }
-        else if deviceOrientation == CLDeviceOrientation.landscapeRight { pitch = atan2(-gravity.x, gravity.z) }
-        
-        // Set pitch angle so that it suits us (0 = looking straight)
-        pitch = pitch.toDegrees
-        pitch += 90
-        // Not really needed but, if pointing device down it will return 0...-30...-60...270...240 but like this it returns 0...-30...-60...-90...-120
-        if(pitch > 180) { pitch -= 360 }
-
+        let pitch = ARMath.calculatePitch(gravity: simd_double3(gravity), deviceOrientation: deviceOrientation)
         return pitch
     }
     
-    internal func calculateHeading()
+    //==========================================================================================================================================================
+    // MARK:                                                    Heading
+    //==========================================================================================================================================================
+    //@CL
+    internal func setClHeading(newHeading: CLHeading)
     {
-        guard !self.isDebugging else { return }
-        guard let gravity = self.motionManager.deviceMotion?.gravity else { return }
-        guard let attitude = self.motionManager.deviceMotion?.attitude.quaternion else { return }
-        let deviceOrientation = self.orientation
+        guard newHeading.headingAccuracy >= 0 && newHeading.headingAccuracy <= self.minimumHeadingAccuracy else { return }
 
-        self.heading = self.calculateHeading(attitude: simd_quatd(attitude), gravity: simd_double3(gravity), deviceOrientation: deviceOrientation)
+        if newHeading.trueHeading < 0 { self.clHeading = fmod(newHeading.magneticHeading, 360.0) }
+        else { self.clHeading = fmod(newHeading.trueHeading, 360.0) }
     }
     
-    /**
-     Calculates heading from attitude and gravity.
-     This is used because deviceMotion.heading doesn't work when pitch > 135.
-     Same effect can be observerd in Compass app: Start with iphone lying on the ground with screen pointing toward the sky (pitch = 0), now rotate iphone around its x axis (axes link below). Once you
-     rotate more than 135 degrees, heading will jump.
-     
-     iphone axes: https://developer.apple.com/documentation/coremotion/getting_processed_device-motion_data/understanding_reference_frames_and_device_attitude
-     */
-    internal func calculateHeading(attitude: simd_quatd, gravity: simd_double3, deviceOrientation: CLDeviceOrientation) -> Double
+    internal func calculateHeading(pitch: Double) -> Double?
     {
-        /**
-         1) Determine device's local up and right vector when in reference position (not rotated).
-         */
-        var upVector: simd_double3
-        var rightVector: simd_double3
-        if deviceOrientation == .portraitUpsideDown { upVector = simd_double3(0,-1,0); rightVector = simd_double3(-1,0,0); }
-        else if deviceOrientation == .landscapeLeft{ upVector = simd_double3(1,0,0); rightVector = simd_double3(0,-1,0); }
-        else if deviceOrientation == .landscapeRight { upVector = simd_double3(-1,0,0); rightVector = simd_double3(0,1,0); }
-        else { upVector = simd_double3(0,1,0); rightVector = simd_double3(1,0,0); }
-        
-        /**
-         2) Calculate device's local up vector when device is rotated. To calculate it, take device's local up vector in reference position and rotate it by device's attitude.
-         Do the same with right vector.
-         */
-        let deviceUpVector = attitude.act(upVector)
-        let deviceRightVector = attitude.act(rightVector)
-        
-        /**
-         3) Now rotate device's local up vector by -pitch around devices's local right vector. In other words - rotate device's local up vector to reference xy plane.
-         Note: Pitch has to be 0 when device is lying flat on the ground with screen towards the sky. Pitch changes 0...360 as you rotate it around x axis (right hand rule).
-         */
-        let pitch = self.pitch + 90
-        let rotationToHorizontalPlane = simd_quatd(angle: -pitch.toRadians, axis: deviceRightVector)
-        var deviceDirectionHorizontalVector = rotationToHorizontalPlane.act(deviceUpVector)
-        
-        /**
-         4) Calculate heading from deviceDirectionHorizontalVector.
-         */
-        var heading = atan2(deviceDirectionHorizontalVector.y, deviceDirectionHorizontalVector.x).toDegrees
-        heading = 360 - normalizeDegree(heading)
-        
-        return heading
-    }
-
-    //==========================================================================================================================================================
-    // MARK:                                                    Utility
-    //==========================================================================================================================================================
-    /**
-     Calculates bearing between userLocation and location.
-     */
-    internal func bearingFromUserToLocation(userLocation: CLLocation, location: CLLocation, approximate: Bool = false) -> Double
-    {
-        var bearing: Double = 0
-        
-        if approximate
+        let heading: Double?
+        if self.headingSource == .deviceMotion
         {
-            bearing = self.approximateBearingBetween(startLocation: userLocation, endLocation: location)
+            guard let attitude = self.motionManager.deviceMotion?.attitude.quaternion else { return nil }
+            let deviceOrientation = self.orientation
+            
+            heading = ARMath.calculateHeading(attitude: simd_quatd(attitude), pitch: pitch, deviceOrientation: deviceOrientation)
         }
         else
         {
-            bearing = self.bearingBetween(startLocation: userLocation, endLocation: location)
+            heading = self.clHeading
         }
         
-        return bearing;
+        return heading
     }
     
-    /**
-     Precise bearing between two points.
-    */
-    internal func bearingBetween(startLocation : CLLocation, endLocation : CLLocation) -> Double
-    {
-        var bearing: Double = 0
-        
-        let lat1 = startLocation.coordinate.latitude.toRadians
-        let lon1 = startLocation.coordinate.longitude.toRadians
-        
-        let lat2 = endLocation.coordinate.latitude.toRadians
-        let lon2 = endLocation.coordinate.longitude.toRadians
-        
-        let dLon = lon2 - lon1
-        let y = sin(dLon) * cos(lat2)
-        let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
-        let radiansBearing = atan2(y, x)
-        bearing = radiansBearing.toDegrees
-        if(bearing < 0) { bearing += 360 }
-        
-        return bearing
-    }
-    
-    /**
-     Approximate bearing between two points, good for small distances(<10km). 
-     This is 30% faster than bearingBetween but it is not as precise. Error is about 1 degree on 10km, 5 degrees on 300km, depends on location...
-     
-     It uses formula for flat surface and multiplies it with LAT_LON_FACTOR which "simulates" earth curvature.
-    */
-    internal func approximateBearingBetween(startLocation: CLLocation, endLocation: CLLocation) -> Double
-    {
-        var bearing: Double = 0
-        
-        let startCoordinate: CLLocationCoordinate2D = startLocation.coordinate
-        let endCoordinate: CLLocationCoordinate2D = endLocation.coordinate
-        
-        let latitudeDistance: Double = startCoordinate.latitude - endCoordinate.latitude;
-        let longitudeDistance: Double = startCoordinate.longitude - endCoordinate.longitude;
-        
-        bearing = (atan2(longitudeDistance, (latitudeDistance * Double(LAT_LON_FACTOR)))).toDegrees
-        bearing += 180.0
-        
-        return bearing
-    }
-    
+
     //==========================================================================================================================================================
     // MARK:                                                        Location search
     //==========================================================================================================================================================
-    
     internal func startLocationSearchTimer(resetStartTime: Bool = true)
     {
         self.stopLocationSearchTimer()
@@ -446,5 +399,19 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         
         self.startLocationSearchTimer(resetStartTime: false)
         self.delegate?.arTrackingManager(self, didFailToFindLocationAfter: elapsedSeconds)
+    }
+    
+    //==========================================================================================================================================================
+    // MARK:                                                    Nested
+    //==========================================================================================================================================================
+    /**
+     Defines source of heading value that ARTrackingManager will use for its calculations.
+     */
+    public enum HeadingSource
+    {
+        /// Uses CoreLocation's LocationManager to fetch heading. These readings are not updated often and are probably not adjusted using accelerometer etc. Also these valuse can jump so filtering is usually needed.
+        case coreLocation
+        /// iOS 11+. This means that ARTrackingManager will use CMMotionManager.deviceMotion.heading for its heading. This value is updated more often and values are more stable compared to CoreLocation's heading.
+        case deviceMotion
     }
 }

@@ -33,15 +33,25 @@ class ViewController: UIViewController, ARDataSource
         //FIXME: set your initial position here, this is used to generate random POIs
         let lat = 45.554864
         let lon = 18.695441
+        //let lat = 45.681177
+        //let lon = 18.401508
         let deltaLat = 0.04 // Area in which to generate annotations
         let deltaLon = 0.07 // Area in which to generate annotations
         let altitudeDelta: Double = 0
         let count = 100
         let dummyAnnotations = ViewController.getDummyAnnotations(centerLatitude: lat, centerLongitude: lon, deltaLat: deltaLat, deltaLon: deltaLon, altitudeDelta: altitudeDelta, count: count)
-   
-        
+        /*var dummyAnnotations = [ARAnnotation]()
+        self.addDummyAnnotation(45.551337, 18.705983 , altitude: 0, title: "Home", annotations: &dummyAnnotations)
+        self.addDummyAnnotation(45.550319, 18.705871, altitude: 0, title: "Cross 1", annotations: &dummyAnnotations)
+        self.addDummyAnnotation(45.548801, 18.693078 , altitude: 0, title: "Cross 2", annotations: &dummyAnnotations)
+        self.addDummyAnnotation(45.546730, 18.686932 , altitude: 0, title: "Tram 1", annotations: &dummyAnnotations)
+        self.addDummyAnnotation(45.544808, 18.678549 , altitude: 0, title: "Konzum", annotations: &dummyAnnotations)
+*/
         // ARViewController
-        let arViewController = ARViewController()
+        //@TODO
+        //let arViewController = ARViewController()
+        // You can use your own xib if you have the need.
+        let arViewController = ARViewController(nibName: "TestARViewController", bundle: nil)
         
         //===== Presenter - handles visual presentation of annotations
         let presenter = arViewController.presenter!

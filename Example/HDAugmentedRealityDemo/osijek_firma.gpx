@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<gpx
+ version="1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="http://www.topografix.com/GPX/1/0"
+ xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+
+<!--1-->
+<wpt lat="45.556235" lon="18.683989">
+ <time>2013-12-08T12:00:00Z</time>
+</wpt>
+
+<!--2-->
+<wpt lat="45.556339" lon="18.686078">
+ <time>2013-12-08T12:00:10Z</time>
+</wpt>
+
+<!--3-->
+<wpt lat="45.555407" lon="18.686110">
+ <time>2013-12-08T12:00:20Z</time>
+</wpt>
+
+
+</gpx>
+

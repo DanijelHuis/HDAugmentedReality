@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C13E68822DD1ADF002286A9 /* RadarMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C13E68722DD1ADF002286A9 /* RadarMapView.swift */; };
+		0C13E68A22DD1E19002286A9 /* TestARViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C13E68922DD1E19002286A9 /* TestARViewController.xib */; };
 		0C56798F1EA0160800E4613C /* FrontRowTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C56798E1EA0160800E4613C /* FrontRowTransform.swift */; };
 		0C5E594B1E6769F8003CCA93 /* StackTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */; };
 		0CAD4EB31AE6FC14000F2A2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAD4EB21AE6FC14000F2A2A /* AppDelegate.swift */; };
@@ -17,10 +19,15 @@
 		0CAD4F061AE70ACA000F2A2A /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CAD4F051AE70ACA000F2A2A /* CoreLocation.framework */; };
 		0CB2C2471AF18C620006E949 /* TestAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB2C2461AF18C620006E949 /* TestAnnotationView.swift */; };
 		0CB56FB21B35E5DF000EDEBB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CB56FB11B35E5DF000EDEBB /* MapKit.framework */; };
+		0CC5197F22E12522005EE3CA /* osijek_firma.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 0CC5197E22E12522005EE3CA /* osijek_firma.gpx */; };
+		0CE6CCC322E90F0300A4B9F6 /* compass.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CE6CCC222E90F0300A4B9F6 /* compass.png */; };
+		0CE6CCC522E90FA900A4B9F6 /* RadarMapView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0CE6CCC422E90FA900A4B9F6 /* RadarMapView.xib */; };
 		DE7601D40D03319210409921 /* Pods_HDAugmentedRealityDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0D2E3953577132FCDAEF4AD /* Pods_HDAugmentedRealityDemo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0C13E68722DD1ADF002286A9 /* RadarMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarMapView.swift; sourceTree = "<group>"; };
+		0C13E68922DD1E19002286A9 /* TestARViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestARViewController.xib; sourceTree = "<group>"; };
 		0C56798E1EA0160800E4613C /* FrontRowTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrontRowTransform.swift; sourceTree = "<group>"; };
 		0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackTestViewController.swift; sourceTree = "<group>"; };
 		0CAD4EAD1AE6FC14000F2A2A /* HDAugmentedRealityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HDAugmentedRealityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -33,6 +40,9 @@
 		0CAD4F051AE70ACA000F2A2A /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0CB2C2461AF18C620006E949 /* TestAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestAnnotationView.swift; sourceTree = "<group>"; };
 		0CB56FB11B35E5DF000EDEBB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		0CC5197E22E12522005EE3CA /* osijek_firma.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = osijek_firma.gpx; sourceTree = "<group>"; };
+		0CE6CCC222E90F0300A4B9F6 /* compass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compass.png; sourceTree = "<group>"; };
+		0CE6CCC422E90FA900A4B9F6 /* RadarMapView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RadarMapView.xib; sourceTree = "<group>"; };
 		C2DA810FB00D15665EE37980 /* Pods-HDAugmentedRealityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HDAugmentedRealityDemo.debug.xcconfig"; path = "Target Support Files/Pods-HDAugmentedRealityDemo/Pods-HDAugmentedRealityDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		DBB5B9979118DA6E43A9E50E /* Pods-HDAugmentedRealityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HDAugmentedRealityDemo.release.xcconfig"; path = "Target Support Files/Pods-HDAugmentedRealityDemo/Pods-HDAugmentedRealityDemo.release.xcconfig"; sourceTree = "<group>"; };
 		E0D2E3953577132FCDAEF4AD /* Pods_HDAugmentedRealityDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HDAugmentedRealityDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,6 +63,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C13E68B22DD21CD002286A9 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				0CAD4EB41AE6FC14000F2A2A /* ViewController.swift */,
+				0CB2C2461AF18C620006E949 /* TestAnnotationView.swift */,
+				0C13E68722DD1ADF002286A9 /* RadarMapView.swift */,
+				0CE6CCC422E90FA900A4B9F6 /* RadarMapView.xib */,
+				0C13E68922DD1E19002286A9 /* TestARViewController.xib */,
+			);
+			name = Main;
+			sourceTree = "<group>";
+		};
 		0C1E92881B336AA7005254F2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -85,8 +107,9 @@
 		0CAD4EAF1AE6FC14000F2A2A /* HDAugmentedRealityDemo */ = {
 			isa = PBXGroup;
 			children = (
-				0CAD4EB41AE6FC14000F2A2A /* ViewController.swift */,
-				0CB2C2461AF18C620006E949 /* TestAnnotationView.swift */,
+				0CE6CCC222E90F0300A4B9F6 /* compass.png */,
+				0CC5197E22E12522005EE3CA /* osijek_firma.gpx */,
+				0C13E68B22DD21CD002286A9 /* Main */,
 				0CAD4EB21AE6FC14000F2A2A /* AppDelegate.swift */,
 				0CAD4EB61AE6FC14000F2A2A /* Main.storyboard */,
 				0CAD4EB91AE6FC14000F2A2A /* Images.xcassets */,
@@ -177,8 +200,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CC5197F22E12522005EE3CA /* osijek_firma.gpx in Resources */,
 				0CAD4EB81AE6FC14000F2A2A /* Main.storyboard in Resources */,
+				0CE6CCC522E90FA900A4B9F6 /* RadarMapView.xib in Resources */,
+				0C13E68A22DD1E19002286A9 /* TestARViewController.xib in Resources */,
 				0CAD4EBA1AE6FC14000F2A2A /* Images.xcassets in Resources */,
+				0CE6CCC322E90F0300A4B9F6 /* compass.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C13E68822DD1ADF002286A9 /* RadarMapView.swift in Sources */,
 				0CB2C2471AF18C620006E949 /* TestAnnotationView.swift in Sources */,
 				0CAD4EB51AE6FC14000F2A2A /* ViewController.swift in Sources */,
 				0C5E594B1E6769F8003CCA93 /* StackTestViewController.swift in Sources */,
@@ -370,7 +398,7 @@
 				INFOPLIST_FILE = HDAugmentedRealityDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Huis.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = Huis.HDAugmentedRealityDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "3721ebd7-c018-4626-95b5-5fd2ab7f49d0";
 				PROVISIONING_PROFILE_SPECIFIER = NTH_Development;
@@ -390,7 +418,7 @@
 				INFOPLIST_FILE = HDAugmentedRealityDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Huis.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = Huis.HDAugmentedRealityDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "e28b5d0e-47ea-46a9-9805-9d88b59efa0f";
 				PROVISIONING_PROFILE_SPECIFIER = NTHEnterprise;

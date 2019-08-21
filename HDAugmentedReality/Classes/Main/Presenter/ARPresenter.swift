@@ -307,7 +307,7 @@ open class ARPresenter: UIView
             guard let annotationView = annotation.annotationView else { continue }
             
             // This is distance of center of annotation to the center of screen, measured in degrees
-            let delta = deltaAngle(heading, annotation.azimuth)
+            let delta = ARMath.deltaAngle(heading, annotation.azimuth)
             
             if fabs(delta) < degreesDeltaH
             {
@@ -351,7 +351,7 @@ open class ARPresenter: UIView
                 let y = self.yPositionForAnnotationView(annotationView, arStatus: arStatus)
                 annotationView.arPosition = CGPoint(x: x, y: y)
             }
-            let headingXOffset = CGFloat(deltaAngle(annotation.azimuth, arStatus.heading)) * CGFloat(arStatus.hPixelsPerDegree)
+            let headingXOffset = CGFloat(ARMath.deltaAngle(annotation.azimuth, arStatus.heading)) * CGFloat(arStatus.hPixelsPerDegree)
 
             let x: CGFloat = annotationView.arPosition.x + headingXOffset
             let y: CGFloat = annotationView.arPosition.y + pitchYOffset + annotationView.arPositionOffset.y
