@@ -33,15 +33,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// Class for tracking location/heading/pitch. Use it to set properties like reloadDistanceFilter, userDistanceFilter etc.
     fileprivate(set) open var trackingManager: ARTrackingManager = ARTrackingManager()
     
-    /// Image for close button. If not set, default one is used.
-    open var closeButtonImage: UIImage?
-    {
-        didSet
-        {
-            self.closeButton?.setImage(self.closeButtonImage, for: UIControl.State.normal)
-        }
-    }
-    
     /**
      Called every 5 seconds after location tracking is started but failed to deliver location. It is also called when tracking has just started with timeElapsed = 0.
      The timer is restarted when app comes from background or on didAppear.
@@ -52,24 +43,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
      Some ui options. Set it before controller is shown, changes made afterwards are disregarded.
      */
     open var uiOptions = UiOptions()
-    
-    /**
-     Presenter instance. It is responsible for creation and layout of annotation views. Subclass and provide your own implementation if needed. Always set it before anything else is set on this controller.
-     */
-    open var presenter: ARPresenter!
-    {
-        willSet
-        {
-            self.presenter?.removeFromSuperview()
-        }
-        didSet
-        {
-            if self.didLayoutSubviews
-            {
-                self.view.insertSubview(self.presenter, aboveSubview: self.cameraView)
-            }
-        }
-    }
     
     /**
      Structure that holds all information related to AR. All device/location properties gathered by ARTrackingManager and
@@ -84,19 +57,30 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     @IBOutlet open var accessoriesOutlet: [AnyObject] = []
     
     /**
-     Accessories. You can also add accessory from Interface builder by connecting it to "accessoriesOutlet".
+     Close button, it is set in xib.
      */
-    private(set) open var accessories: [ARAccessory] = []
-    @IBOutlet var controlsView: UIView?
-    @IBOutlet var labelCollection: [UILabel]!
-    
+    @IBOutlet open weak var closeButton: UIButton!
+
+
+    /**
+     Presenter instance. It is responsible for creation and layout of annotation views. Subclass and provide your own implementation if needed. Always set it before anything else is set on this controller.
+     */
+    @IBOutlet open weak var presenter: ARPresenter!
+
     //===== Private
     fileprivate var annotations: [ARAnnotation] = []
-    fileprivate var cameraView: CameraView = CameraView()
-
+    @IBOutlet private weak var cameraView: CameraView!
+    
+    /// Used as container for all controls and accessories.
+    @IBOutlet private weak var controlContainerView: UIView!
+    
+    /**
+     Accessories. You can add accessory from Interface builder by connecting it to "accessoriesOutlet" or by using addAccessory method.
+     */
+    private var accessories: [ARAccessory] = []
+    
     fileprivate var initialized: Bool = false
     fileprivate var displayTimer: CADisplayLink?
-    fileprivate var closeButton: UIButton?
     fileprivate var lastLocation: CLLocation?
     fileprivate var didLayoutSubviews: Bool = false
     fileprivate var pendingHighestRankingReload: ReloadType?
@@ -114,8 +98,11 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     //==========================================================================================================================================================
     public init()
     {
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: "ARViewController", bundle: Bundle(for: ARViewController.self))
         self.initializeInternal()
+        
+        // Needed because we want IBOutlets to be available immediately after init, so they can be configured from outside.
+        self.loadViewIfNeeded()
     }
     
     required public init?(coder aDecoder: NSCoder)
@@ -128,6 +115,9 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.initializeInternal()
+        
+        // Needed because we want IBOutlets to be available immediately after init, so they can be configured from outside.
+        self.loadViewIfNeeded()
     }
     
     internal func initializeInternal()
@@ -136,8 +126,11 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.initialized = true
         
         // Default values
-        self.presenter = ARPresenter(arViewController: self)
         self.trackingManager.delegate = self
+        if #available(iOS 13.0, *)
+        {
+            self.overrideUserInterfaceStyle = .dark
+        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.locationNotification(_:)), name: NSNotification.Name(rawValue: "kNotificationLocationSet"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ARViewController.appWillEnterForeground(_:)), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -245,30 +238,12 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /// This is called only once when view is fully layouted.
     fileprivate func loadUi()
     {
-        // Controls view, if not given via xib - create it.
-        if self.controlsView == nil
-        {
-            let controlsView = TouchView()
-            controlsView.translatesAutoresizingMaskIntoConstraints = false
-            controlsView.backgroundColor = UIColor.clear
-            self.view.addSubview(controlsView)
-            controlsView.pinToLayoutGuide(self.view.safeAreaLayoutGuide, leading: 0, trailing: 0, top: 0, bottom: 0, width: nil, height: nil)
-            self.controlsView = controlsView
-        }
-        
         // Accessories: Adding accessoriesOutlet to accessories. accessoriesOutlet is used only as shortcut to add accessory via Interface Builder.
         self.accessories.append(contentsOf: self.accessoriesOutlet.compactMap({ $0 as? ARAccessory }))
-        
-        // Presenter
-        if self.presenter.superview == nil { self.view.insertSubview(self.presenter, at: 0) }
-        
+                
         // Camera
-        if self.cameraView.superview == nil { self.view.insertSubview(self.cameraView, at: 0) }
         self.cameraView.startRunning()
-        
-        // Close button
-        if self.uiOptions.closeButtonEnabled { self.addCloseButton() }
-        
+                
         // Debug
         self.addDebugUi()
         
@@ -279,8 +254,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     fileprivate func layoutUi()
     {
-        self.cameraView.frame = self.view.bounds
-        self.presenter.frame = self.view.bounds
         self.calculateFOV()
     }
     
@@ -325,7 +298,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
     
         self.presenter.reload(annotations: self.annotations, reloadType: highestRankingReload)
-        self.accessories.forEach({ $0.reload(reloadType: highestRankingReload, status: arStatus) })
+        self.accessories.forEach({ $0.reload(reloadType: highestRankingReload, status: arStatus, presenter: self.presenter) })
     }
     
     open func calculateDistancesForAnnotations()
@@ -536,36 +509,26 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         self.arStatus.hPixelsPerDegree = hFov > 0 ? Double(frame.size.width / CGFloat(hFov)) : 0
         self.arStatus.vPixelsPerDegree = vFov > 0 ? Double(frame.size.height / CGFloat(vFov)) : 0
     }
+    //==========================================================================================================================================================
+    // MARK:                                                    Accessories
+    //==========================================================================================================================================================
+    open func addAccessory(_ accessory: ARAccessory, leading: CGFloat?, trailing: CGFloat?, top: CGFloat?, bottom: CGFloat?, width: CGFloat?, height: CGFloat?)
+    {
+        if let accessoryView = accessory as? UIView
+        {
+            self.controlContainerView.addSubview(accessoryView)
+            accessoryView.pinToSuperview(leading: leading, trailing: trailing, top: top, bottom: bottom, width: width, height: height)
+        }
+        
+        self.accessories.append(accessory)
+    }
+
 
     //==========================================================================================================================================================
     //MARK:                                                        UI
     //==========================================================================================================================================================
-    func addCloseButton()
-    {
-        self.closeButton?.removeFromSuperview()
-        
-        if self.closeButtonImage == nil
-        {
-            let bundle = Bundle(for: ARViewController.self)
-            let path = bundle.path(forResource: "hdar_close", ofType: "png")
-            if let path = path
-            {
-                self.closeButtonImage = UIImage(contentsOfFile: path)
-            }
-        }
-        
-        // Close button - make it customizable
-        let closeButton: UIButton = UIButton(type: UIButton.ButtonType.custom)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.setImage(closeButtonImage, for: UIControl.State.normal);
-        closeButton.addTarget(self, action: #selector(ARViewController.closeButtonTap), for: UIControl.Event.touchUpInside)
-        self.controlsView?.addSubview(closeButton)
-        closeButton.pinToSuperview(leading: nil, trailing: 0, top: 0, bottom: nil, width: 40, height: 40)
-        
-        self.closeButton = closeButton
-    }
-    
-    @objc internal func closeButtonTap()
+
+    @IBAction func closeButtonTap()
     {
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
@@ -607,7 +570,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     func addDebugUi()
     {
-        guard let controlsView = self.controlsView else { return }
+        guard let controlsView = self.controlContainerView else { return }
         
         if self.uiOptions.debugMap
         {
@@ -800,8 +763,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         public var debugLabel = false
         /// If true, it will set debugLocation to center of all annotations. Usefull for simulator debugging
         public var setUserLocationToCenterOfAnnotations = false;
-        /// Enables/Disables close button.
-        public var closeButtonEnabled = true
     }
 }
 

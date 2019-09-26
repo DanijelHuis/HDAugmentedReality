@@ -34,6 +34,35 @@ extension UIView
         if let width = width { view.widthAnchor.constraint(equalToConstant: width).isActive = true }
         if let height = height { view.heightAnchor.constraint(equalToConstant: height).isActive = true}
     }
+    
+    /**
+     Returns constraint with given attribute. Supported attributes:
+     - .width
+     - .height
+     */
+    public func findConstraint(attribute: NSLayoutConstraint.Attribute) -> NSLayoutConstraint?
+    {
+        if attribute == .height || attribute == .width
+        {
+            for constraint in self.constraints
+            {
+                let typeString = String(describing: type(of: constraint))
+                if typeString == "NSContentSizeLayoutConstraint" { continue }
+                
+                if constraint.firstItem === self, constraint.firstAttribute == attribute, constraint.secondAttribute == .notAnAttribute
+                {
+                    return constraint
+                }
+            }
+        }
+        else
+        {
+            print("findConstraint called with unsupported attribute. Only .width and .height attributes are supported.")
+        }
+        
+        return nil
+    }
+    
 }
 
 

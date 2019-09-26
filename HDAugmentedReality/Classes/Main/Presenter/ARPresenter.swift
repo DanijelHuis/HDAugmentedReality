@@ -22,18 +22,6 @@ import CoreLocation
 open class ARPresenter: UIView
 {
     /**
-     Stacks overlapping annotations vertically.
-    */
-    @available(iOS, deprecated:1.0, message: "Use presenterTransform = ARPresenterStackTransform()")
-    open var verticalStackingEnabled = false
-    {
-        didSet
-        {
-            self.presenterTransform = self.verticalStackingEnabled ? ARPresenterStackTransform() : nil
-        }
-    }
-    
-    /**
      How much to vertically offset annotations by distance, in pixels per meter. Use it if distanceOffsetMode is manual or automaticOffsetMinDistance.
      
      Also look at distanceOffsetMinThreshold and distanceOffsetMode.
@@ -81,7 +69,7 @@ open class ARPresenter: UIView
         case automatic
     }
 
-    open weak var arViewController: ARViewController!
+    @IBOutlet open weak var arViewController: ARViewController!
     /// All annotations
     open var annotations: [ARAnnotation] = []
     /// Annotations filtered by distance/maxVisibleAnnotations. Look at activeAnnotationsFromAnnotations.
@@ -107,7 +95,16 @@ open class ARPresenter: UIView
     
     required public init?(coder aDecoder: NSCoder)
     {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
+    }
+    
+    open override func awakeFromNib()
+    {
+        super.awakeFromNib()
+        if self.arViewController == nil
+        {
+            fatalError("Set arViewController outlet from xib.")
+        }
     }
     
     /**

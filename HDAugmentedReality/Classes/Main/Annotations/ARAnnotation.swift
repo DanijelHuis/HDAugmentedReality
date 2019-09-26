@@ -27,6 +27,8 @@ open class ARAnnotation: NSObject, MKAnnotation
     
     /// Title of annotation, can be used in ARAnnotationView
     open var title: String?
+    open var subtitle: String?
+
     
     /// Location of the annotation, it is guaranteed to be valid location(coordinate). It is set in init or by validateAndSetLocation.
     internal(set) open var location: CLLocation

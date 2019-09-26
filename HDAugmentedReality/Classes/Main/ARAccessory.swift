@@ -11,5 +11,5 @@ import HDAugmentedReality
 
 public protocol ARAccessory
 {
-    func reload(reloadType: ARViewController.ReloadType, status: ARStatus)
+    func reload(reloadType: ARViewController.ReloadType, status: ARStatus, presenter: ARPresenter)
 }

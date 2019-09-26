@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0C13E68F22DD2C41002286A9 /* ARAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C13E68E22DD2C41002286A9 /* ARAccessory.swift */; };
+		0CEC575E233D5E300020D515 /* ARViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0CEC575D233D5E300020D515 /* ARViewController.xib */; };
 		0D6F0E48926558752C47A4AF962FE8C3 /* ARAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBEDB33BCDB074F11F425EF9A773642 /* ARAnnotationView.swift */; };
 		1DDDC7279AFD6A125DB19F4AD8A7A495 /* ARAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7F6907961043148BBC4F7C8674B0B1 /* ARAnnotation.swift */; };
 		1DEA12854D046357A86864368FCA9340 /* hdar_close.png in Resources */ = {isa = PBXBuildFile; fileRef = FAEFEF19E19C44C26A6F3A0ED7BF053E /* hdar_close.png */; };
@@ -20,7 +21,7 @@
 		6378D050CC679E3F21BF4052056CDFA8 /* ARPresenterTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04E72FFE82F4913259237072848E8C1 /* ARPresenterTransform.swift */; };
 		713989CFC4B0E09F939EC3DE95CAA444 /* hdar_close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B94F0E71F522D5957692EF169236022 /* hdar_close@3x.png */; };
 		724BAE7535F3B311DA403C241D2B1B88 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3609B326DFEA95AE29DD337938C14608 /* CameraView.swift */; };
-		796E8B8251A78B6E25FD28117906F200 /* UIView+constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA602FA78B92EE7069331C47F24B175B /* UIView+constraints.swift */; };
+		796E8B8251A78B6E25FD28117906F200 /* UIView+utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA602FA78B92EE7069331C47F24B175B /* UIView+utility.swift */; };
 		7F8A0C92423A86615446D8B4C55B0F91 /* ARTrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FC750B75256F3BEECF19E1EB5A3D07D /* ARTrackingManager.swift */; };
 		99C83E2419B205B86CB118947B3FF94A /* DebugMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B03C273339AC8B1647292DA3AD655E2 /* DebugMapViewController.xib */; };
 		C8EB4B43F5C0773B2C62826C09C519F6 /* TouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D7D2240F9F83F837211E00C53418F4 /* TouchView.swift */; };
@@ -45,6 +46,7 @@
 /* Begin PBXFileReference section */
 		0B03C273339AC8B1647292DA3AD655E2 /* DebugMapViewController.xib */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.xib; name = DebugMapViewController.xib; path = HDAugmentedReality/Resources/DebugMapViewController.xib; sourceTree = "<group>"; };
 		0C13E68E22DD2C41002286A9 /* ARAccessory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARAccessory.swift; sourceTree = "<group>"; };
+		0CEC575D233D5E300020D515 /* ARViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ARViewController.xib; sourceTree = "<group>"; };
 		0D64AD0D235C10312CBFC96A6FB9A8EA /* hdar_close@2x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "hdar_close@2x.png"; path = "HDAugmentedReality/Resources/hdar_close@2x.png"; sourceTree = "<group>"; };
 		1009B9C66C798934456493AABB471A10 /* Pods-HDAugmentedRealityDemo-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-HDAugmentedRealityDemo-acknowledgements.markdown"; sourceTree = "<group>"; };
 		10F28389E72D2582E79D30F6C5342795 /* Pods-HDAugmentedRealityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HDAugmentedRealityDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -73,7 +75,7 @@
 		D228026ED08211E518A27123409933D3 /* HDAugmentedReality-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "HDAugmentedReality-dummy.m"; sourceTree = "<group>"; };
 		D7D7D2240F9F83F837211E00C53418F4 /* TouchView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TouchView.swift; sourceTree = "<group>"; };
 		E7E8CCEED15812151B84FA9E74DC92A7 /* HDAugmentedReality.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = HDAugmentedReality.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		EA602FA78B92EE7069331C47F24B175B /* UIView+constraints.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+constraints.swift"; sourceTree = "<group>"; };
+		EA602FA78B92EE7069331C47F24B175B /* UIView+utility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+utility.swift"; sourceTree = "<group>"; };
 		F1497743FFC0EA36A75C2B4724C7E8E6 /* ARViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		F93374FABE4C667FABF77652215BE68A /* ARConfiguration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ARConfiguration.swift; sourceTree = "<group>"; };
 		F9C8617F0E8FD987F6F44ED152542601 /* ARMath.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ARMath.swift; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				0B03C273339AC8B1647292DA3AD655E2 /* DebugMapViewController.xib */,
+				0CEC575D233D5E300020D515 /* ARViewController.xib */,
 				FAEFEF19E19C44C26A6F3A0ED7BF053E /* hdar_close.png */,
 				0D64AD0D235C10312CBFC96A6FB9A8EA /* hdar_close@2x.png */,
 				6B94F0E71F522D5957692EF169236022 /* hdar_close@3x.png */,
@@ -246,7 +249,7 @@
 			children = (
 				3609B326DFEA95AE29DD337938C14608 /* CameraView.swift */,
 				D7D7D2240F9F83F837211E00C53418F4 /* TouchView.swift */,
-				EA602FA78B92EE7069331C47F24B175B /* UIView+constraints.swift */,
+				EA602FA78B92EE7069331C47F24B175B /* UIView+utility.swift */,
 			);
 			name = External;
 			path = HDAugmentedReality/Classes/External;
@@ -391,6 +394,7 @@
 			files = (
 				99C83E2419B205B86CB118947B3FF94A /* DebugMapViewController.xib in Resources */,
 				1DEA12854D046357A86864368FCA9340 /* hdar_close.png in Resources */,
+				0CEC575E233D5E300020D515 /* ARViewController.xib in Resources */,
 				5634B6FD4E4DDDF2A2CE9C4193F33AFB /* hdar_close@2x.png in Resources */,
 				713989CFC4B0E09F939EC3DE95CAA444 /* hdar_close@3x.png in Resources */,
 			);
@@ -416,7 +420,7 @@
 				D80317AAD3CEC2A7E752A0424F52B94E /* HDAugmentedReality-dummy.m in Sources */,
 				DB8A0F554301EE651C2A4F65F34D6576 /* ARMath.swift in Sources */,
 				C8EB4B43F5C0773B2C62826C09C519F6 /* TouchView.swift in Sources */,
-				796E8B8251A78B6E25FD28117906F200 /* UIView+constraints.swift in Sources */,
+				796E8B8251A78B6E25FD28117906F200 /* UIView+utility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

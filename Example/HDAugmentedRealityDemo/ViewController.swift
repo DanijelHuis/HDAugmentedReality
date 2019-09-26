@@ -51,7 +51,7 @@ class ViewController: UIViewController, ARDataSource
         //@TODO
         //let arViewController = ARViewController()
         // You can use your own xib if you have the need.
-        let arViewController = ARViewController(nibName: "TestARViewController", bundle: nil)
+        let arViewController = ARViewController()
         
         //===== Presenter - handles visual presentation of annotations
         let presenter = arViewController.presenter!
@@ -74,9 +74,8 @@ class ViewController: UIViewController, ARDataSource
         //===== ARViewController
         // Ui
         arViewController.dataSource = self
-        arViewController.uiOptions.closeButtonEnabled = true
         // Debugging
-        arViewController.uiOptions.debugLabel = true
+        arViewController.uiOptions.debugLabel = false
         arViewController.uiOptions.debugMap = true
         arViewController.uiOptions.simulatorDebugging = Platform.isSimulator
         arViewController.uiOptions.setUserLocationToCenterOfAnnotations =  Platform.isSimulator
@@ -91,6 +90,13 @@ class ViewController: UIViewController, ARDataSource
         }
         // Setting annotations
         arViewController.setAnnotations(dummyAnnotations)
+        arViewController.modalPresentationStyle = .fullScreen
+        
+        // Radar
+        let radar = RadarMapView()
+        radar.translatesAutoresizingMaskIntoConstraints = false
+        arViewController.addAccessory(radar, leading: 10, trailing: nil, top: nil, bottom: 10, width: nil, height: 150)
+        
         // Presenting controller
         self.present(arViewController, animated: true, completion: nil)
     }
