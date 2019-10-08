@@ -7,7 +7,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RadarMapView" customModule="HDAugmentedRealityDemo" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RadarMapView" customModule="HDAugmentedReality" customModuleProvider="target">
             <connections>
                 <outlet property="indicatorContainerView" destination="IqT-XI-o7E" id="XwY-Oq-kNS"/>
                 <outlet property="mapView" destination="t8A-FZ-WsR" id="gQb-V9-fr3"/>
@@ -24,10 +24,10 @@
                     <rect key="frame" x="0.0" y="0.0" width="195" height="195"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IqT-XI-o7E">
-                            <rect key="frame" x="0.0" y="0.0" width="195" height="195"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <rect key="frame" x="-3" y="-3" width="201" height="201"/>
+                            <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
-                        <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="t8A-FZ-WsR">
+                        <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" rotateEnabled="NO" showsCompass="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t8A-FZ-WsR">
                             <rect key="frame" x="0.0" y="0.0" width="195" height="195"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
@@ -38,13 +38,13 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="t8A-FZ-WsR" secondAttribute="height" multiplier="1:1" id="1IV-kN-VBC"/>
-                        <constraint firstItem="IqT-XI-o7E" firstAttribute="top" secondItem="ZLx-3y-5c7" secondAttribute="top" id="4dd-oU-JFS"/>
-                        <constraint firstAttribute="trailing" secondItem="IqT-XI-o7E" secondAttribute="trailing" id="AOX-RR-wFB"/>
-                        <constraint firstItem="IqT-XI-o7E" firstAttribute="leading" secondItem="ZLx-3y-5c7" secondAttribute="leading" id="DZq-c5-Id3"/>
+                        <constraint firstItem="IqT-XI-o7E" firstAttribute="top" secondItem="ZLx-3y-5c7" secondAttribute="top" constant="-3" id="4dd-oU-JFS"/>
+                        <constraint firstAttribute="trailing" secondItem="IqT-XI-o7E" secondAttribute="trailing" constant="-3" id="AOX-RR-wFB"/>
+                        <constraint firstItem="IqT-XI-o7E" firstAttribute="leading" secondItem="ZLx-3y-5c7" secondAttribute="leading" constant="-3" id="DZq-c5-Id3"/>
                         <constraint firstItem="t8A-FZ-WsR" firstAttribute="leading" secondItem="ZLx-3y-5c7" secondAttribute="leading" id="I7V-Qp-yi4"/>
                         <constraint firstAttribute="trailing" secondItem="t8A-FZ-WsR" secondAttribute="trailing" id="Vsg-mQ-58O"/>
                         <constraint firstItem="t8A-FZ-WsR" firstAttribute="top" secondItem="ZLx-3y-5c7" secondAttribute="top" id="b8j-bs-oTF"/>
-                        <constraint firstAttribute="bottom" secondItem="IqT-XI-o7E" secondAttribute="bottom" id="gE2-M0-Vqc"/>
+                        <constraint firstAttribute="bottom" secondItem="IqT-XI-o7E" secondAttribute="bottom" constant="-3" id="gE2-M0-Vqc"/>
                         <constraint firstAttribute="bottom" secondItem="t8A-FZ-WsR" secondAttribute="bottom" id="hg3-1s-J9v"/>
                     </constraints>
                 </view>
@@ -64,8 +64,8 @@
                                                 <constraint firstAttribute="width" secondItem="EW3-w8-UNQ" secondAttribute="height" multiplier="1:1" id="8XR-jM-aPm"/>
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <state key="normal" image="arrow.up.right.circle.fill" catalog="system"/>
-                                            <state key="selected" image="arrow.down.left.circle.fill" catalog="system"/>
+                                            <state key="normal" image="radar_expand"/>
+                                            <state key="selected" image="radar_shrink"/>
                                             <connections>
                                                 <action selector="sizeButtonTapped:" destination="-1" eventType="touchUpInside" id="S9I-YW-iTx"/>
                                             </connections>
@@ -99,7 +99,7 @@
                                                 <constraint firstAttribute="width" secondItem="b4h-9D-W8c" secondAttribute="height" multiplier="1:1" id="doG-ox-1vM"/>
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <state key="normal" image="plus.circle.fill" catalog="system"/>
+                                            <state key="normal" image="radar_zoom_in"/>
                                             <connections>
                                                 <action selector="zoomInButtonTapped:" destination="-1" eventType="touchUpInside" id="CkV-Fq-6FE"/>
                                             </connections>
@@ -111,7 +111,7 @@
                                                 <constraint firstAttribute="width" secondItem="WOS-h5-wsw" secondAttribute="height" multiplier="1:1" id="P1m-DD-lWD"/>
                                             </constraints>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <state key="normal" image="minus.circle.fill" catalog="system"/>
+                                            <state key="normal" image="radar_zoom_out"/>
                                             <connections>
                                                 <action selector="zoomOutButtonTapped:" destination="-1" eventType="touchUpInside" id="2sG-Vs-aod"/>
                                             </connections>
@@ -161,13 +161,13 @@
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="191.19999999999999" y="-65.217391304347828"/>
+            <point key="canvasLocation" x="4" y="-109.29535232383809"/>
         </view>
     </objects>
     <resources>
-        <image name="arrow.down.left.circle.fill" catalog="system" width="64" height="62"/>
-        <image name="arrow.up.right.circle.fill" catalog="system" width="64" height="62"/>
-        <image name="minus.circle.fill" catalog="system" width="64" height="62"/>
-        <image name="plus.circle.fill" catalog="system" width="64" height="62"/>
+        <image name="radar_expand" width="28" height="31"/>
+        <image name="radar_shrink" width="28" height="31"/>
+        <image name="radar_zoom_in" width="28" height="31"/>
+        <image name="radar_zoom_out" width="28" height="31"/>
     </resources>
 </document>

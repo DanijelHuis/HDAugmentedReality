@@ -15,5 +15,5 @@ Pod::Spec.new do |s|
 
   s.source_files = 'HDAugmentedReality/Classes/**/*'
   #s.resource_bundles = {'Resources' => ['HDAugmentedReality/Resources/**/*.{xib,png}']}
-  s.resources = 'HDAugmentedReality/Resources/**/*.{xib,png}'
+  s.resources = 'HDAugmentedReality/Resources/**/*.{xib,png,xcassets}'
 end

@@ -35,6 +35,8 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
     open var startMode: RadarStartMode = .centerUser(span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
     /// Defines map position and zoom when user location changes.
     open var trackingMode: RadarTrackingMode = .centerUserWhenNearBorder(span: nil)
+    //open var trackingMode: RadarTrackingMode = .none
+
     open var configuration: Configuration = Configuration()
     
     
@@ -91,7 +93,7 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
     {
         // Other
         self.isReadyToReload = true
-    }
+ }
     
     func bindUi()
     {
@@ -108,6 +110,11 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
         self.mapView.setNeedsLayout()
         self.mapView.layoutIfNeeded()
         self.mapView.layer.cornerRadius = self.mapView.bounds.size.width / 2.0
+        
+        self.indicatorContainerView.setNeedsLayout()
+        self.indicatorContainerView.layoutIfNeeded()
+        self.indicatorContainerView.layer.cornerRadius = self.indicatorContainerView.bounds.size.width / 2.0
+        self.indicatorContainerView.clipsToBounds = true
     }
 
     //==========================================================================================================================================================
@@ -221,7 +228,7 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
             let view = (mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)) ?? MKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
             view.annotation = annotation
             view.displayPriority = .required
-            view.canShowCallout = true
+            view.canShowCallout = false
             view.image = self.configuration.annotationImage
             return view
         }
@@ -260,7 +267,7 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
             let annotationCenterCGPoint = self.mapView.convert(annotation.coordinate, toPointTo: self.mapView)
             let annotationCenter = simd_double2(x: Double(annotationCenterCGPoint.x) , y: Double(annotationCenterCGPoint.y))
             let centerToAnnotationVector = annotationCenter - mapCenter
-            let pointOnCircumference = mapCenter + simd_normalize(centerToAnnotationVector) * mapRadius
+            let pointOnCircumference = mapCenter + simd_normalize(centerToAnnotationVector) * (mapRadius + 1.5)
             if simd_length(centerToAnnotationVector) < mapRadius { continue }
 
             // Create indicator view if not reusing old view.
@@ -276,7 +283,7 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
                 indicatorView = newIndicatorView
             }
             
-            indicatorView.center = CGPoint(x: pointOnCircumference.x, y: pointOnCircumference.y)
+            indicatorView.center = self.indicatorContainerView.convert(CGPoint(x: pointOnCircumference.x, y: pointOnCircumference.y), from: self.mapView)
             self.indicatorContainerView.insertSubview(indicatorView, at: 0)
             if isUserAnnotation { self.indicatorContainerView.bringSubviewToFront(indicatorView) }
             

@@ -17,5 +17,5 @@
   },
   "requires_arc": true,
   "source_files": "HDAugmentedReality/Classes/**/*",
-  "resources": "HDAugmentedReality/Resources/**/*.{xib,png}"
+  "resources": "HDAugmentedReality/Resources/**/*.{xib,png,xcassets}"
 }
