@@ -221,7 +221,7 @@ public class ARMath
          */
         let pitch = pitch + 90
         let rotationToHorizontalPlane = simd_quatd(angle: -pitch.toRadians, axis: deviceRightVector)
-        var deviceDirectionHorizontalVector = rotationToHorizontalPlane.act(deviceUpVector)
+        let deviceDirectionHorizontalVector = rotationToHorizontalPlane.act(deviceUpVector)
         
         /**
          4) Calculate heading from deviceDirectionHorizontalVector.

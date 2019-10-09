@@ -47,7 +47,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     /// Locations older than this will be disregarded. In seconds.
     public var minimumLocationAge: Double = 30
     /**
-     On iOS 11+, it will be set to .deviceMotion and headingFilterFactor will be set to 1.0 (no filtering).
+     Source of heading. Read carefully HeadingSource comments. deviceMotion is more accurate/fluid but it has problems when device is moving fast.
      */
     public var headingSource: HeadingSource = .coreLocation
     /**
@@ -103,7 +103,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         // Setup location manager
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.distanceFilter = CLLocationDistance(self.userDistanceFilter)
-        self.locationManager.headingFilter = 0.1    //@TODO test
+        self.locationManager.headingFilter = 0.1
         self.locationManager.delegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(ARTrackingManager.deviceOrientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
@@ -134,7 +134,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     {
         self.resetAllTrackingData()
 
-        // Request authorization if state is not determined
+        // Request authorization if state is not determined, no need to wait for result.
         if CLLocationManager.locationServicesEnabled()
         {
             if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.notDetermined
@@ -194,7 +194,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     //==========================================================================================================================================================
     // MARK:                                                        CLLocationManagerDelegate
     //==========================================================================================================================================================
-    //@CL
+    
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
     {
         self.setClHeading(newHeading: newHeading)
@@ -216,7 +216,6 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
 
         //===== Set current user location
         self.userLocation = location
-        //self.userLocation = CLLocation(coordinate: location.coordinate, altitude: 95, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())
         if self.reloadLocationPrevious == nil { self.reloadLocationPrevious = self.userLocation }
         
         //@DEBUG
@@ -225,7 +224,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
             print("== \(location.horizontalAccuracy), \(age) \(location.coordinate.latitude), \(location.coordinate.longitude), \(location.altitude)" )
         }*/
         
-        //===== Reporting location 5s after we get location, this will filter multiple locations calls and make only one delegate call
+        //===== Reporting location some time after we get location, this will filter multiple locations calls and make only one delegate call
         let reportIsScheduled = self.reportLocationTimer != nil
         
         // First time, reporting immediately
@@ -238,7 +237,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         {
             
         }
-        // Scheduling report in 5s
+        // Scheduling report
         else
         {
             self.startReportLocationTimer()
@@ -344,7 +343,6 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     //==========================================================================================================================================================
     // MARK:                                                    Heading
     //==========================================================================================================================================================
-    //@CL
     internal func setClHeading(newHeading: CLHeading)
     {
         guard newHeading.headingAccuracy >= 0 && newHeading.headingAccuracy <= self.minimumHeadingAccuracy else { return }
@@ -409,9 +407,9 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
      */
     public enum HeadingSource
     {
-        /// Uses CoreLocation's LocationManager to fetch heading. These readings are not updated often and are probably not adjusted using accelerometer etc. Also these valuse can jump so filtering is usually needed.
+        /// Uses CoreLocation's LocationManager to fetch heading.
         case coreLocation
-        /// iOS 11+. This means that ARTrackingManager will use CMMotionManager.deviceMotion.heading for its heading. This value is updated more often and values are more stable compared to CoreLocation's heading.
+        /// iOS 11+. This means that ARTrackingManager will use CMMotionManager.deviceMotion.heading for its heading. Do not use this if you expect device to move fast (e.g. in car, bus etc) because CMMotionManager.deviceMotion.heading returns false readings.
         case deviceMotion
     }
 }
