@@ -94,7 +94,6 @@ class ViewController: UIViewController, ARDataSource
         
         // Radar
         let radar = RadarMapView()
-        radar.translatesAutoresizingMaskIntoConstraints = false
         arViewController.addAccessory(radar, leading: 10, trailing: nil, top: nil, bottom: 10, width: nil, height: 150)
         
         // Presenting controller

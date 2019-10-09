@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0C3C4477234D0D0B00E06776 /* Readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0C3C4476234D0D0B00E06776 /* Readme.txt */; };
-		0C56798F1EA0160800E4613C /* FrontRowTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C56798E1EA0160800E4613C /* FrontRowTransform.swift */; };
 		0C5E594B1E6769F8003CCA93 /* StackTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */; };
 		0CAD4EB31AE6FC14000F2A2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAD4EB21AE6FC14000F2A2A /* AppDelegate.swift */; };
 		0CAD4EB51AE6FC14000F2A2A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAD4EB41AE6FC14000F2A2A /* ViewController.swift */; };
@@ -24,7 +23,6 @@
 
 /* Begin PBXFileReference section */
 		0C3C4476234D0D0B00E06776 /* Readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
-		0C56798E1EA0160800E4613C /* FrontRowTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrontRowTransform.swift; sourceTree = "<group>"; };
 		0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackTestViewController.swift; sourceTree = "<group>"; };
 		0CAD4EAD1AE6FC14000F2A2A /* HDAugmentedRealityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HDAugmentedRealityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CAD4EB11AE6FC14000F2A2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -62,6 +60,7 @@
 			children = (
 				0CAD4EB41AE6FC14000F2A2A /* ViewController.swift */,
 				0CB2C2461AF18C620006E949 /* TestAnnotationView.swift */,
+				0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -75,6 +74,17 @@
 				E0D2E3953577132FCDAEF4AD /* Pods_HDAugmentedRealityDemo.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0C5FCA64234E774B0050256E /* App */ = {
+			isa = PBXGroup;
+			children = (
+				0CAD4EB21AE6FC14000F2A2A /* AppDelegate.swift */,
+				0CAD4EB61AE6FC14000F2A2A /* Main.storyboard */,
+				0CAD4EB91AE6FC14000F2A2A /* Images.xcassets */,
+				0CAD4EB01AE6FC14000F2A2A /* Supporting Files */,
+			);
+			name = App;
 			sourceTree = "<group>";
 		};
 		0CAD4EA41AE6FC14000F2A2A = {
@@ -99,14 +109,9 @@
 		0CAD4EAF1AE6FC14000F2A2A /* HDAugmentedRealityDemo */ = {
 			isa = PBXGroup;
 			children = (
-				0CC5197E22E12522005EE3CA /* osijek_firma.gpx */,
+				0C5FCA64234E774B0050256E /* App */,
 				0C13E68B22DD21CD002286A9 /* Main */,
-				0CAD4EB21AE6FC14000F2A2A /* AppDelegate.swift */,
-				0CAD4EB61AE6FC14000F2A2A /* Main.storyboard */,
-				0CAD4EB91AE6FC14000F2A2A /* Images.xcassets */,
-				0CAD4EB01AE6FC14000F2A2A /* Supporting Files */,
-				0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */,
-				0C56798E1EA0160800E4613C /* FrontRowTransform.swift */,
+				0CC5197E22E12522005EE3CA /* osijek_firma.gpx */,
 			);
 			path = HDAugmentedRealityDemo;
 			sourceTree = "<group>";
@@ -252,7 +257,6 @@
 				0CAD4EB51AE6FC14000F2A2A /* ViewController.swift in Sources */,
 				0C5E594B1E6769F8003CCA93 /* StackTestViewController.swift in Sources */,
 				0CAD4EB31AE6FC14000F2A2A /* AppDelegate.swift in Sources */,
-				0C56798F1EA0160800E4613C /* FrontRowTransform.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

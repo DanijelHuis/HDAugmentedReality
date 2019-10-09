@@ -2,15 +2,7 @@
 
 # HDAugmentedReality
 
-Augmented Reality component for iOS, written in Swift 4.0.
-
-Version history:
-- 2.4.0: written in swift 4.2, iOS 8+
-- 2.3.0: written in swift 4.0, iOS 8+
-- 2.0.0: written in swift 3.0, iOS 8+
-- 1.1.x: written in Swift 3.0, iOS 8+
-- 1.0.x: written in Swift 2.0, iOS 7+
-- 0.1.0: written in Swift 1.2, iOS 7+
+Augmented Reality component for iOS.
 
 ## Description
 
@@ -29,12 +21,11 @@ Altitudes of POIs are disregarded.
 - Works with large amount of annotations and on-screen annotation views
 - Simulator debugging and debugging with map controller
 - Configurable vertical offset by distance
+- Radar with map and out-of-bounds indicators
 
 ## What is next?
-- Improve heading and pitch accuracy by using CMDeviceMotion and new heading property on iOS 11. This will lower the need for high filtering 
-and improve responsiveness.
 - Notify ARAnnotationView when device is targeting it (Focus mode). This could be used as alternative to stacking or used with it. Similar feature can be seen in Flightradar app.
-- Add radar view as standalone accessory. Add support for accessories.
+
 
 ## Dependencies & Requirements
 
@@ -132,6 +123,15 @@ Make sure NSLocationWhenInUseUsageDescription and NSCameraUsageDescription are a
 **ARAnnotationView**: Responsible for presenting annotations visually. Analogue to MKAnnotationView. It is usually subclassed to provide custom look.
 
 **ARStatus**: Structure that holds all information about screen(FOV),  device(location/heading/pitch) and all other informations important for layout of annotation views on the screen.
+
+## Version history:
+- 3.0.0: written in swift 5, iOS 11+
+- 2.4.0: written in swift 4.2, iOS 8+
+- 2.3.0: written in swift 4.0, iOS 8+
+- 2.0.0: written in swift 3.0, iOS 8+
+- 1.1.x: written in Swift 3.0, iOS 8+
+- 1.0.x: written in Swift 2.0, iOS 7+
+- 0.1.0: written in Swift 1.2, iOS 7+
 
 ## License 
 

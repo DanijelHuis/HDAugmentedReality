@@ -83,11 +83,12 @@ open class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
     
     @objc open func tapGesture()
     {
-        if let annotation = self.annotation
-        {
-            let alertView = UIAlertView(title: annotation.title, message: "Tapped", delegate: nil, cancelButtonTitle: "OK")
-            alertView.show()
-        }
+        guard let annotation = self.annotation, let rootViewController = UIApplication.shared.delegate?.window??.rootViewController else { return }
+
+        let alertController = UIAlertController(title: annotation.title, message: "Tapped", preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(action)
+        rootViewController.presentedViewController?.present(alertController, animated: true, completion: nil)
     }
 
     

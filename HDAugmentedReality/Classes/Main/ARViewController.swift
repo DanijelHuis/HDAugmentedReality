@@ -517,6 +517,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         if let accessoryView = accessory as? UIView
         {
             self.controlContainerView.addSubview(accessoryView)
+            accessoryView.translatesAutoresizingMaskIntoConstraints = false
             accessoryView.pinToSuperview(leading: leading, trailing: trailing, top: top, bottom: bottom, width: width, height: height)
         }
         
