@@ -24,7 +24,7 @@
 /* Begin PBXFileReference section */
 		0C3C4476234D0D0B00E06776 /* Readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
 		0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackTestViewController.swift; sourceTree = "<group>"; };
-		0CAD4EAD1AE6FC14000F2A2A /* HDAugmentedRealityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HDAugmentedRealityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CAD4EAD1AE6FC14000F2A2A /* HDAR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HDAR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CAD4EB11AE6FC14000F2A2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0CAD4EB21AE6FC14000F2A2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0CAD4EB41AE6FC14000F2A2A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 		0CAD4EAE1AE6FC14000F2A2A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0CAD4EAD1AE6FC14000F2A2A /* HDAugmentedRealityDemo.app */,
+				0CAD4EAD1AE6FC14000F2A2A /* HDAR.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -152,7 +152,7 @@
 			);
 			name = HDAugmentedRealityDemo;
 			productName = HDAugmentedRealityDemo;
-			productReference = 0CAD4EAD1AE6FC14000F2A2A /* HDAugmentedRealityDemo.app */;
+			productReference = 0CAD4EAD1AE6FC14000F2A2A /* HDAR.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -390,8 +390,9 @@
 				INFOPLIST_FILE = HDAugmentedRealityDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Huis.HDAugmentedRealityDemo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = HDAR;
 				PROVISIONING_PROFILE = "3721ebd7-c018-4626-95b5-5fd2ab7f49d0";
 				PROVISIONING_PROFILE_SPECIFIER = NTH_Development;
 				SWIFT_VERSION = 4.2;
@@ -410,8 +411,9 @@
 				INFOPLIST_FILE = HDAugmentedRealityDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Huis.HDAugmentedRealityDemo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = HDAR;
 				PROVISIONING_PROFILE = "e28b5d0e-47ea-46a9-9805-9d88b59efa0f";
 				PROVISIONING_PROFILE_SPECIFIER = NTHEnterprise;
 				SWIFT_VERSION = 4.2;

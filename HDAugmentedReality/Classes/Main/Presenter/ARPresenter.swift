@@ -98,6 +98,15 @@ open class ARPresenter: UIView
         super.init(coder: aDecoder)
     }
     
+    deinit
+    {
+        // When changing ARPresenter it might be usefull to let AnnotationViews deinit.
+        for annotation in self.annotations
+        {
+            annotation.annotationView = nil
+        }
+    }
+    
     open override func awakeFromNib()
     {
         super.awakeFromNib()
@@ -106,6 +115,7 @@ open class ARPresenter: UIView
             fatalError("Set arViewController outlet from xib.")
         }
     }
+    
     
     /**
      Total maximum number of visible annotation views. Default value is 100. Max value is 500.

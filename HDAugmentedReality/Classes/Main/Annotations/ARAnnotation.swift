@@ -29,11 +29,11 @@ open class ARAnnotation: NSObject, MKAnnotation
     open var title: String?
     open var subtitle: String?
 
-    
     /// Location of the annotation, it is guaranteed to be valid location(coordinate). It is set in init or by validateAndSetLocation.
     internal(set) open var location: CLLocation
     
-    /// View for annotation. It is set inside ARPresenter after fetching view from dataSource.
+    /// View for annotation. It is set inside ARPresenter after fetching view from dataSource. Can be set multiple times.
+    /// Must not be weak var because nothing else than this holds it (except superview but sometimes it is removed from it when not active).
     internal(set) open var annotationView: ARAnnotationView?
     
     // Internal use only, do not set this properties

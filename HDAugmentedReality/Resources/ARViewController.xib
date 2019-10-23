@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -37,14 +37,14 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wT7-zC-wNn">
-                            <rect key="frame" x="367" y="59.5" width="32" height="31.5"/>
+                            <rect key="frame" x="367" y="59" width="32" height="32"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="6Zz-L1-qzD"/>
                                 <constraint firstAttribute="width" constant="32" id="CcI-G3-VZP"/>
                             </constraints>
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <state key="normal" backgroundImage="xmark.circle.fill" catalog="system"/>
+                            <state key="normal" image="close_button"/>
                             <connections>
                                 <action selector="closeButtonTap" destination="-1" eventType="touchUpInside" id="RgE-Gm-nfZ"/>
                             </connections>
@@ -73,10 +73,10 @@
                 <constraint firstItem="KHp-dx-LbS" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="xlI-2I-TII"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <point key="canvasLocation" x="61" y="98"/>
+            <point key="canvasLocation" x="-41" y="-113"/>
         </view>
     </objects>
     <resources>
-        <image name="xmark.circle.fill" catalog="system" width="64" height="62"/>
+        <image name="close_button" width="28" height="31"/>
     </resources>
 </document>

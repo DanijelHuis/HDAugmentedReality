@@ -47,7 +47,7 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
     /// Locations older than this will be disregarded. In seconds.
     public var minimumLocationAge: Double = 30
     /**
-     Source of heading. Read carefully HeadingSource comments. deviceMotion is more accurate/fluid but it has problems when device is moving fast.
+     Source of heading. Read carefully HeadingSource comments. .deviceMotion is smoother but it has problems when device is moving fast. coreLocation works well in all situations.
      */
     public var headingSource: HeadingSource = .coreLocation
     /**
@@ -326,6 +326,16 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         
         self.previousRawPitch = newPitch
         self.previousRawHeading = newHeading
+    }
+    
+    /**
+     Solves problem with delayed filtering, e.g. if values change quickly for some reason then filtered values would need a lot of time to catch up.
+     */
+    internal func catchUpFilteredHeadingAndPitch()
+    {
+        guard let previousRawPitch = self.previousRawPitch, let previousRawHeading = self.previousRawHeading else { return }
+        self.pitch = previousRawPitch
+        self.heading = previousRawHeading
     }
 
     //==========================================================================================================================================================

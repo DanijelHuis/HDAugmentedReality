@@ -28,7 +28,7 @@ public protocol ARPresenterTransform: class
 
 open class ARPresenterStackTransform: ARPresenterTransform
 {
-    open var arPresenter: ARPresenter!
+    open weak var arPresenter: ARPresenter!
     
     public init() {}
     

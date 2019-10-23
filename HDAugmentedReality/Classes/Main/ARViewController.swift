@@ -65,7 +65,25 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     /**
      Presenter instance. It is responsible for creation and layout of annotation views. Subclass and provide your own implementation if needed. Always set it before anything else is set on this controller.
      */
-    @IBOutlet open weak var presenter: ARPresenter!
+    @IBOutlet open var presenter: ARPresenter!
+    {
+        willSet
+        {
+            // Removing old instance
+            self.presenter?.removeFromSuperview()
+        }
+        didSet
+        {
+            // If no superview, that means this is set from outside and not from xib so we need to add it.
+            if self.presenter.superview == nil
+            {
+                self.presenter.translatesAutoresizingMaskIntoConstraints = false
+                self.view.insertSubview(self.presenter, aboveSubview: self.cameraView)
+                self.presenter.pinToSuperview(leading: 0, trailing: 0, top: 0, bottom: 0, width: nil, height: nil)
+            }
+        }
+    }
+
 
     //===== Private
     fileprivate var annotations: [ARAnnotation] = []
@@ -153,6 +171,10 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     //==========================================================================================================================================================
     // MARK:                                                        View's lifecycle
     //==========================================================================================================================================================
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
     open override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
@@ -339,9 +361,9 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             //===== Location
             var location: CLLocation? = self.fixedDebugLocation
   
-            if self.uiOptions.setUserLocationToCenterOfAnnotations, self.shouldRecalculateDebugLocation, location == nil
+            if location == nil, self.uiOptions.setUserLocationToCenterOfAnnotations, self.shouldRecalculateDebugLocation, self.annotations.count > 0
             {
-                location = self.centerLocationFromAnnotations(annotations: annotations)
+                location = self.centerLocationFromAnnotations(annotations: self.annotations)
                 self.shouldRecalculateDebugLocation = false
             }
             
@@ -448,8 +470,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             [unowned self] (coordinatorContext) in
             self.presenter.isHidden = false
             self.layoutAndReloadOnOrientationChange()
-            //@TODO fix transition
-            //@TODO update filtered values
+            self.trackingManager.catchUpFilteredHeadingAndPitch()
         }
     }
     
@@ -637,7 +658,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             headingSlider.maximumValue = 180
             headingSlider.value = 1
             controlsView.addSubview(headingSlider)
-            headingSlider.pinToSuperview(leading: 10, trailing: 10, top: nil, bottom: 0, width: nil, height: 20)
+            headingSlider.pinToSuperview(leading: 20, trailing: 60, top: 40, bottom: nil, width: nil, height: 20)
             self.debugHeadingSlider = headingSlider
             
             let pitchSlider: UISlider = UISlider()
@@ -648,12 +669,14 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             pitchSlider.value = 1
             controlsView.addSubview(pitchSlider)
             pitchSlider.heightAnchor.constraint(equalToConstant: 20).isActive = true
-            pitchSlider.centerYAnchor.constraint(equalTo: controlsView.centerYAnchor).isActive = true
-            pitchSlider.centerXAnchor.constraint(equalTo: controlsView.trailingAnchor, constant: -10).isActive = true
-            pitchSlider.widthAnchor.constraint(equalTo: controlsView.heightAnchor, multiplier: 1.0, constant: -20).isActive = true
+            pitchSlider.centerYAnchor.constraint(equalTo: controlsView.centerYAnchor, constant: 20).isActive = true
+            pitchSlider.centerXAnchor.constraint(equalTo: controlsView.trailingAnchor, constant: -20).isActive = true
+            pitchSlider.widthAnchor.constraint(equalTo: controlsView.heightAnchor, multiplier: 1.0, constant: -80).isActive = true
             pitchSlider.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi * 0.5))
             self.debugPitchSlider = pitchSlider
         }
+        
+        self.closeButton.superview?.bringSubviewToFront(self.closeButton)
     }
     
     func showDebugViewWithColor(color: UIColor)

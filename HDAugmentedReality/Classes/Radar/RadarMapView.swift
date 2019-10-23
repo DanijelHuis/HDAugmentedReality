@@ -34,8 +34,8 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
         public var annotationImage = UIImage(named: "radarAnnotation", in: Bundle(for: RadarMapView.self), compatibleWith: nil)
         /// Image for user indicator that is shown on the map
         public var userAnnotationImage = UIImage(named: "userRadarAnnotation", in: Bundle(for: RadarMapView.self), compatibleWith: nil)
-        /// Use it to set anchor point for your userAnnotationImage.
-        public var userAnnotationAnchorPoint = CGPoint(x: 0.5, y: 0.860)
+        /// Use it to set anchor point for your userAnnotationImage. This is where you center is on the image, in default image its on 201st pixel, image height is 240.
+        public var userAnnotationAnchorPoint = CGPoint(x: 0.5, y: 201/240)
         /// Size of indicator on the ring that shows out of bounds annotations.
         public var indicatorSize: CGFloat = 8
         /// Image for indicators on the ring that shows out of bounds annotations.
@@ -105,6 +105,7 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
     func loadUi()
     {
         self.isReadyToReload = true
+
     }
     
     func bindUi()
@@ -228,6 +229,7 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
             view.isSelected = true  // Keeps it above other annotations (hopefully)
             view.imageView?.image = self.configuration.userAnnotationImage
             view.imageView?.layer.anchorPoint = self.configuration.userAnnotationAnchorPoint
+            view.frame.size = self.configuration.userAnnotationImage?.size ?? CGSize(width: 100, height: 100)
             self.userRadarAnnotationView = view
 
             return view
@@ -387,6 +389,8 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
         })
         {
             (finished) in
+            
+            self.mapView.setNeedsLayout()   // Needed because of legal label.
         }
     }
     
@@ -438,10 +442,11 @@ open class UserRadarAnnotationView: MKAnnotationView
     
     open func loadUi()
     {
-        self.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        self.frame = CGRect(x: 0, y: 0, width: 100, height: 100) // Doesn't matter, it is set in RadarMapView.
 
         self.imageView?.removeFromSuperview()
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(imageView)
         imageView.pinToSuperview(leading: 0, trailing: 0, top: 0, bottom: 0, width: nil, height: nil)
@@ -469,4 +474,28 @@ public enum RadarTrackingMode
     case centerUserAlways(span: MKCoordinateSpan?)
     /// Centers on user when its annotation comes near map border. Use span if you want to force zoom/span level.
     case centerUserWhenNearBorder(span: MKCoordinateSpan?)
+}
+
+/**
+ MKMapView subclass that moves legal label to center (horizontally).
+ */
+class LegalMapView: MKMapView
+{
+    private var isLayoutingLegalLabel = false
+    override func layoutSubviews()
+    {
+        super.layoutSubviews()
+        guard !self.isLayoutingLegalLabel else { return }   // To prevent layout loops.
+        
+        self.isLayoutingLegalLabel = true
+        for subview in self.subviews
+        {
+            if "\(type(of: subview))" == "MKAttributionLabel"   //MKAttributionLabel, _MKMapContentView
+            {
+                subview.layer.cornerRadius = subview.frame.size.height * 0.5
+                subview.center.x = self.frame.size.width / 2
+            }
+        }
+        self.isLayoutingLegalLabel = false
+    }
 }

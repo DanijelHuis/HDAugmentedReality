@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import HDAugmentedReality
+import MapKit
 
 class ViewController: UIViewController, ARDataSource
 {
@@ -46,13 +47,10 @@ class ViewController: UIViewController, ARDataSource
         self.addDummyAnnotation(45.548801, 18.693078 , altitude: 0, title: "Cross 2", annotations: &dummyAnnotations)
         self.addDummyAnnotation(45.546730, 18.686932 , altitude: 0, title: "Tram 1", annotations: &dummyAnnotations)
         self.addDummyAnnotation(45.544808, 18.678549 , altitude: 0, title: "Konzum", annotations: &dummyAnnotations)
-*/
+         */
         // ARViewController
-        //@TODO
-        //let arViewController = ARViewController()
         // You can use your own xib if you have the need.
         let arViewController = ARViewController()
-        
         //===== Presenter - handles visual presentation of annotations
         let presenter = arViewController.presenter!
         // Vertical offset by distance
@@ -60,7 +58,7 @@ class ViewController: UIViewController, ARDataSource
         presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter
         presenter.distanceOffsetMinThreshold = 500 // Doesn't raise annotations that are nearer than this
         // Filtering for performance
-        presenter.maxDistance = 3000               // Don't show annotations if they are farther than this
+        presenter.maxDistance = 3000 //@TODO 3000              // Don't show annotations if they are farther than this
         presenter.maxVisibleAnnotations = 100      // Max number of annotations on the screen
         // Stacking
         presenter.presenterTransform = ARPresenterStackTransform()
@@ -70,6 +68,8 @@ class ViewController: UIViewController, ARDataSource
         let trackingManager = arViewController.trackingManager
         trackingManager.userDistanceFilter = 15
         trackingManager.reloadDistanceFilter = 50
+        //trackingManager.filterFactor = 0.05
+        //trackingManager.headingSource = .deviceMotion   // Read headingSource property description before changing.
         
         //===== ARViewController
         // Ui
@@ -93,8 +93,11 @@ class ViewController: UIViewController, ARDataSource
         arViewController.modalPresentationStyle = .fullScreen
         
         // Radar
+        let safeArea = UIApplication.shared.delegate?.window??.safeAreaInsets ?? UIEdgeInsets.zero
         let radar = RadarMapView()
-        arViewController.addAccessory(radar, leading: 10, trailing: nil, top: nil, bottom: 10, width: nil, height: 150)
+        radar.startMode = .centerUser(span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        radar.trackingMode = .centerUserWhenNearBorder(span: nil)
+        arViewController.addAccessory(radar, leading: 15, trailing: nil, top: nil, bottom: 15 + safeArea.bottom / 4, width: nil, height: 150)
         
         // Presenting controller
         self.present(arViewController, animated: true, completion: nil)
