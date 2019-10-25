@@ -17,8 +17,23 @@
 		0CAD4F061AE70ACA000F2A2A /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CAD4F051AE70ACA000F2A2A /* CoreLocation.framework */; };
 		0CB2C2471AF18C620006E949 /* TestAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB2C2461AF18C620006E949 /* TestAnnotationView.swift */; };
 		0CB56FB21B35E5DF000EDEBB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CB56FB11B35E5DF000EDEBB /* MapKit.framework */; };
-		DE7601D40D03319210409921 /* Pods_HDAugmentedRealityDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0D2E3953577132FCDAEF4AD /* Pods_HDAugmentedRealityDemo.framework */; };
+		DEFE417109239DDF297A9258 /* Pods_HDAugmentedRealityDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A033FEC95712B817AC61EE40 /* Pods_HDAugmentedRealityDemo.framework */; };
+		FEA8D6112362E6B100F2E81E /* BuildFile in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FEA8D6122362E6B100F2E81E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FEA8D6112362E6B100F2E81E /* BuildFile in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0C56798E1EA0160800E4613C /* FrontRowTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrontRowTransform.swift; sourceTree = "<group>"; };
@@ -33,9 +48,9 @@
 		0CAD4F051AE70ACA000F2A2A /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0CB2C2461AF18C620006E949 /* TestAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestAnnotationView.swift; sourceTree = "<group>"; };
 		0CB56FB11B35E5DF000EDEBB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		C2DA810FB00D15665EE37980 /* Pods-HDAugmentedRealityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HDAugmentedRealityDemo.debug.xcconfig"; path = "Target Support Files/Pods-HDAugmentedRealityDemo/Pods-HDAugmentedRealityDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		DBB5B9979118DA6E43A9E50E /* Pods-HDAugmentedRealityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HDAugmentedRealityDemo.release.xcconfig"; path = "Target Support Files/Pods-HDAugmentedRealityDemo/Pods-HDAugmentedRealityDemo.release.xcconfig"; sourceTree = "<group>"; };
-		E0D2E3953577132FCDAEF4AD /* Pods_HDAugmentedRealityDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HDAugmentedRealityDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1361ED5FB7293D2D8C41D337 /* Pods-HDAugmentedRealityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HDAugmentedRealityDemo.debug.xcconfig"; path = "Target Support Files/Pods-HDAugmentedRealityDemo/Pods-HDAugmentedRealityDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		A033FEC95712B817AC61EE40 /* Pods_HDAugmentedRealityDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HDAugmentedRealityDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFCBBC963288CA6C3ABDE028 /* Pods-HDAugmentedRealityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HDAugmentedRealityDemo.release.xcconfig"; path = "Target Support Files/Pods-HDAugmentedRealityDemo/Pods-HDAugmentedRealityDemo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,7 +61,7 @@
 				0CB56FB21B35E5DF000EDEBB /* MapKit.framework in Frameworks */,
 				0CAD4F061AE70ACA000F2A2A /* CoreLocation.framework in Frameworks */,
 				0CAD4F041AE70A3E000F2A2A /* CoreMotion.framework in Frameworks */,
-				DE7601D40D03319210409921 /* Pods_HDAugmentedRealityDemo.framework in Frameworks */,
+				DEFE417109239DDF297A9258 /* Pods_HDAugmentedRealityDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +74,7 @@
 				0CB56FB11B35E5DF000EDEBB /* MapKit.framework */,
 				0CAD4F051AE70ACA000F2A2A /* CoreLocation.framework */,
 				0CAD4F031AE70A3E000F2A2A /* CoreMotion.framework */,
-				E0D2E3953577132FCDAEF4AD /* Pods_HDAugmentedRealityDemo.framework */,
+				A033FEC95712B817AC61EE40 /* Pods_HDAugmentedRealityDemo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -108,8 +123,8 @@
 		8D060E828949256580B4E072 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C2DA810FB00D15665EE37980 /* Pods-HDAugmentedRealityDemo.debug.xcconfig */,
-				DBB5B9979118DA6E43A9E50E /* Pods-HDAugmentedRealityDemo.release.xcconfig */,
+				1361ED5FB7293D2D8C41D337 /* Pods-HDAugmentedRealityDemo.debug.xcconfig */,
+				CFCBBC963288CA6C3ABDE028 /* Pods-HDAugmentedRealityDemo.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -121,11 +136,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0CAD4ECC1AE6FC14000F2A2A /* Build configuration list for PBXNativeTarget "HDAugmentedRealityDemo" */;
 			buildPhases = (
-				609A4FDD77A553CBB88165A7 /* [CP] Check Pods Manifest.lock */,
+				309D3CE3A31EF6B98550629A /* [CP] Check Pods Manifest.lock */,
 				0CAD4EA91AE6FC14000F2A2A /* Sources */,
 				0CAD4EAA1AE6FC14000F2A2A /* Frameworks */,
 				0CAD4EAB1AE6FC14000F2A2A /* Resources */,
-				4BB3AD1AB768522064E4C3B2 /* [CP] Embed Pods Frameworks */,
+				FEA8D6122362E6B100F2E81E /* Embed Frameworks */,
+				9F080F301696BDEA584A322C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -184,25 +200,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4BB3AD1AB768522064E4C3B2 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HDAugmentedRealityDemo/Pods-HDAugmentedRealityDemo-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/HDAugmentedReality/HDAugmentedReality.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HDAugmentedReality.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HDAugmentedRealityDemo/Pods-HDAugmentedRealityDemo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		609A4FDD77A553CBB88165A7 /* [CP] Check Pods Manifest.lock */ = {
+		309D3CE3A31EF6B98550629A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -222,6 +220,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9F080F301696BDEA584A322C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HDAugmentedRealityDemo/Pods-HDAugmentedRealityDemo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/HDAugmentedReality/HDAugmentedReality.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HDAugmentedReality.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HDAugmentedRealityDemo/Pods-HDAugmentedRealityDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -362,7 +378,7 @@
 		};
 		0CAD4ECD1AE6FC14000F2A2A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C2DA810FB00D15665EE37980 /* Pods-HDAugmentedRealityDemo.debug.xcconfig */;
+			baseConfigurationReference = 1361ED5FB7293D2D8C41D337 /* Pods-HDAugmentedRealityDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -381,7 +397,7 @@
 		};
 		0CAD4ECE1AE6FC14000F2A2A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DBB5B9979118DA6E43A9E50E /* Pods-HDAugmentedRealityDemo.release.xcconfig */;
+			baseConfigurationReference = CFCBBC963288CA6C3ABDE028 /* Pods-HDAugmentedRealityDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;

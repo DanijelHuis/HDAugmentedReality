@@ -7,25 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		058E1C658F9BF68F690A17DAAC3A2616 /* ARAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60CBBBC2D2A253076B76513BA4A64BE /* ARAnnotation.swift */; };
-		08C6FB6CB04204DA3AF50870C6305211 /* ARTrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EDA7B16260582785133E042BB2A4573 /* ARTrackingManager.swift */; };
 		09C2534A226B8919511CAF3324723F35 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		27EEB23111C8C42982F8233F9D9F1D36 /* ARPresenterTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7857AF3F74D9395C4281592B3DDFF46 /* ARPresenterTransform.swift */; };
 		2E68A65696747FEC86007ADBE46B8B58 /* Pods-HDAugmentedRealityDemo-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4934F9DC830C4B45E0C2B3C8E27FD2B3 /* Pods-HDAugmentedRealityDemo-dummy.m */; };
-		32FF90287BE602883C66CF1118575121 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07302ED078CE2B3D8797277CE1E1E3FF /* CameraView.swift */; };
-		52B6BA6BCC8533FEA26A3A9A8B11B054 /* HDAugmentedReality-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E882E0D338BCE4F37775F51A3A007F88 /* HDAugmentedReality-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		59C463CD322B6E7F340E352AA0E249BC /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1EFD91CD84D9653806417A9E3EAAB /* ARViewController.swift */; };
-		60D8743AD63872D012F895754DFC12FF /* DebugMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06B08484F7866AADA7D54445071C2D5 /* DebugMapViewController.swift */; };
-		6A7158A1E1A3EF6FAEDA648837A10203 /* ARConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1BBC9840DDA87B741E5B54A285AD62 /* ARConfiguration.swift */; };
-		924DB5BC9B0A49F251FEFF4CC19EA861 /* hdar_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 02BCD5C9285225C810A86B0EBAC50F5E /* hdar_close.png */; };
-		AB87C9566016C857F55025A99838FE73 /* ARAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143F8F72860A7A8B22F022D43F895F64 /* ARAnnotationView.swift */; };
-		B84D1938E34B4623F5B7967F9738DB05 /* hdar_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F7CE42A3D225BE9F83AC888A3B309713 /* hdar_close@2x.png */; };
-		BCC3128773F2C0E0A3C041C122EA12CB /* HDAugmentedReality-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 52556E201E2B04093BA6B2B27FE93427 /* HDAugmentedReality-dummy.m */; };
-		BDE989EEABFABADE65627FB87DDEE390 /* DebugMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D1D189C45A87C1D54B996DAE8C57E2E /* DebugMapViewController.xib */; };
+		32FF90287BE602883C66CF1118575121 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF771CD191E7C12CCCDD84663B79853E /* CameraView.swift */; };
+		34A6ABECF2A72DEC2E43FBE7D97CF524 /* ARAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11728BDC84BCB6E6C49BA017A5754B0E /* ARAnnotation.swift */; };
+		46E170F1BAE12FEAAC92A2774B6F4AB6 /* ARAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654691734343C49F371A259FF8CA900F /* ARAnnotationView.swift */; };
+		49FB5DAF17C62BC1C3D9C22B0A827ADF /* hdar_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4DEB544BBE1F4D1BDD970625025BB767 /* hdar_close@2x.png */; };
+		52B6BA6BCC8533FEA26A3A9A8B11B054 /* HDAugmentedReality-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D1661DA32478451BD0EAA526235C6B85 /* HDAugmentedReality-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		60D8743AD63872D012F895754DFC12FF /* DebugMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4A96AC61C507CD171886BA41BA1F85 /* DebugMapViewController.swift */; };
+		733241E176E093F127A0275D31749F01 /* ARTrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABABCE5B54214E393B621C89D82AF52 /* ARTrackingManager.swift */; };
+		779080821B5D2417713DCF5300FB6A56 /* hdar_close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 451F9AED6D28B2328B5D19AFDB849BFF /* hdar_close@3x.png */; };
+		7FA30910FE0735C058C80D5FC209BC9D /* ARPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F95AC580C044F635D1863AE401B27EE /* ARPresenter.swift */; };
+		95657BE5282BF20C4A6122C3E28841CA /* ARConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7793C5E5B7BAFFA586AF618CAD54C59C /* ARConfiguration.swift */; };
+		A041DB53506D146E1BAC613DB968DB0E /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD397E428D63586C7AC768C0AF69E01 /* ARViewController.swift */; };
+		BCC3128773F2C0E0A3C041C122EA12CB /* HDAugmentedReality-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 57BC409D022C4BB55E0C821EBC151955 /* HDAugmentedReality-dummy.m */; };
 		CD4B05B18C952E430C68ED52B9F3E6E1 /* Pods-HDAugmentedRealityDemo-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C0E16CF00324458933BDD0E2805289B /* Pods-HDAugmentedRealityDemo-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CDC25A2A907DFB69B3CBD730D15476AB /* hdar_close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3446714DFBD9A92C4DB54DC0AB2E3CB2 /* hdar_close@3x.png */; };
 		D2176110D6F29220C9EB062B039A5953 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
-		F92DC0090D20FC902FA053F16824D89E /* ARPresenterTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF46478F76FC2D319BC9AD1C6F357E9D /* ARPresenterTransform.swift */; };
-		FE2D89EEFE02767EB5BCDA370C4BE9E1 /* ARPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB2A6DA85B5B260C0BABD859A7A7822 /* ARPresenter.swift */; };
+		F66A00B7014C33904A634C6D630B350E /* DebugMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A7F627C482FA627EAF7ABF2EA1E6F7C /* DebugMapViewController.xib */; };
+		FA610FE7C90559C8650C709630910958 /* hdar_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AADD960145048C6392917DE10E3A407 /* hdar_close.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,40 +39,40 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		02BCD5C9285225C810A86B0EBAC50F5E /* hdar_close.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = hdar_close.png; path = HDAugmentedReality/Resources/hdar_close.png; sourceTree = "<group>"; };
-		07302ED078CE2B3D8797277CE1E1E3FF /* CameraView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
-		0D1D189C45A87C1D54B996DAE8C57E2E /* DebugMapViewController.xib */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.xib; name = DebugMapViewController.xib; path = HDAugmentedReality/Resources/DebugMapViewController.xib; sourceTree = "<group>"; };
+		0AD397E428D63586C7AC768C0AF69E01 /* ARViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARViewController.swift; path = Sources/HDAugmentedReality/Classes/ARViewController.swift; sourceTree = "<group>"; };
 		1009B9C66C798934456493AABB471A10 /* Pods-HDAugmentedRealityDemo-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-HDAugmentedRealityDemo-acknowledgements.markdown"; sourceTree = "<group>"; };
 		10F28389E72D2582E79D30F6C5342795 /* Pods-HDAugmentedRealityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HDAugmentedRealityDemo.release.xcconfig"; sourceTree = "<group>"; };
-		143F8F72860A7A8B22F022D43F895F64 /* ARAnnotationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARAnnotationView.swift; path = HDAugmentedReality/Classes/ARAnnotationView.swift; sourceTree = "<group>"; };
+		11728BDC84BCB6E6C49BA017A5754B0E /* ARAnnotation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARAnnotation.swift; path = Sources/HDAugmentedReality/Classes/ARAnnotation.swift; sourceTree = "<group>"; };
+		138C17B1B787A41E59E32CC66E8660F2 /* HDAugmentedReality.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = HDAugmentedReality.xcconfig; sourceTree = "<group>"; };
 		155F44211153AC9E15269A8459ED4E17 /* Pods-HDAugmentedRealityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HDAugmentedRealityDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		1BF1EFD91CD84D9653806417A9E3EAAB /* ARViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARViewController.swift; path = HDAugmentedReality/Classes/ARViewController.swift; sourceTree = "<group>"; };
-		1EB2A6DA85B5B260C0BABD859A7A7822 /* ARPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARPresenter.swift; path = HDAugmentedReality/Classes/ARPresenter.swift; sourceTree = "<group>"; };
+		1AADD960145048C6392917DE10E3A407 /* hdar_close.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = hdar_close.png; path = Sources/HDAugmentedReality/Resources/hdar_close.png; sourceTree = "<group>"; };
+		1F95AC580C044F635D1863AE401B27EE /* ARPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARPresenter.swift; path = Sources/HDAugmentedReality/Classes/ARPresenter.swift; sourceTree = "<group>"; };
 		2155AA6DE0C18C0930938FDDEDA15721 /* HDAugmentedReality.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = HDAugmentedReality.framework; path = HDAugmentedReality.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D1BBC9840DDA87B741E5B54A285AD62 /* ARConfiguration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARConfiguration.swift; path = HDAugmentedReality/Classes/ARConfiguration.swift; sourceTree = "<group>"; };
 		3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		3446714DFBD9A92C4DB54DC0AB2E3CB2 /* hdar_close@3x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "hdar_close@3x.png"; path = "HDAugmentedReality/Resources/hdar_close@3x.png"; sourceTree = "<group>"; };
+		451F9AED6D28B2328B5D19AFDB849BFF /* hdar_close@3x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "hdar_close@3x.png"; path = "Sources/HDAugmentedReality/Resources/hdar_close@3x.png"; sourceTree = "<group>"; };
 		4934F9DC830C4B45E0C2B3C8E27FD2B3 /* Pods-HDAugmentedRealityDemo-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-HDAugmentedRealityDemo-dummy.m"; sourceTree = "<group>"; };
+		4DEB544BBE1F4D1BDD970625025BB767 /* hdar_close@2x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "hdar_close@2x.png"; path = "Sources/HDAugmentedReality/Resources/hdar_close@2x.png"; sourceTree = "<group>"; };
+		4F4A96AC61C507CD171886BA41BA1F85 /* DebugMapViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DebugMapViewController.swift; sourceTree = "<group>"; };
 		50FE10935AA89FFFB1320CB3EE15BDDF /* Pods-HDAugmentedRealityDemo-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HDAugmentedRealityDemo-acknowledgements.plist"; sourceTree = "<group>"; };
-		52556E201E2B04093BA6B2B27FE93427 /* HDAugmentedReality-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "HDAugmentedReality-dummy.m"; sourceTree = "<group>"; };
-		6EDA7B16260582785133E042BB2A4573 /* ARTrackingManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARTrackingManager.swift; path = HDAugmentedReality/Classes/ARTrackingManager.swift; sourceTree = "<group>"; };
+		57BC409D022C4BB55E0C821EBC151955 /* HDAugmentedReality-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "HDAugmentedReality-dummy.m"; sourceTree = "<group>"; };
+		654691734343C49F371A259FF8CA900F /* ARAnnotationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARAnnotationView.swift; path = Sources/HDAugmentedReality/Classes/ARAnnotationView.swift; sourceTree = "<group>"; };
+		6E6461F206711E47E6B7A82D7387504E /* HDAugmentedReality.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = HDAugmentedReality.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		70B004ABAC39157E821ED2C30855C2F9 /* Pods-HDAugmentedRealityDemo-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-HDAugmentedRealityDemo-frameworks.sh"; sourceTree = "<group>"; };
-		737D32235738B7AEBA0D41051384EBC7 /* HDAugmentedReality.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = HDAugmentedReality.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		74C0C359ACB41C93C6DC97E7EB75316A /* Pods-HDAugmentedRealityDemo-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HDAugmentedRealityDemo-Info.plist"; sourceTree = "<group>"; };
+		7793C5E5B7BAFFA586AF618CAD54C59C /* ARConfiguration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARConfiguration.swift; path = Sources/HDAugmentedReality/Classes/ARConfiguration.swift; sourceTree = "<group>"; };
+		7ABABCE5B54214E393B621C89D82AF52 /* ARTrackingManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARTrackingManager.swift; path = Sources/HDAugmentedReality/Classes/ARTrackingManager.swift; sourceTree = "<group>"; };
+		82A89B185D4A2BC210F80BEC8A2EF98B /* HDAugmentedReality.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = HDAugmentedReality.modulemap; sourceTree = "<group>"; };
+		82C626A8A0ACBAF2C140E9F4DAB0D591 /* HDAugmentedReality-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "HDAugmentedReality-Info.plist"; sourceTree = "<group>"; };
+		8A7F627C482FA627EAF7ABF2EA1E6F7C /* DebugMapViewController.xib */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.xib; name = DebugMapViewController.xib; path = Sources/HDAugmentedReality/Resources/DebugMapViewController.xib; sourceTree = "<group>"; };
 		9C0E16CF00324458933BDD0E2805289B /* Pods-HDAugmentedRealityDemo-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-HDAugmentedRealityDemo-umbrella.h"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9ED86C3D53D0743A50FA9CA13595797B /* Pods-HDAugmentedRealityDemo.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-HDAugmentedRealityDemo.modulemap"; sourceTree = "<group>"; };
-		ABE6C924EBC672FB8D1940E4FC2BB4F0 /* HDAugmentedReality-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "HDAugmentedReality-Info.plist"; sourceTree = "<group>"; };
-		BF46478F76FC2D319BC9AD1C6F357E9D /* ARPresenterTransform.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARPresenterTransform.swift; path = HDAugmentedReality/Classes/ARPresenterTransform.swift; sourceTree = "<group>"; };
-		CEA96F17A3F6AF90A3D63291C9402843 /* HDAugmentedReality.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = HDAugmentedReality.xcconfig; sourceTree = "<group>"; };
-		DC3954A2ECB7D6774DA9C826D55E021E /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
-		E60CBBBC2D2A253076B76513BA4A64BE /* ARAnnotation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARAnnotation.swift; path = HDAugmentedReality/Classes/ARAnnotation.swift; sourceTree = "<group>"; };
-		E882E0D338BCE4F37775F51A3A007F88 /* HDAugmentedReality-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HDAugmentedReality-umbrella.h"; sourceTree = "<group>"; };
-		EC2B55A7B6D0F873B165B107E24F6111 /* HDAugmentedReality.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = HDAugmentedReality.modulemap; sourceTree = "<group>"; };
-		EDEBD9051D9AFDB62EADBB1DE6D01C83 /* HDAugmentedReality-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HDAugmentedReality-prefix.pch"; sourceTree = "<group>"; };
-		F01C897A8FCB373A16CAC7F789C62154 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
-		F06B08484F7866AADA7D54445071C2D5 /* DebugMapViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DebugMapViewController.swift; sourceTree = "<group>"; };
-		F7CE42A3D225BE9F83AC888A3B309713 /* hdar_close@2x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "hdar_close@2x.png"; path = "HDAugmentedReality/Resources/hdar_close@2x.png"; sourceTree = "<group>"; };
+		A7857AF3F74D9395C4281592B3DDFF46 /* ARPresenterTransform.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ARPresenterTransform.swift; path = Sources/HDAugmentedReality/Classes/ARPresenterTransform.swift; sourceTree = "<group>"; };
+		B80F85711154E2A92E8D20EB3027E334 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		D1661DA32478451BD0EAA526235C6B85 /* HDAugmentedReality-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HDAugmentedReality-umbrella.h"; sourceTree = "<group>"; };
+		D6EA8616CEC3B2F58929DC610C51FDEC /* HDAugmentedReality-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HDAugmentedReality-prefix.pch"; sourceTree = "<group>"; };
+		EF771CD191E7C12CCCDD84663B79853E /* CameraView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		F46C20D8118D6E17A088BDF908561FF2 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
 		FB0752E79EAB42AA858AC16F553EE720 /* Pods_HDAugmentedRealityDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_HDAugmentedRealityDemo.framework; path = "Pods-HDAugmentedRealityDemo.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -96,6 +96,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0235226F3F5AD98E80B9D9D124B5DB0E /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				6E6461F206711E47E6B7A82D7387504E /* HDAugmentedReality.podspec */,
+				B80F85711154E2A92E8D20EB3027E334 /* LICENSE */,
+				F46C20D8118D6E17A088BDF908561FF2 /* README.md */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
 		1927FF1B68663DFB7DB808A6A3805CD0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -103,6 +113,17 @@
 				FB0752E79EAB42AA858AC16F553EE720 /* Pods_HDAugmentedRealityDemo.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1E2D2CF6A70E80639BC0D04E29B8D2DA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8A7F627C482FA627EAF7ABF2EA1E6F7C /* DebugMapViewController.xib */,
+				1AADD960145048C6392917DE10E3A407 /* hdar_close.png */,
+				4DEB544BBE1F4D1BDD970625025BB767 /* hdar_close@2x.png */,
+				451F9AED6D28B2328B5D19AFDB849BFF /* hdar_close@3x.png */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		402EC37BCC51D711D115B5D72B6C40D7 /* Targets Support Files */ = {
@@ -113,22 +134,64 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
+		74F810963BA0E49EB5F37FBB9839E520 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				82A89B185D4A2BC210F80BEC8A2EF98B /* HDAugmentedReality.modulemap */,
+				138C17B1B787A41E59E32CC66E8660F2 /* HDAugmentedReality.xcconfig */,
+				57BC409D022C4BB55E0C821EBC151955 /* HDAugmentedReality-dummy.m */,
+				82C626A8A0ACBAF2C140E9F4DAB0D591 /* HDAugmentedReality-Info.plist */,
+				D6EA8616CEC3B2F58929DC610C51FDEC /* HDAugmentedReality-prefix.pch */,
+				D1661DA32478451BD0EAA526235C6B85 /* HDAugmentedReality-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/HDAugmentedReality";
+			sourceTree = "<group>";
+		};
+		7788AB96D2144EAE6D26B433442ECCD3 /* HDAugmentedReality */ = {
+			isa = PBXGroup;
+			children = (
+				11728BDC84BCB6E6C49BA017A5754B0E /* ARAnnotation.swift */,
+				654691734343C49F371A259FF8CA900F /* ARAnnotationView.swift */,
+				7793C5E5B7BAFFA586AF618CAD54C59C /* ARConfiguration.swift */,
+				1F95AC580C044F635D1863AE401B27EE /* ARPresenter.swift */,
+				A7857AF3F74D9395C4281592B3DDFF46 /* ARPresenterTransform.swift */,
+				7ABABCE5B54214E393B621C89D82AF52 /* ARTrackingManager.swift */,
+				0AD397E428D63586C7AC768C0AF69E01 /* ARViewController.swift */,
+				8D1AB6E126F38287450E36A77032385E /* Debug */,
+				830E47093878E263E94A517E3308E155 /* External */,
+				0235226F3F5AD98E80B9D9D124B5DB0E /* Pod */,
+				1E2D2CF6A70E80639BC0D04E29B8D2DA /* Resources */,
+				74F810963BA0E49EB5F37FBB9839E520 /* Support Files */,
+			);
+			name = HDAugmentedReality;
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		830E47093878E263E94A517E3308E155 /* External */ = {
+			isa = PBXGroup;
+			children = (
+				EF771CD191E7C12CCCDD84663B79853E /* CameraView.swift */,
+			);
+			name = External;
+			path = Sources/HDAugmentedReality/Classes/External;
+			sourceTree = "<group>";
+		};
+		8D1AB6E126F38287450E36A77032385E /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				4F4A96AC61C507CD171886BA41BA1F85 /* DebugMapViewController.swift */,
+			);
+			name = Debug;
+			path = Sources/HDAugmentedReality/Classes/Debug;
+			sourceTree = "<group>";
+		};
 		A6F7060FB378A83820F338163B2C324D /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F83A2B304FCA3335000F212F36A80C24 /* HDAugmentedReality */,
+				7788AB96D2144EAE6D26B433442ECCD3 /* HDAugmentedReality */,
 			);
 			name = "Development Pods";
-			sourceTree = "<group>";
-		};
-		AC5C6CB54A969228E6E4BFEA53A235E3 /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				737D32235738B7AEBA0D41051384EBC7 /* HDAugmentedReality.podspec */,
-				F01C897A8FCB373A16CAC7F789C62154 /* LICENSE */,
-				DC3954A2ECB7D6774DA9C826D55E021E /* README.md */,
-			);
-			name = Pod;
 			sourceTree = "<group>";
 		};
 		C0834CEBB1379A84116EF29F93051C60 /* iOS */ = {
@@ -137,17 +200,6 @@
 				3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */,
 			);
 			name = iOS;
-			sourceTree = "<group>";
-		};
-		CD2D7B9816A94E6B2DBBC3081E5C095D /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				0D1D189C45A87C1D54B996DAE8C57E2E /* DebugMapViewController.xib */,
-				02BCD5C9285225C810A86B0EBAC50F5E /* hdar_close.png */,
-				F7CE42A3D225BE9F83AC888A3B309713 /* hdar_close@2x.png */,
-				3446714DFBD9A92C4DB54DC0AB2E3CB2 /* hdar_close@3x.png */,
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
@@ -167,58 +219,6 @@
 				C0834CEBB1379A84116EF29F93051C60 /* iOS */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		E2A70BCBF0852E20710FC8CCAB433E5C /* External */ = {
-			isa = PBXGroup;
-			children = (
-				07302ED078CE2B3D8797277CE1E1E3FF /* CameraView.swift */,
-			);
-			name = External;
-			path = HDAugmentedReality/Classes/External;
-			sourceTree = "<group>";
-		};
-		E375228B7935D5C37E17920325EF752D /* Debug */ = {
-			isa = PBXGroup;
-			children = (
-				F06B08484F7866AADA7D54445071C2D5 /* DebugMapViewController.swift */,
-			);
-			name = Debug;
-			path = HDAugmentedReality/Classes/Debug;
-			sourceTree = "<group>";
-		};
-		F4FA9203EB93F6E3E87E921060CB6DBC /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				EC2B55A7B6D0F873B165B107E24F6111 /* HDAugmentedReality.modulemap */,
-				CEA96F17A3F6AF90A3D63291C9402843 /* HDAugmentedReality.xcconfig */,
-				52556E201E2B04093BA6B2B27FE93427 /* HDAugmentedReality-dummy.m */,
-				ABE6C924EBC672FB8D1940E4FC2BB4F0 /* HDAugmentedReality-Info.plist */,
-				EDEBD9051D9AFDB62EADBB1DE6D01C83 /* HDAugmentedReality-prefix.pch */,
-				E882E0D338BCE4F37775F51A3A007F88 /* HDAugmentedReality-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/HDAugmentedReality";
-			sourceTree = "<group>";
-		};
-		F83A2B304FCA3335000F212F36A80C24 /* HDAugmentedReality */ = {
-			isa = PBXGroup;
-			children = (
-				E60CBBBC2D2A253076B76513BA4A64BE /* ARAnnotation.swift */,
-				143F8F72860A7A8B22F022D43F895F64 /* ARAnnotationView.swift */,
-				2D1BBC9840DDA87B741E5B54A285AD62 /* ARConfiguration.swift */,
-				1EB2A6DA85B5B260C0BABD859A7A7822 /* ARPresenter.swift */,
-				BF46478F76FC2D319BC9AD1C6F357E9D /* ARPresenterTransform.swift */,
-				6EDA7B16260582785133E042BB2A4573 /* ARTrackingManager.swift */,
-				1BF1EFD91CD84D9653806417A9E3EAAB /* ARViewController.swift */,
-				E375228B7935D5C37E17920325EF752D /* Debug */,
-				E2A70BCBF0852E20710FC8CCAB433E5C /* External */,
-				AC5C6CB54A969228E6E4BFEA53A235E3 /* Pod */,
-				CD2D7B9816A94E6B2DBBC3081E5C095D /* Resources */,
-				F4FA9203EB93F6E3E87E921060CB6DBC /* Support Files */,
-			);
-			name = HDAugmentedReality;
-			path = ../..;
 			sourceTree = "<group>";
 		};
 		FDF886A3E4AD750F588E3C24C2415102 /* Pods-HDAugmentedRealityDemo */ = {
@@ -337,10 +337,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDE989EEABFABADE65627FB87DDEE390 /* DebugMapViewController.xib in Resources */,
-				924DB5BC9B0A49F251FEFF4CC19EA861 /* hdar_close.png in Resources */,
-				B84D1938E34B4623F5B7967F9738DB05 /* hdar_close@2x.png in Resources */,
-				CDC25A2A907DFB69B3CBD730D15476AB /* hdar_close@3x.png in Resources */,
+				F66A00B7014C33904A634C6D630B350E /* DebugMapViewController.xib in Resources */,
+				FA610FE7C90559C8650C709630910958 /* hdar_close.png in Resources */,
+				49FB5DAF17C62BC1C3D9C22B0A827ADF /* hdar_close@2x.png in Resources */,
+				779080821B5D2417713DCF5300FB6A56 /* hdar_close@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,13 +351,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				058E1C658F9BF68F690A17DAAC3A2616 /* ARAnnotation.swift in Sources */,
-				AB87C9566016C857F55025A99838FE73 /* ARAnnotationView.swift in Sources */,
-				6A7158A1E1A3EF6FAEDA648837A10203 /* ARConfiguration.swift in Sources */,
-				FE2D89EEFE02767EB5BCDA370C4BE9E1 /* ARPresenter.swift in Sources */,
-				F92DC0090D20FC902FA053F16824D89E /* ARPresenterTransform.swift in Sources */,
-				08C6FB6CB04204DA3AF50870C6305211 /* ARTrackingManager.swift in Sources */,
-				59C463CD322B6E7F340E352AA0E249BC /* ARViewController.swift in Sources */,
+				34A6ABECF2A72DEC2E43FBE7D97CF524 /* ARAnnotation.swift in Sources */,
+				46E170F1BAE12FEAAC92A2774B6F4AB6 /* ARAnnotationView.swift in Sources */,
+				95657BE5282BF20C4A6122C3E28841CA /* ARConfiguration.swift in Sources */,
+				7FA30910FE0735C058C80D5FC209BC9D /* ARPresenter.swift in Sources */,
+				27EEB23111C8C42982F8233F9D9F1D36 /* ARPresenterTransform.swift in Sources */,
+				733241E176E093F127A0275D31749F01 /* ARTrackingManager.swift in Sources */,
+				A041DB53506D146E1BAC613DB968DB0E /* ARViewController.swift in Sources */,
 				32FF90287BE602883C66CF1118575121 /* CameraView.swift in Sources */,
 				60D8743AD63872D012F895754DFC12FF /* DebugMapViewController.swift in Sources */,
 				BCC3128773F2C0E0A3C041C122EA12CB /* HDAugmentedReality-dummy.m in Sources */,
@@ -480,7 +480,7 @@
 		};
 		63EE086031240F502AB3DF9CEA2AE493 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CEA96F17A3F6AF90A3D63291C9402843 /* HDAugmentedReality.xcconfig */;
+			baseConfigurationReference = 138C17B1B787A41E59E32CC66E8660F2 /* HDAugmentedReality.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -609,7 +609,7 @@
 		};
 		EC68DC71AB7768CE37A66B2E4B460877 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CEA96F17A3F6AF90A3D63291C9402843 /* HDAugmentedReality.xcconfig */;
+			baseConfigurationReference = 138C17B1B787A41E59E32CC66E8660F2 /* HDAugmentedReality.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";

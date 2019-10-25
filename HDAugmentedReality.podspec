@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "HDAugmentedReality"
-  s.version          = "2.4.0"
+  s.version          = "2.5.0"
   s.summary          = "Augmented Reality component for iOS, written in Swift"
   s.description      = <<-DESC
                         ...
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
-  s.source_files = 'HDAugmentedReality/Classes/**/*'
+  s.source_files = 'Sources/HDAugmentedReality/Classes/**/*'
   #s.resource_bundles = {'Resources' => ['HDAugmentedReality/Resources/**/*.{xib,png}']}
-  s.resources = 'HDAugmentedReality/Resources/**/*.{xib,png}'
+  s.resources = 'Sources/HDAugmentedReality/Resources/**/*.{xib,png}'
 end
