@@ -5,6 +5,7 @@
 Augmented Reality component for iOS, written in Swift 4.0.
 
 Version history:
+- 2.5.0: written in swift 5.0, iOS 8+
 - 2.4.0: written in swift 4.2, iOS 8+
 - 2.3.0: written in swift 4.0, iOS 8+
 - 2.0.0: written in swift 3.0, iOS 8+
@@ -59,7 +60,7 @@ platform :ios, '8.0'
 use_frameworks!
  
 target "TargetName" do
-pod 'HDAugmentedReality', '~> 2.4'
+pod 'HDAugmentedReality', '~> 2.5'
 end
  ```
 
