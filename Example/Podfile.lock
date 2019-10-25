@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  HDAugmentedReality: fa0a69b8e3bf183feed35d283e521dc59cc62344
+  HDAugmentedReality: 7a6afcd7792b9b4e5b3cc6069302a19e5ddbfdec
 
 PODFILE CHECKSUM: f7912dea3f2bcd20e2c73663c86839b1e1f82ebc
 
-COCOAPODS: 1.6.0.beta.1
+COCOAPODS: 1.8.4
