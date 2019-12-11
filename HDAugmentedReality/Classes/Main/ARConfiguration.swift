@@ -10,7 +10,10 @@ let MAX_VISIBLE_ANNOTATIONS: Int = 500                           // Do not chang
 @objc public protocol ARDataSource : NSObjectProtocol
 {
     /// Asks the data source to provide annotation view for annotation. Annotation view must be subclass of ARAnnotationView.
-    func ar(_ arViewController: ARViewController, viewForAnnotation: ARAnnotation) -> ARAnnotationView
+    func ar(_ arViewController: ARViewController, viewForAnnotation annotation: ARAnnotation) -> ARAnnotationView
+    
+    /// Called when some error occurs. Currently it is thrown only when camera fails to initialize.
+    @objc optional func ar(_ arViewController: ARViewController, didFailWithError error: Error)
    
    /**
     *       READ BEFORE IMPLEMENTING
@@ -56,8 +59,8 @@ public struct ARStatus
             let vFovOK = vFov > 0
             let hPixelsPerDegreeOK = hPixelsPerDegree > 0
             let vPixelsPerDegreeOK = vPixelsPerDegree > 0
-            let headingOK = heading != 0    //@TODO
-            let pitchOK = pitch != 0        //@TODO
+            let headingOK = heading != 0
+            let pitchOK = pitch != 0
             let userLocationOK = self.userLocation != nil && CLLocationCoordinate2DIsValid(self.userLocation!.coordinate)
 
             return hFovOK && vFovOK && hPixelsPerDegreeOK && vPixelsPerDegreeOK && headingOK && pitchOK && userLocationOK

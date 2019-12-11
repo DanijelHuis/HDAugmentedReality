@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<gpx
+ version="1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="http://www.topografix.com/GPX/1/0"
+ xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+
+
+<wpt lat="45.660414" lon="18.678777">
+ <time>2013-12-08T12:00:05Z</time>
+</wpt>
+
+<wpt lat="45.611082" lon="18.667583">
+ <time>2013-12-08T12:00:10Z</time>
+</wpt>
+
+<wpt lat="45.578531" lon="18.642085">
+ <time>2013-12-08T12:00:15Z</time>
+</wpt>
+
+<wpt lat="45.564987" lon="18.630654">
+ <time>2013-12-08T12:00:20Z</time>
+</wpt>
+
+<wpt lat="45.564923" lon="18.639120">
+ <time>2013-12-08T12:00:25Z</time>
+</wpt>
+
+<wpt lat="45.564828" lon="18.645888">
+ <time>2013-12-08T12:00:30Z</time>
+</wpt>
+
+<wpt lat="45.563852" lon="18.660941">
+ <time>2013-12-08T12:00:35Z</time>
+</wpt>
+
+<wpt lat="45.558157" lon="18.676442">
+ <time>2013-12-08T12:00:40Z</time>
+</wpt>
+
+<wpt lat="45.554862" lon="18.695582">
+ <time>2013-12-08T12:00:45Z</time>
+</wpt>
+
+<wpt lat="45.549046" lon="18.693463">
+ <time>2013-12-08T12:00:50Z</time>
+</wpt>
+
+<wpt lat="45.522703" lon="18.686011">
+ <time>2013-12-08T12:00:55Z</time>
+</wpt>
+</gpx>
+

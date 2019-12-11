@@ -203,17 +203,28 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     fileprivate func onViewWillAppear()
     {
-        // Set orientation and start camera
-        self.setOrientation(UIApplication.shared.statusBarOrientation)
-        
-        // TrackingManager will reset all its values except last reload location so it will
-        // call reload if user location changed significantly since disappear.
-        self.startCameraAndTracking(notifyLocationFailure: true)
+
     }
     
     fileprivate func onViewDidAppear()
     {
+        // Set orientation and start camera
+        self.setOrientation(UIApplication.shared.statusBarOrientation)
         
+        // Try to init camera
+        if !self.cameraView.isSessionCreated
+        {
+            let result = self.cameraView.createSessionAndVideoPreviewLayer()
+            if let error = result.error, !Platform.isSimulator
+            {
+                self.dataSource?.ar?(self, didFailWithError: error)
+                return
+            }
+        }
+        
+        // TrackingManager will reset all its values except last reload location so it will
+        // call reload if user location changed significantly since disappear.
+        self.startCameraAndTracking(notifyLocationFailure: true)
     }
     
     fileprivate func onViewDidDisappear()
@@ -262,16 +273,9 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     {
         // Accessories: Adding accessoriesOutlet to accessories. accessoriesOutlet is used only as shortcut to add accessory via Interface Builder.
         self.accessories.append(contentsOf: self.accessoriesOutlet.compactMap({ $0 as? ARAccessory }))
-                
-        // Camera
-        self.cameraView.startRunning()
-                
+                                       
         // Debug
         self.addDebugUi()
-        
-        // Must be called bcs of camera view
-        self.setOrientation(UIApplication.shared.statusBarOrientation)
-        self.view.layoutIfNeeded()
     }
     
     fileprivate func layoutUi()
@@ -380,15 +384,14 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             self.arStatus.userLocation = self.fixedDebugLocation ?? self.trackingManager.userLocation
         }
         
-        
         self.reload(reloadType: .headingChanged)
         self.debug()
     }
     
     internal func arTrackingManager(_ trackingManager: ARTrackingManager, didUpdateUserLocation location: CLLocation)
     {
-        self.arStatus.userLocation = location
-        self.lastLocation = location
+        self.arStatus.userLocation = self.fixedDebugLocation ?? location
+        self.lastLocation = self.arStatus.userLocation
         self.reload(reloadType: .userLocationChanged)
         
         // Debug view, indicating that update was done
@@ -397,8 +400,8 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     internal func arTrackingManager(_ trackingManager: ARTrackingManager, didUpdateReloadLocation location: CLLocation)
     {
-        self.arStatus.userLocation = location
-        self.lastLocation = location
+        self.arStatus.userLocation = self.fixedDebugLocation ?? location
+        self.lastLocation = self.arStatus.userLocation
         
         // Manual reload?
         if let dataSource = self.dataSource, dataSource.responds(to: #selector(ARDataSource.ar(_:shouldReloadWithLocation:)))
@@ -524,7 +527,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
                 hFov = (2 * atan( tan((vFov / 2).toRadians) * Double(self.view.bounds.size.width / self.view.bounds.size.height))).toDegrees
             }
         }
-        
         self.arStatus.hFov = hFov
         self.arStatus.vFov = vFov
         self.arStatus.hPixelsPerDegree = hFov > 0 ? Double(frame.size.width / CGFloat(hFov)) : 0
@@ -560,8 +562,9 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         return true
     }
     
-    /// Checks if back video device is available.
-    public static func isAllHardwareAvailable() -> NSError?
+    /// Checks if camera can be initialized. You can use it if you really need to but this tries to create whole session so it is heavy operation.
+    /// It is better to implement ARDataSource.ar(arViewController:didFailWithError:) and wait for error there.
+    public static func isAllHardwareAvailable() -> CameraViewError?
     {
         return CameraView.createCaptureSession(withMediaType: AVMediaType.video, position: AVCaptureDevice.Position.back).error
     }
@@ -582,7 +585,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     /// Opening DebugMapViewController
     @objc internal func debugButtonTap()
-    {
+    {        
         // DEBUG
         let bundle = Bundle(for: DebugMapViewController.self)
         let mapViewController = DebugMapViewController(nibName: "DebugMapViewController", bundle: bundle)

@@ -7,10 +7,9 @@
 
 import UIKit
 
-//@TODO set internal
 extension UIView
 {
-    public func pinToSuperview(leading: CGFloat?, trailing: CGFloat?, top: CGFloat?, bottom: CGFloat?, width: CGFloat?, height: CGFloat? )
+    internal func pinToSuperview(leading: CGFloat?, trailing: CGFloat?, top: CGFloat?, bottom: CGFloat?, width: CGFloat?, height: CGFloat? )
     {
         let view = self
         guard let superview = view.superview else { return }
@@ -23,7 +22,7 @@ extension UIView
         if let height = height { view.heightAnchor.constraint(equalToConstant: height).isActive = true}
     }
     
-    public func pinToLayoutGuide(_ layoutGuide: UILayoutGuide, leading: CGFloat?, trailing: CGFloat?, top: CGFloat?, bottom: CGFloat?, width: CGFloat?, height: CGFloat? )
+    internal func pinToLayoutGuide(_ layoutGuide: UILayoutGuide, leading: CGFloat?, trailing: CGFloat?, top: CGFloat?, bottom: CGFloat?, width: CGFloat?, height: CGFloat? )
     {
         let view = self
         
@@ -40,7 +39,7 @@ extension UIView
      - .width
      - .height
      */
-    public func findConstraint(attribute: NSLayoutConstraint.Attribute) -> NSLayoutConstraint?
+    internal func findConstraint(attribute: NSLayoutConstraint.Attribute) -> NSLayoutConstraint?
     {
         if attribute == .height || attribute == .width
         {
@@ -65,9 +64,7 @@ extension UIView
     
 }
 
-
-
-public extension UIView
+internal extension UIView
 {
     /**
      Loads view from nib. Type is inferred by return type.

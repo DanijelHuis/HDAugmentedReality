@@ -21,28 +21,14 @@ open class CameraView: UIView
     open var devicePosition: AVCaptureDevice.Position = AVCaptureDevice.Position.back
     /// Video gravitry for videoPreviewLayer, set it before adding to superview.
     open var videoGravity: AVLayerVideoGravity = AVLayerVideoGravity.resizeAspectFill
-
+    open var isSessionCreated = false
+    
     fileprivate var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     fileprivate var captureSession: AVCaptureSession?
 
     //==========================================================================================================================================================
     //MARK:                                                        UIView overrides
     //==========================================================================================================================================================
-    open override func didMoveToSuperview()
-    {
-        super.didMoveToSuperview()
-        
-        if self.superview != nil
-        {
-            self.createSessionAndVideoPreviewLayer()
-            self.setNeedsLayout()
-        }
-        else
-        {
-            self.destroySessionAndVideoPreviewLayer()
-        }
-    }
-    
     open override func layoutSubviews()
     {
         super.layoutSubviews()
@@ -75,7 +61,7 @@ open class CameraView: UIView
     }
     
     /// Creates capture session and video preview layer, destroySessionAndVideoPreviewLayer is called.
-    fileprivate func createSessionAndVideoPreviewLayer()
+    @discardableResult open func createSessionAndVideoPreviewLayer() -> (session: AVCaptureSession?, error: CameraViewError?)
     {
         self.destroySessionAndVideoPreviewLayer()
         
@@ -84,7 +70,7 @@ open class CameraView: UIView
         guard captureSessionResult.error == nil, let session = captureSessionResult.session else
         {
             print("CameraView: Cannot create capture session, use createCaptureSession method to check if device is capable for augmented reality.")
-            return
+            return captureSessionResult
         }
         self.captureSession = session
         
@@ -93,15 +79,18 @@ open class CameraView: UIView
         videoPreviewLayer.videoGravity = self.videoGravity
         self.layer.insertSublayer(videoPreviewLayer, at: 0)
         self.videoPreviewLayer = videoPreviewLayer
+        self.isSessionCreated = true
+        return captureSessionResult
     }
     
     /// Stops running and destroys capture session, removes and destroys video preview layer.
-    fileprivate func destroySessionAndVideoPreviewLayer()
+    open func destroySessionAndVideoPreviewLayer()
     {
         self.stopRunning()
         self.videoPreviewLayer?.removeFromSuperlayer()
         self.videoPreviewLayer = nil
         self.captureSession = nil
+        self.isSessionCreated = false
     }
     
     open func setVideoOrientation(_ orientation: UIInterfaceOrientation)
@@ -118,25 +107,14 @@ open class CameraView: UIView
     //MARK:                                                        Utilities
     //==========================================================================================================================================================
     
+
+    
     /// Tries to find video device and add video input to it.
-    open class func createCaptureSession(withMediaType mediaType: AVMediaType, position: AVCaptureDevice.Position) -> (session: AVCaptureSession?, error: NSError?)
+    open class func createCaptureSession(withMediaType mediaType: AVMediaType, position: AVCaptureDevice.Position) -> (session: AVCaptureSession?, error: CameraViewError?)
     {
-        var error: NSError?
-        var captureSession: AVCaptureSession?
-        var captureDevice: AVCaptureDevice?
-        
-        // Get all capture devices with given media type(video/photo)
-        let captureDevices = AVCaptureDevice.devices(for: mediaType)
-        
-        // Get capture device for specified position
-        for captureDeviceLoop in captureDevices
-        {
-            if captureDeviceLoop.position == position
-            {
-                captureDevice = captureDeviceLoop
-                break
-            }
-        }
+        var error: CameraViewError?
+        var captureSession: AVCaptureSession?        
+        let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: mediaType, position: position)
         
         if let captureDevice = captureDevice
         {
@@ -146,9 +124,9 @@ open class CameraView: UIView
             {
                 captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
             }
-            catch let deviceError as NSError
+            catch let deviceError
             {
-                error = deviceError
+                error = CameraViewError.deviceInput(underlyingError: deviceError)
                 captureDeviceInput = nil
             }
             
@@ -162,19 +140,19 @@ open class CameraView: UIView
                 }
                 else
                 {
-                    error = NSError(domain: "CameraView", code: 10002, userInfo: ["description": "Error adding video input."])
+                    error = CameraViewError.addVideoInput
                 }
                 
                 captureSession = session
             }
             else
             {
-                error = NSError(domain: "CameraView", code: 10001, userInfo: ["description": "Error creating capture device input."])
+                error = CameraViewError.createCaptureDeviceInput
             }
         }
         else
         {
-            error = NSError(domain: "CameraView", code: 10000, userInfo: ["description": "Back video device not found."])
+            error = CameraViewError.backVideoDeviceNotFount
         }
         
         return (session: captureSession, error: error)
@@ -198,3 +176,11 @@ open class CameraView: UIView
     }
 }
 
+public enum CameraViewError: Error
+{
+    case deviceInput(underlyingError: Error)
+    case addVideoInput
+    case createCaptureDeviceInput
+    case backVideoDeviceNotFount
+
+}

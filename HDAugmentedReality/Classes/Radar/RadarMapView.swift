@@ -13,12 +13,12 @@ import SceneKit
  RadarMapView consists of:
     - MKMapView showing annotations
     - ring around map that shows out of bounds annotations (indicators)
-    - map zoom in/out and radar shrink/expand buttons
+    - zoom in/out and shrink/expand buttons
  
  RadarMapView gets annotations and all other data via ARAccessory delegate. Intended to be used with ARViewController.
  
  Usage:
-    - RadarMapView must have height constraint in order to resize/shrink properly.
+    - RadarMapView must have height constraint in order to resize/shrink properly (.
     - use startMode and trackingMode properties to adjust how map zoom/tracking behaves on start and later on.
     - use configuration property to customize.
  
@@ -31,19 +31,17 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
     public struct Configuration
     {
         /// Image for annotations that are shown on the map
-        public var annotationImage = UIImage(named: "radarAnnotation", in: Bundle(for: RadarMapView.self), compatibleWith: nil)
-        /// Image for user indicator that is shown on the map
-        public var userAnnotationImage = UIImage(named: "userRadarAnnotation", in: Bundle(for: RadarMapView.self), compatibleWith: nil)
+        public var annotationImage = UIImage(named: "radarAnnotation", in: Bundle(for: RadarMapView.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        /// Image for user annotation that is shown on the map
+        public var userAnnotationImage = UIImage(named: "radarUserAnnotation", in: Bundle(for: RadarMapView.self), compatibleWith: nil)
         /// Use it to set anchor point for your userAnnotationImage. This is where you center is on the image, in default image its on 201st pixel, image height is 240.
         public var userAnnotationAnchorPoint = CGPoint(x: 0.5, y: 201/240)
-        /// Size of indicator on the ring that shows out of bounds annotations.
-        public var indicatorSize: CGFloat = 8
-        /// Image for indicators on the ring that shows out of bounds annotations.
-        public var indicatorImage = UIImage(named: "radarAnnotation", in: Bundle(for: RadarMapView.self), compatibleWith: nil)
-        /// Image for user indicator on the ring that shows out of bounds annotations.
-        public var userIndicatorImage = UIImage(named: "userIndicator", in: Bundle(for: RadarMapView.self), compatibleWith: nil)
         /// Determines how much RadarMapView expands.
         public var radarSizeRatio: CGFloat = 1.75
+        /// If true, resize button will be placed in top right corner which resizes whole radar.
+        public var isResizeEnabled = true
+        /// If true, +/- buttons are placed in lower right cornert which control map zoom level.
+        public var isZoomEnabled = true
     }
     
     //===== Public
@@ -51,8 +49,14 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
     open var startMode: RadarStartMode = .centerUser(span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
     /// Defines map position and zoom when user location changes.
     open var trackingMode: RadarTrackingMode = .centerUserWhenNearBorder(span: nil)
-    /// Use it to configure and customize your radar.
+    /// Use it to configure and customize your radar. Must be done before RadarMapView is added to superview.
     open var configuration: Configuration = Configuration()
+    /// If set it will show only annotations that are closer than given value (in meters).
+    open var maxDistance: Double?
+    /// Read MKAnnotationView.canShowCallout.
+    open var annotationsCanShowCallout = false
+    /// Radar ring type.
+    open var indicatorRingType: IndicatorRingType = .none { didSet { self.updateIndicatorRingType() } }
     
     //===== IB
     @IBOutlet weak private(set) public var mapViewContainer: UIView!
@@ -67,10 +71,10 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
     private var isReadyToReload = false
     private var radarAnnotations: [ARAnnotation] = []
     private var userRadarAnnotation: ARAnnotation?
-    private weak var userRadarAnnotationView: UserRadarAnnotationView?
-    private var indicatorViewsDictionary: [ARAnnotation : UIImageView] = [:]
+    private weak var userRadarAnnotationView: RadarAnnotationView?
     override open var bounds: CGRect { didSet { self.layoutUi() } }
-
+    private var allRadarAnnotationsCount: Int = 0
+    
     //==========================================================================================================================================================
     // MARK:                                                       Init
     //==========================================================================================================================================================
@@ -105,7 +109,6 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
     func loadUi()
     {
         self.isReadyToReload = true
-
     }
     
     func bindUi()
@@ -127,20 +130,40 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
         self.indicatorContainerView.setNeedsLayout()
         self.indicatorContainerView.layoutIfNeeded()
         self.indicatorContainerView.layer.cornerRadius = self.indicatorContainerView.bounds.size.width / 2.0
+    
+        self.resizeButton.isHidden = !self.configuration.isResizeEnabled
+        self.zoomInButton.isHidden = !self.configuration.isZoomEnabled
+        self.zoomOutButton.isHidden = !self.configuration.isZoomEnabled
+    }
+    
+    override open func didMoveToSuperview()
+    {
+        super.didMoveToSuperview()
+        if self.superview != nil { self.layoutUi() }
+    }
+    
+    /// Can be called to reload some configuration properties.
+    open func reload()
+    {
+        self.layoutUi()
     }
 
     //==========================================================================================================================================================
     // MARK:                                                    Reload
     //==========================================================================================================================================================
-    public func reload(reloadType: ARViewController.ReloadType, status: ARStatus, presenter: ARPresenter)
+    /// This is called from ARPresenter
+    open func reload(reloadType: ARViewController.ReloadType, status: ARStatus, presenter: ARPresenter)
     {
         guard self.isReadyToReload, let location = status.userLocation else { return }
         var didChangeAnnotations = false
         
         //===== Add/remove radar annotations if annotations changed
-        if reloadType == .annotationsChanged || self.radarAnnotations.count != presenter.annotations.count
+        if reloadType == .annotationsChanged || self.allRadarAnnotationsCount != presenter.annotations.count || (reloadType == .reloadLocationChanged && self.maxDistance != nil)
         {
-            self.radarAnnotations = presenter.annotations
+            self.allRadarAnnotationsCount = presenter.annotations.count
+            if let maxDistance = self.maxDistance { self.radarAnnotations = presenter.annotations.filter { $0.distanceFromUser <= maxDistance } }
+            else { self.radarAnnotations = presenter.annotations }
+            
             // Remove everything except the user annotation
             self.mapView.removeAnnotations(self.mapView.annotations.filter { $0 !== self.userRadarAnnotation })
             self.mapView.addAnnotations(self.radarAnnotations)
@@ -211,7 +234,7 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
         {
             self.updateIndicators()
         }
-  }
+    }
     
     //==========================================================================================================================================================
     // MARK:                                                    MKMapViewDelegate
@@ -222,7 +245,7 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
         if annotation === self.userRadarAnnotation
         {
             let reuseIdentifier = "userRadarAnnotation"
-            let view = (mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier) as! UserRadarAnnotationView?) ?? UserRadarAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
+            let view = (mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier) as! RadarAnnotationView?) ?? RadarAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
             view.annotation = annotation
             view.displayPriority = .required
             view.canShowCallout = false
@@ -238,11 +261,15 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
         else
         {
             let reuseIdentifier = "radarAnnotation"
-            let view = (mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)) ?? MKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
+            let view = (mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier) as! RadarAnnotationView?) ?? RadarAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
             view.annotation = annotation
             view.displayPriority = .required
-            view.canShowCallout = false
-            view.image = self.configuration.annotationImage
+            view.canShowCallout = self.annotationsCanShowCallout
+            
+            let radarAnnotation = annotation as? RadarAnnotation
+            view.imageView?.image = radarAnnotation?.radarAnnotationImage ?? self.configuration.annotationImage
+            view.imageView?.tintColor = radarAnnotation?.radarAnnotationTintColor ?? nil
+            view.frame.size = CGSize(width: 9, height: 9)
             return view
         }
     }
@@ -255,60 +282,56 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
     //==========================================================================================================================================================
     // MARK:                                                    Indicators
     //==========================================================================================================================================================
+    private var lastTimeInterval: TimeInterval = Date().timeIntervalSince1970
+    private var indicatorsRefreshInterval: Double = 1/25
+    private(set) open var indicatorRing: IndicatorRingProtocol?
+
+    private func updateIndicatorRingType()
+    {
+        self.indicatorRing?.removeFromSuperview()
+        self.indicatorRing = nil
+        var indicatorRing: IndicatorRingProtocol?
+        
+        switch self.indicatorRingType
+        {
+        case .none:
+            break
+        case .segmented(let segmentColor, let userSegmentColor):
+            let segmentedIndicatorRing = SegmentedIndicatorRing(frame: .zero)
+            if let segmentColor = segmentColor { segmentedIndicatorRing.segmentColor = segmentColor.cgColor }
+            if let userSegmentColor = userSegmentColor { segmentedIndicatorRing.userSegmentColor = userSegmentColor.cgColor }
+            indicatorRing = segmentedIndicatorRing
+        case .precise(let indicatorColor, let userIndicatorColor):
+            let preciseIndicatorRing = PreciseIndicatorRing(frame: .zero)
+            if let userIndicatorColor = userIndicatorColor { preciseIndicatorRing.userIndicatorColor = userIndicatorColor }
+            if let indicatorColor = indicatorColor { preciseIndicatorRing.indicatorColor = indicatorColor }
+            indicatorRing = preciseIndicatorRing
+            break
+        case .custom(let customIndicatorRing):
+            indicatorRing = customIndicatorRing
+        }
+        
+        if let indicatorRing = indicatorRing
+        {
+            indicatorRing.translatesAutoresizingMaskIntoConstraints = false
+            self.indicatorContainerView.addSubview(indicatorRing)
+            indicatorRing.pinToSuperview(leading: 0, trailing: 0, top: 0, bottom: 0, width: nil, height: nil)
+            self.indicatorRing = indicatorRing
+        }
+    }
     
     /**
      Updates indicators position.
      */
     private func updateIndicators()
     {
-         let mapRadius = Double(self.mapView.frame.size.width) / 2
-         let mapCenter = simd_double2(x: mapRadius, y: mapRadius)
-
-        var newIndicatorViewsDictionary: [ARAnnotation : UIImageView] = [:]
-        let allViews = Set(self.indicatorContainerView.subviews)
-        var usedViews: Set<UIView> = Set()
-        let indicatorSize = self.configuration.indicatorSize
-        
-        for annotation in self.mapView.annotations
+        let currentTimeInterval = Date().timeIntervalSince1970
+        if abs(self.lastTimeInterval - currentTimeInterval) < self.indicatorsRefreshInterval
         {
-            guard let arAnnotation = annotation as? ARAnnotation else { continue }
-            let isUserAnnotation = arAnnotation === self.userRadarAnnotation
-            let existingIndicatorView = self.indicatorViewsDictionary[arAnnotation]
-            if let existingIndicatorView = existingIndicatorView { newIndicatorViewsDictionary[arAnnotation] = existingIndicatorView  }
-            
-            // Calculate point on circumference
-            let annotationCenterCGPoint = self.mapView.convert(annotation.coordinate, toPointTo: self.mapView)
-            let annotationCenter = simd_double2(x: Double(annotationCenterCGPoint.x) , y: Double(annotationCenterCGPoint.y))
-            let centerToAnnotationVector = annotationCenter - mapCenter
-            let pointOnCircumference = mapCenter + simd_normalize(centerToAnnotationVector) * (mapRadius + 1.5)
-            if simd_length(centerToAnnotationVector) < mapRadius { continue } // It is not added to usedViews so it will be removed from superView
-
-            // Create indicator view if not reusing old view.
-            let indicatorView: UIImageView
-            if let existingIndicatorView = existingIndicatorView { indicatorView = existingIndicatorView }
-            else
-            {
-                let newIndicatorView = UIImageView()
-                newIndicatorView.image = isUserAnnotation ? self.configuration.userIndicatorImage : self.configuration.indicatorImage
-                // x,y not important her, it is set after.
-                newIndicatorView.frame = CGRect(x: 0, y: 0, width: indicatorSize, height: indicatorSize)
-                newIndicatorViewsDictionary[arAnnotation] = newIndicatorView
-                indicatorView = newIndicatorView
-            }
-            
-            indicatorView.center = self.indicatorContainerView.convert(CGPoint(x: pointOnCircumference.x, y: pointOnCircumference.y), from: self.mapView)
-            self.indicatorContainerView.insertSubview(indicatorView, at: 0)
-            if isUserAnnotation { self.indicatorContainerView.bringSubviewToFront(indicatorView) }
-            
-            usedViews.insert(indicatorView)
+            return;
         }
         
-        // Remove all views that are not used
-        let unusedViews = allViews.subtracting(usedViews)
-        for view in unusedViews { view.removeFromSuperview() }
-        
-        // Update newIndicatorViewsDictionary (also removes unused items)
-        self.indicatorViewsDictionary = newIndicatorViewsDictionary
+        self.indicatorRing?.update(mapView: self.mapView, userAnnotation: self.userRadarAnnotation)
     }
     
     /**
@@ -325,12 +348,7 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
         let annotationCenter = simd_double2(x: Double(annotationCenterCGPoint.x) , y: Double(annotationCenterCGPoint.y))
         let centerToAnnotationVector = annotationCenter - mapCenter
         
-        if simd_length(centerToAnnotationVector) > (mapRadius - threshold)
-        {
-            return true
-        }
-        
-        return false
+        return simd_length(centerToAnnotationVector) > (mapRadius - threshold)
     }
     
     //==========================================================================================================================================================
@@ -418,84 +436,3 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
     }
 }
 
-//==========================================================================================================================================================
-// MARK:                                                    Helper classes
-//==========================================================================================================================================================
-/**
- Compass style MKAnnotationView.
- */
-open class UserRadarAnnotationView: MKAnnotationView
-{
-    open var imageView: UIImageView?
-    open var heading: Double = 0 { didSet { self.layoutUi() } }
-    
-    public override init(annotation: MKAnnotation?, reuseIdentifier: String?)
-    {
-        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        self.loadUi()
-    }
-    
-    required public init?(coder aDecoder: NSCoder)
-    {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    open func loadUi()
-    {
-        self.frame = CGRect(x: 0, y: 0, width: 100, height: 100) // Doesn't matter, it is set in RadarMapView.
-
-        self.imageView?.removeFromSuperview()
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(imageView)
-        imageView.pinToSuperview(leading: 0, trailing: 0, top: 0, bottom: 0, width: nil, height: nil)
-        self.imageView = imageView
-    }
-    
-    open func layoutUi()
-    {
-        self.imageView?.transform = CGAffineTransform.identity.rotated(by: CGFloat(self.heading.toRadians))
-    }
-}
-
-public enum RadarStartMode
-{
-    /// Centers on user
-    case centerUser(span: MKCoordinateSpan)
-    /// Fits annotations
-    case fitAnnotations
-}
-
-public enum RadarTrackingMode
-{
-    case none
-    /// Centers on user whenever location change is detected. Use span if you want to force zoom/span level.
-    case centerUserAlways(span: MKCoordinateSpan?)
-    /// Centers on user when its annotation comes near map border. Use span if you want to force zoom/span level.
-    case centerUserWhenNearBorder(span: MKCoordinateSpan?)
-}
-
-/**
- MKMapView subclass that moves legal label to center (horizontally).
- */
-class LegalMapView: MKMapView
-{
-    private var isLayoutingLegalLabel = false
-    override func layoutSubviews()
-    {
-        super.layoutSubviews()
-        guard !self.isLayoutingLegalLabel else { return }   // To prevent layout loops.
-        
-        self.isLayoutingLegalLabel = true
-        for subview in self.subviews
-        {
-            if "\(type(of: subview))" == "MKAttributionLabel"   //MKAttributionLabel, _MKMapContentView
-            {
-                subview.layer.cornerRadius = subview.frame.size.height * 0.5
-                subview.center.x = self.frame.size.width / 2
-            }
-        }
-        self.isLayoutingLegalLabel = false
-    }
-}

@@ -15,15 +15,12 @@ import MapKit
  the visual representation of the annotation. It is analogue to MKAnnotation. It can be subclassed if additional 
  information for some annotation is needed.
  */
-open class ARAnnotation: NSObject, MKAnnotation
+open class ARAnnotation: NSObject
 {
-    public var coordinate: CLLocationCoordinate2D
-    {
-        return location.coordinate
-    }
-    
     /// Identifier of annotation, not used by HDAugmentedReality internally.
     open var identifier: String?
+    /// Can be used for anything, not used by HDAugmentedReality internally.
+    open var userInfo: Any?
     
     /// Title of annotation, can be used in ARAnnotationView
     open var title: String?
@@ -60,5 +57,13 @@ open class ARAnnotation: NSObject, MKAnnotation
         
         self.location = location
         return true
+    }
+}
+
+extension ARAnnotation : MKAnnotation
+{
+    public var coordinate: CLLocationCoordinate2D
+    {
+        return location.coordinate
     }
 }

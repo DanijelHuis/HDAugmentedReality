@@ -94,10 +94,6 @@ public class ARTrackingManager: NSObject, CLLocationManagerDelegate
         NotificationCenter.default.removeObserver(self)
     }
     
-    /*
-     //@TODO Info.plist.
-     https://developer.apple.com/documentation/coremotion/getting_processed_device-motion_data
-    */
     fileprivate func initialize()
     {
         // Setup location manager

@@ -9,7 +9,7 @@
 import UIKit
 
 /**
- Responsible for presenting annotations visually. Analogue to MKAnnotationView. 
+ The visual representation of your annotation on augmented reality screen. Analogue to MKAnnotationView. 
  It is usually subclassed to provide custom look.
  
  Annotation views should be lightweight, try to avoid xibs and autolayout.
@@ -19,18 +19,19 @@ open class ARAnnotationView: UIView
     //===== Public
     /** 
      Normally, center of annotationView points to real location of POI, but this property can be used to alter that.
-     E.g. if bottom-left edge of annotationView should point to real location, centerOffset should be (0, 1)
+     E.g. if you have a downward arrow at center bottom part of your view then you should set this to (0.5, 1)
      */
     open var centerOffset = CGPoint(x: 0.5, y: 0.5)
     /// Annotation associated with this view.
     open weak var annotation: ARAnnotation?
 
-    /// Position of annotation view without heading, pitch, stack offsets.
-    open var arPosition: CGPoint = CGPoint(x: 0, y: 0)
-    /// Offset for arPosition, this is not offset for heading/pitch but offset that is set in ARPresenterTransform.
-    open var arPositionOffset = CGPoint(x: 0, y: 0)
-    /// Used for internal calculations.
-    open var arAlternateFrame: CGRect = CGRect.zero
+    //===== Internal
+    /// Internal usage. Position of annotation view without heading, pitch, stack offsets.
+    internal var arPosition: CGPoint = CGPoint(x: 0, y: 0)
+    /// Internal usage. Offset for arPosition, this is not offset for heading/pitch but offset that is set in ARPresenterTransform.
+    internal var arPositionOffset = CGPoint(x: 0, y: 0)
+    /// Internal usage. Used for calculations.
+    internal var arAlternateFrame: CGRect = CGRect.zero
 
     fileprivate var initialized: Bool = false
     
