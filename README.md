@@ -26,6 +26,9 @@ Altitudes of POIs are disregarded.
 ## What is next?
 - Notify ARAnnotationView when device is targeting it (Focus mode). This could be used as alternative to stacking or used with it. Similar feature can be seen in Flightradar app.
 
+## Important
+- Please don't submit pull requests without notice
+- I have no intention of supporting Carthage
 
 ## Plist
 - Add NSLocationWhenInUseUsageDescription. This is needed for location authorization.
