@@ -8,7 +8,7 @@ Augmented Reality component for iOS.
 
 HDAugmentedReality is designed to be used in areas with large concentration of static POIs where
 primary goal is the visibility of all POIs. This is achieved by stacking POIs vertically, meaning
-that farther POIs that are obscured by nearer POIs are put higher, above the POIs that obscures them. 
+that farther POIs, ones that would normally be obscured by nearer POIs, are put higher. 
 Altitudes of POIs are disregarded.
 
 ## Features
@@ -44,7 +44,7 @@ end
  ```
 
 ## Basic usage
-Look at a demo project for a complete example.
+Look at the demo project for a complete example.
   
 Import
 ```swift
@@ -56,7 +56,7 @@ Create annotations.
 let annotation1 = ARAnnotation(identifier: "bakery", title: "Bakery", location: CLLocation(latitude: 45.13432, longitude: 18.62095))
 let annotation2 = ARAnnotation(identifier: "supermarket", title: "Supermarket", location: CLLocation(latitude: 45.84638, longitude: 18.84610))
 let annotation3 = ARAnnotation(identifier: "home", title: "Home", location: CLLocation(latitude: 45.23432, longitude: 18.65436))
-let dummyAnnotations = [annotation1, annotation2, annotation3]
+let dummyAnnotations = [annotation1, annotation2, annotation3].compactMap{ $0 }
 ```
   
 Create ARViewController and configure ARPresenter.
@@ -101,7 +101,7 @@ Subclassing:
 - bindUi method is called when distance to the user or bearing changes. Override it to refresh your UI if you want that info.
 
 ### ARViewController customization
-Custom XIB
+Custom XIB  
 You can copy ARViewController.xib to your project, rename and edit it however you like and provide xib name to ARViewController(nibName:"MyARViewController", bundle: nil).
 
 Adjust vertical offset by distance.

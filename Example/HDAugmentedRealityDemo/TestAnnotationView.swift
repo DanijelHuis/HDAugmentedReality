@@ -110,7 +110,7 @@ open class TestAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
     // This method is called whenever distance/azimuth is set
     override open func bindUi()
     {
-        let annotationTitle = (self.annotation as? TestAnnotation)?.type.title ?? ""
+        let annotationTitle = (self.annotation as? TestAnnotation)?.type.title ?? self.annotation?.title ?? ""
         var distance: String = ""
         if let annotation = self.annotation { distance = annotation.distanceFromUser > 1000 ? String(format: "%.1fkm", annotation.distanceFromUser / 1000) : String(format:"%.0fm", annotation.distanceFromUser) }
         
