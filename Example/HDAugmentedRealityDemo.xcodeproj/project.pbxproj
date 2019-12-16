@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0C00C39A2374DD0C00A07384 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C00C3992374DD0C00A07384 /* LaunchScreen.storyboard */; };
-		0C2E762A239FE6D7001CEF2F /* osijek_test.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 0C2E7629239FE6D7001CEF2F /* osijek_test.gpx */; };
 		0C3C4477234D0D0B00E06776 /* Readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0C3C4476234D0D0B00E06776 /* Readme.txt */; };
 		0C5E594B1E6769F8003CCA93 /* StackTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */; };
 		0CAD4EB31AE6FC14000F2A2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAD4EB21AE6FC14000F2A2A /* AppDelegate.swift */; };
@@ -25,7 +24,6 @@
 
 /* Begin PBXFileReference section */
 		0C00C3992374DD0C00A07384 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		0C2E7629239FE6D7001CEF2F /* osijek_test.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = osijek_test.gpx; sourceTree = "<group>"; };
 		0C3C4476234D0D0B00E06776 /* Readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
 		0C5E594A1E6769F8003CCA93 /* StackTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackTestViewController.swift; sourceTree = "<group>"; };
 		0CAD4EAD1AE6FC14000F2A2A /* HDAR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HDAR.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,7 +94,6 @@
 		0CAD4EA41AE6FC14000F2A2A = {
 			isa = PBXGroup;
 			children = (
-				0C2E7629239FE6D7001CEF2F /* osijek_test.gpx */,
 				0C3C4476234D0D0B00E06776 /* Readme.txt */,
 				0CAD4EAF1AE6FC14000F2A2A /* HDAugmentedRealityDemo */,
 				0CAD4EAE1AE6FC14000F2A2A /* Products */,
@@ -205,7 +202,6 @@
 				0CAD4EB81AE6FC14000F2A2A /* Main.storyboard in Resources */,
 				0C3C4477234D0D0B00E06776 /* Readme.txt in Resources */,
 				0C00C39A2374DD0C00A07384 /* LaunchScreen.storyboard in Resources */,
-				0C2E762A239FE6D7001CEF2F /* osijek_test.gpx in Resources */,
 				0CAD4EBA1AE6FC14000F2A2A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

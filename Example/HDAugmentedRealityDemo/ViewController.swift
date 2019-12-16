@@ -37,8 +37,8 @@ class ViewController: UIViewController
         // Vertical offset by distance
         presenter.distanceOffsetMode = .manual
         presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter
-        presenter.distanceOffsetMinThreshold = 500 // Doesn't raise annotations that are nearer than this
-        // Filtering for performance
+        presenter.distanceOffsetMinThreshold = 500 // Tell it to not raise annotations that are nearer than this
+        // Limiting number of annotations shown for performance
         presenter.maxDistance = 5000               // Don't show annotations if they are farther than this
         presenter.maxVisibleAnnotations = 100      // Max number of annotations on the screen
         // Telling it to stack vertically.

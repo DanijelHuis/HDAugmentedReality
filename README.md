@@ -20,83 +20,60 @@ Altitudes of POIs are disregarded.
 - Works on all iOS devices(with GPS) and supports all rotations
 - Works with large amount of annotations and on-screen annotation views
 - Simulator debugging and debugging with map controller
-- Configurable vertical offset by distance
 - Radar with map and out-of-bounds indicators
+- Configurable vertical offset by distance
 
 ## What is next?
 - Notify ARAnnotationView when device is targeting it (Focus mode). This could be used as alternative to stacking or used with it. Similar feature can be seen in Flightradar app.
 
 
-## Dependencies & Requirements
-
-- CoreLocation.Framework
-- CoreMotion.Framework
-- MapKit.Framework (For debugging only, can be set ‘Optional’)
-
-## Manual installation
-
-- Drag & drop HDAugmentedReality folder from demo project into your project.
-- Add native frameworks listed in “Dependencies & Requirements”
-- Add NSLocationWhenInUseUsageDescription to Info.plist. This is needed for location authorization.
-- Add NSCameraUsageDescription to Info.plist. This is needed for camera authorization.
+## Plist
+- Add NSLocationWhenInUseUsageDescription. This is needed for location authorization.
+- Add NSCameraUsageDescription. This is needed for camera authorization.
+- Optional: Add UIRequiredDeviceCapabilities (array) and add "gyroscope", "accelerometer", "gps" and "location-services" values.
 
 ## CocoaPods
-
-- Add NSLocationWhenInUseUsageDescription to Info.plist. This is needed for location authorization.
-- Add NSCameraUsageDescription to Info.plist. This is needed for camera authorization.
 - Setup your podfile: 
 ```bash
-platform :ios, '8.0'
+platform :ios, '11.0'
 use_frameworks!
  
 target "TargetName" do
-pod 'HDAugmentedReality', '~> 2.4'
+pod 'HDAugmentedReality', '~> 3.0'
 end
  ```
 
-## How to use
+## Basic usage
+Look at a demo project for a complete example.
+  
 Import
 ```swift
 import HDAugmentedReality
 ```
-Setup controller and provide annotations:
+  
+Create annotations.
 ```swift
+let annotation1 = ARAnnotation(identifier: "bakery", title: "Bakery", location: CLLocation(latitude: 45.13432, longitude: 18.62095))
+let annotation2 = ARAnnotation(identifier: "supermarket", title: "Supermarket", location: CLLocation(latitude: 45.84638, longitude: 18.84610))
+let annotation3 = ARAnnotation(identifier: "home", title: "Home", location: CLLocation(latitude: 45.23432, longitude: 18.65436))
+let dummyAnnotations = [annotation1, annotation2, annotation3]
+```
+  
+Create ARViewController and configure ARPresenter.
+```swift
+// Creating ARViewController. You can use ARViewController(nibName:bundle:) if you have custom xib.
 let arViewController = ARViewController()
-arViewController.dataSource = self
-// Vertical offset by distance
-arViewController.presenter.distanceOffsetMode = .manual
-arViewController.presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter
-arViewController.presenter.distanceOffsetMinThreshold = 500 // Doesn't raise annotations that are nearer than this
-// Filtering for performance
-arViewController.presenter.maxDistance = 3000               // Don't show annotations if they are farther than this
-arViewController.presenter.maxVisibleAnnotations = 100      // Max number of annotations on the screen
-// Stacking
-arViewController.presenter.verticalStackingEnabled = true
-// Location precision
-arViewController.trackingManager.userDistanceFilter = 15
-arViewController.trackingManager.reloadDistanceFilter = 50
-// Ui
-arViewController.uiOptions.closeButtonEnabled = true
-// Debugging
-arViewController.uiOptions.debugLabel = true
-arViewController.uiOptions.debugMap = true
-arViewController.uiOptions.simulatorDebugging = Platform.isSimulator
-arViewController.uiOptions.setUserLocationToCenterOfAnnotations =  Platform.isSimulator
-// Interface orientation
-arViewController.interfaceOrientationMask = .all
-// Failure handling
-arViewController.onDidFailToFindLocation =
-{
-[weak self, weak arViewController] elapsedSeconds, acquiredLocationBefore in
-// Show alert and dismiss
-}
 
-// Setting annotations
+// Presenter - handles visual presentation of annotations
+let presenter = arViewController.presenter!
+presenter.presenterTransform = ARPresenterStackTransform()
+
+arViewController.dataSource = self
 arViewController.setAnnotations(dummyAnnotations)
-// Presenting controller
 self.present(arViewController, animated: true, completion: nil)
 ```
-Implement ARDataSource and provide annotation views:
+  
+Implement ARDataSource and provide annotation view. This will be called for each annotation.  
 ```swift
 func ar(_ arViewController: ARViewController, viewForAnnotation: ARAnnotation) -> ARAnnotationView
 {
@@ -105,12 +82,74 @@ let annotationView = TestAnnotationView()
 annotationView.frame = CGRect(x: 0,y: 0,width: 150,height: 50)
 return annotationView;
 }
-
 ```
-Annotation views must subclass ARAnnotationView. Override bindUi method inside your custom annotation view to set your UI.
+## Customization
 
-Make sure NSLocationWhenInUseUsageDescription and NSCameraUsageDescription are added to your Info.plist file.
+### Annotation customization
+You can subclass ARAnnotation and add your properties if you have the need (Look at TestAnnotation in the demo project).
 
+### AnnotationView customization/subclass
+ARAnnotationView is just an empty view, you should subclass it and add your UI (labels, background etc.). Try to avoid xibs and constraints
+since they impact performance (keep in mind that you can have hundreds of these on screen). For example take a look at TestAnnotationView in
+the demo project.
+
+ARAnnotationView has annotation property that holds annotation that you created. So if you subclassed ARAnnotation then this subclass instances
+would be passed to ARAnnotationView.
+
+Subclassing:
+- override initialize method to create your UI and init other stuff.
+- bindUi method is called when distance to the user or bearing changes. Override it to refresh your UI if you want that info.
+
+### ARViewController customization
+Custom XIB
+You can copy ARViewController.xib to your project, rename and edit it however you like and provide xib name to ARViewController(nibName:"MyARViewController", bundle: nil).
+
+Adjust vertical offset by distance.
+```swift
+let presenter = arViewController.presenter!
+presenter.distanceOffsetMode = .manual
+presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter
+presenter.distanceOffsetMinThreshold = 500 // Tell it to not raise annotations that are nearer than this
+```
+  
+Limit number of annotations shown by count and distance.
+```swift
+presenter.maxDistance = 5000               // Don't show annotations if they are farther than this
+presenter.maxVisibleAnnotations = 100      // Max number of annotations on the screen
+```
+  
+Adjust location tracking precision and heading/pitch movement.
+```swift
+let trackingManager = arViewController.trackingManager
+trackingManager.userDistanceFilter = 15     // How often are distances and azimuths recalculated (in meters)
+trackingManager.reloadDistanceFilter = 50   // How often are new annotations fetched (in meters)
+trackingManager.filterFactor = 0.4          // Smoothing out the movement of annotation views
+trackingManager.minimumTimeBetweenLocationUpdates = 2   // Minimum time between location updates
+```
+
+## Radar
+You can add radar with MKMapView and indicator ring. Please note that adding radar, and especially if radar.indicatorRingType is .precise, will significantly increase battery consumption.
+```swift
+let radar = RadarMapView()
+radar.startMode = .centerUser(span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+radar.trackingMode = .centerUserWhenNearBorder(span: nil)
+radar.indicatorRingType = .segmented(segmentColor: nil, userSegmentColor: nil)
+radar.maxDistance = 5000    // Limit bcs it drains battery if lots of annotations (>200), especially if indicatorRingType is .precise
+arViewController.addAccessory(radar, leading: 15, trailing: nil, top: nil, bottom: 15 + safeArea.bottom / 4, width: nil, height: 150)
+```
+
+## Custom accessories
+You can make your accessories and use it with ARViewController. RadarMapView is an example of such accessory.
+In order to make accessory you must implement ARAccessory protocol  (single method) and call ARViewController.addAccessory(...) or attach it from xib using accessoriesOutlet.
+
+## Custom presenter
+If you don't like how annotation view are shown or positioned on screen, you can make your ARPresenter subclass and set it to ARViewController.presenter property.
+
+## Known issues
+- ARTrackingManager has property headingSource which is by default set to .coreLocation. That means that heading will be taken from CLLocationManager and it is not as smooth as when taken from CMDeviceMotion. If you set headingSource to .deviceMotion, it will use heading from CMDeviceMotion and it will be smoother but, for some reason, this value is inaccurate when travelling fast e.g. driving in a car or bus.
+- Heading is reversed/not compensated when pitch > 135°. This can be observed in native Compass app: Start with iphone lying on the ground with screen pointing toward the sky (pitch = 0), now rotate iphone around its x axis (axes link below). Once you rotate more than 135 degrees, heading will jump, this jump is different depending where your device is heading. I fixed this but you need to set ARTrackingManager.headingSource = .deviceMotion which has its problems (read above).
+
+Axes: https://developer.apple.com/documentation/coremotion/getting_processed_device-motion_data/understanding_reference_frames_and_device_attitude
 ## Components
 **ARTrackingManager**: Class used internally by ARViewController for tracking and filtering location/heading/pitch etc. ARViewController takes all these informations and stores them in ARViewController.arStatus object, which is then passed to ARPresenter. This class is not intended for subclassing.
 
