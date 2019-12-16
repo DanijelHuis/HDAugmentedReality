@@ -247,7 +247,10 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
             let reuseIdentifier = "userRadarAnnotation"
             let view = (mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier) as! RadarAnnotationView?) ?? RadarAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
             view.annotation = annotation
-            view.displayPriority = .required
+            if #available(iOS 11.0, *)
+            {
+                view.displayPriority = .required
+            }
             view.canShowCallout = false
             view.isSelected = true  // Keeps it above other annotations (hopefully)
             view.imageView?.image = self.configuration.userAnnotationImage
@@ -263,7 +266,10 @@ open class RadarMapView: UIView, ARAccessory, MKMapViewDelegate
             let reuseIdentifier = "radarAnnotation"
             let view = (mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier) as! RadarAnnotationView?) ?? RadarAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
             view.annotation = annotation
-            view.displayPriority = .required
+            if #available(iOS 11.0, *)
+            {
+                view.displayPriority = .required
+            }
             view.canShowCallout = self.annotationsCanShowCallout
             
             let radarAnnotation = annotation as? RadarAnnotation

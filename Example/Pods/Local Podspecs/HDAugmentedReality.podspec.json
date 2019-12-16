@@ -13,7 +13,7 @@
     "tag": "3.0.0"
   },
   "platforms": {
-    "ios": "11.0"
+    "ios": "10.0"
   },
   "requires_arc": true,
   "source_files": "HDAugmentedReality/Classes/**/*",

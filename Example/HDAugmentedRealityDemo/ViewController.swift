@@ -74,7 +74,9 @@ class ViewController: UIViewController
         arViewController.modalPresentationStyle = .fullScreen
 
         //===== Radar
-        let safeArea = UIApplication.shared.delegate?.window??.safeAreaInsets ?? UIEdgeInsets.zero
+        var safeArea = UIEdgeInsets.zero
+        if #available(iOS 11.0, *) { safeArea = UIApplication.shared.delegate?.window??.safeAreaInsets ?? UIEdgeInsets.zero }
+        
         let radar = RadarMapView()
         radar.startMode = .centerUser(span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         radar.trackingMode = .none

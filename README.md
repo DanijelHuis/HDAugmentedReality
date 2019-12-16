@@ -35,7 +35,7 @@ Altitudes of POIs are disregarded.
 ## CocoaPods
 - Setup your podfile: 
 ```bash
-platform :ios, '11.0'
+platform :ios, '10.0'
 use_frameworks!
  
 target "TargetName" do
@@ -164,7 +164,7 @@ Axes: https://developer.apple.com/documentation/coremotion/getting_processed_dev
 **ARStatus**: Structure that holds all information about screen(FOV),  device(location/heading/pitch) and all other informations important for layout of annotation views on the screen.
 
 ## Version history:
-- 3.0.0: written in swift 5, iOS 11+
+- 3.0.0: written in swift 5, iOS 10+
 - 2.4.0: written in swift 4.2, iOS 8+
 - 2.3.0: written in swift 4.0, iOS 8+
 - 2.0.0: written in swift 3.0, iOS 8+

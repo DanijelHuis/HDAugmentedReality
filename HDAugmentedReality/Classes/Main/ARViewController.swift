@@ -737,7 +737,17 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
             let q = deviceMotion.attitude.quaternion
             let simd_q = simd_quatd(q)
             
-            let heading = String(format: "%.0f(%.0f,%.0f)", self.trackingManager.heading ?? 0, self.trackingManager.motionManager.deviceMotion?.heading ?? 0, self.trackingManager.clHeading ?? 0)
+            let heading: String
+            if #available(iOS 11.0, *)
+            {
+                heading = String(format: "%.0f(%.0f,%.0f)", self.trackingManager.heading ?? 0, self.trackingManager.motionManager.deviceMotion?.heading ?? 0, self.trackingManager.clHeading ?? 0)
+            }
+            else
+            {
+                heading = String(format: "%.0f(%.0f)", self.trackingManager.heading ?? 0, self.trackingManager.clHeading ?? 0)
+            }
+            
+            
             let pitch = String(format: "%.3f", self.trackingManager.pitch ?? 0)
             let attitude = String(format: "%.1f,%.1f,%.1f,%.1f", q.w, q.x, q.y, q.z)
             let axisAngle = String(format: "%.1f,%.1f,%.1f,%.1f", simd_q.angle.toDegrees, simd_q.axis.x, simd_q.axis.y, simd_q.axis.z)
