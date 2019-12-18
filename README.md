@@ -11,6 +11,9 @@ primary goal is the visibility of all POIs. This is achieved by stacking POIs ve
 that farther POIs, ones that would normally be obscured by nearer POIs, are put higher. 
 Altitudes of POIs are disregarded.
 
+![HDAugmentedReality](Design/ar.gif)
+
+
 ## Features
 
 - Automatic vertical stacking of annotations views
@@ -140,6 +143,7 @@ radar.indicatorRingType = .segmented(segmentColor: nil, userSegmentColor: nil)
 radar.maxDistance = 5000    // Limit bcs it drains battery if lots of annotations (>200), especially if indicatorRingType is .precise
 arViewController.addAccessory(radar, leading: 15, trailing: nil, top: nil, bottom: 15 + safeArea.bottom / 4, width: nil, height: 150)
 ```
+![Segmented Radar](Design/radar_segmented.gif)
 
 ## Custom accessories
 You can make your accessories and use it with ARViewController. RadarMapView is an example of such accessory.

@@ -36,8 +36,8 @@ class ViewController: UIViewController
         let presenter = arViewController.presenter!
         // Vertical offset by distance
         presenter.distanceOffsetMode = .manual
-        presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter
-        presenter.distanceOffsetMinThreshold = 500 // Tell it to not raise annotations that are nearer than this
+        presenter.distanceOffsetMultiplier = 0.05   // Pixels per meter
+        presenter.distanceOffsetMinThreshold = 1000 // Tell it to not raise annotations that are nearer than this
         // Limiting number of annotations shown for performance
         presenter.maxDistance = 5000               // Don't show annotations if they are farther than this
         presenter.maxVisibleAnnotations = 100      // Max number of annotations on the screen
