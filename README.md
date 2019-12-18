@@ -146,8 +146,7 @@ arViewController.addAccessory(radar, leading: 15, trailing: nil, top: nil, botto
 
 Ring around map indicates direction of out of bounds annotations. On the left is segmented indicator ring and on the right is precise indicator ring.  
 
-![Segmented Radar](Design/radar_segmented.png)
-![Precise Radar](Design/radar_precise.png)
+![Radar](Design/radar.jpg)
 
 ## Custom accessories
 You can make your accessories and use it with ARViewController. RadarMapView is an example of such accessory.
