@@ -143,6 +143,8 @@ radar.indicatorRingType = .segmented(segmentColor: nil, userSegmentColor: nil)
 radar.maxDistance = 5000    // Limit bcs it drains battery if lots of annotations (>200), especially if indicatorRingType is .precise
 arViewController.addAccessory(radar, leading: 15, trailing: nil, top: nil, bottom: 15 + safeArea.bottom / 4, width: nil, height: 150)
 ```
+
+Ring around map indicates direction of out of bounds annotations. On the left is segmented indicator ring and on the right is precise indicator ring.
 ![Segmented Radar](Design/radar_segmented.png)
 ![Precise Radar](Design/radar_precise.png)
 
