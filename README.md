@@ -8,7 +8,7 @@ Augmented Reality component for iOS.
 
 HDAugmentedReality is designed to be used in areas with large concentration of static POIs where
 primary goal is the visibility of all POIs. This is achieved by stacking POIs vertically, meaning
-that farther POIs, ones that would normally be obscured by nearer POIs, are put higher. 
+that farther POIs - ones that would normally be obscured by nearer POIs, are put higher. 
 Altitudes of POIs are disregarded.
 
 ![HDAugmentedReality](Design/ar.gif)
@@ -92,7 +92,7 @@ return annotationView;
 ## Customization
 
 ### Annotation customization
-You can subclass ARAnnotation and add your properties if you have the need (Look at TestAnnotation in the demo project).
+ARAnnotation holds data about your POI. You can subclass ARAnnotation and add your properties if you have the need (Look at TestAnnotation in the demo project).
 
 ### AnnotationView customization/subclass
 ARAnnotationView is just an empty view, you should subclass it and add your UI (labels, background etc.). Try to avoid xibs and constraints
@@ -114,7 +114,7 @@ Adjust vertical offset by distance.
 ```swift
 let presenter = arViewController.presenter!
 presenter.distanceOffsetMode = .manual
-presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter
+presenter.distanceOffsetMultiplier = 0.05   // Pixels per meter
 presenter.distanceOffsetMinThreshold = 500 // Tell it to not raise annotations that are nearer than this
 ```
   
@@ -144,7 +144,7 @@ radar.maxDistance = 5000    // Limit bcs it drains battery if lots of annotation
 arViewController.addAccessory(radar, leading: 15, trailing: nil, top: nil, bottom: 15 + safeArea.bottom / 4, width: nil, height: 150)
 ```
 
-Ring around map indicates direction of out of bounds annotations. On the left is segmented indicator ring and on the right is precise indicator ring.  
+Ring around map indicates direction of out-of-bounds annotations. On the left is segmented indicator ring and on the right is precise indicator ring.  
 
 ![Radar](Design/radar.jpg)
 
