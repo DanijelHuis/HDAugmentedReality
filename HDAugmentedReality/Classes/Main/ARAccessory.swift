@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import HDAugmentedReality
 
-public protocol ARAccessory
+public protocol ARAccessory: class
 {
     func reload(reloadType: ARViewController.ReloadType, status: ARStatus, presenter: ARPresenter)
 }

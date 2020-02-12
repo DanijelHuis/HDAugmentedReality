@@ -535,6 +535,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     //==========================================================================================================================================================
     // MARK:                                                    Accessories
     //==========================================================================================================================================================
+    /// Adds accessory
     open func addAccessory(_ accessory: ARAccessory, leading: CGFloat?, trailing: CGFloat?, top: CGFloat?, bottom: CGFloat?, width: CGFloat?, height: CGFloat?)
     {
         if let accessoryView = accessory as? UIView
@@ -545,6 +546,25 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
         }
         
         self.accessories.append(accessory)
+    }
+    
+    /// Removes accessory
+    open func removeAccessory(_ accessory: ARAccessory)
+    {
+        self.accessories.removeAll(where: { $0 === accessory })
+        if let accessoryView = accessory as? UIView
+        {
+            accessoryView.removeFromSuperview()
+        }
+    }
+    
+    /// Remove all accessories
+    open func removeAllAccessories()
+    {
+        let accessories = self.accessories
+        self.accessories.removeAll()
+        accessories.compactMap({$0 as? UIView}).forEach({ $0.removeFromSuperview() })
+        
     }
 
 
@@ -585,7 +605,7 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     /// Opening DebugMapViewController
     @objc internal func debugButtonTap()
-    {        
+    {
         // DEBUG
         let bundle = Bundle(for: DebugMapViewController.self)
         let mapViewController = DebugMapViewController(nibName: "DebugMapViewController", bundle: bundle)

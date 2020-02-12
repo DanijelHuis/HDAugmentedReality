@@ -171,6 +171,7 @@
 				TargetAttributes = {
 					0CAD4EAC1AE6FC14000F2A2A = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = J2U8N77X8C;
 						LastSwiftMigration = 1000;
 					};
 				};
@@ -389,8 +390,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Danijel Huis (Z5VTM983UF)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Danijel Huis (Z5VTM983UF)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = J2U8N77X8C;
 				INFOPLIST_FILE = HDAugmentedRealityDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -398,7 +400,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Huis.HDAugmentedRealityDemo;
 				PRODUCT_NAME = HDAR;
 				PROVISIONING_PROFILE = "3721ebd7-c018-4626-95b5-5fd2ab7f49d0";
-				PROVISIONING_PROFILE_SPECIFIER = NTH_Development;
+				PROVISIONING_PROFILE_SPECIFIER = TSD_Development_wildcard_112019;
 				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
@@ -409,8 +411,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Danijel Huis (Z5VTM983UF)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Danijel Huis (Z5VTM983UF)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = 8694PW88QR;
 				INFOPLIST_FILE = HDAugmentedRealityDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
